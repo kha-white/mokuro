@@ -247,11 +247,3 @@ class OverlayGenerator:
 
         style = ' '.join(f'{k}:{v};' for k, v in style.items())
         return style
-
-
-def run(path, is_demo=False):
-    path = Path(path).expanduser().absolute()
-    m2h = OverlayGenerator()
-    for p in path.iterdir():
-        if p.is_dir() and p.stem != '_ocr':
-            m2h.process_dir(p, is_demo)
