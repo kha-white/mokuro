@@ -1,0 +1,9 @@
+loguru
+manga-ocr
+numpy
+opencv-python
+Pillow
+requests
+scipy
+tqdm
+yattag
