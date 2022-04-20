@@ -18,13 +18,18 @@ ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/manga-ocr-overlay" target="_blank">manga-ocr-overlay</a> version {__version__}</p>
 """
 
+ABOUT_DEMO = ABOUT + """
+<p>This demo contains excerpt from <a href="http://www.manga109.org/en/download_s.html" target="_blank">Manga109-s dataset</a>.</p>
+<p>うちの猫’ず日記 &copy; がぁさん</p>
+"""
+
 
 class OverlayGenerator:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.mpocr = None
 
-    def process_dir(self, path):
+    def process_dir(self, path, is_demo=False):
         path = Path(path)
         out_dir = path.parent
 
@@ -53,10 +58,10 @@ class OverlayGenerator:
             page_html = self.get_page_html(result, img_path.relative_to(out_dir))
             page_htmls.append(page_html)
 
-        index_html = self.get_index_html(page_htmls)
+        index_html = self.get_index_html(page_htmls, is_demo)
         (out_dir / path.name).with_suffix('.html').write_text(index_html, encoding='utf-8')
 
-    def get_index_html(self, page_htmls):
+    def get_index_html(self, page_htmls, is_demo=False):
         doc, tag, text = Doc().tagtext()
 
         with tag('html'):
@@ -75,7 +80,10 @@ class OverlayGenerator:
                     pass
 
                 with tag('div', id='popupAbout', klass='popup'):
-                    doc.asis(ABOUT)
+                    if is_demo:
+                        doc.asis(ABOUT_DEMO)
+                    else:
+                        doc.asis(ABOUT)
 
                 with tag('a', id='leftAScreen', href='#'):
                     pass
@@ -241,9 +249,9 @@ class OverlayGenerator:
         return style
 
 
-def run(path):
+def run(path, is_demo=False):
     path = Path(path).expanduser().absolute()
     m2h = OverlayGenerator()
     for p in path.iterdir():
         if p.is_dir() and p.stem != '_ocr':
-            m2h.process_dir(p)
+            m2h.process_dir(p, is_demo)

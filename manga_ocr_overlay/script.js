@@ -6,6 +6,7 @@ let hasCover = false;
 let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let pz;
+let showAboutOnStart = false;
 
 let r2l = true;
 let singlePageView = false;
@@ -51,6 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updatePage(page_idx);
     fitToScreen();
+
+    if (showAboutOnStart) {
+        document.getElementById('popupAbout').style.display = 'block';
+        document.getElementById('dimOverlay').style.display = 'initial';
+        pz.pause();
+    }
 
 }, false);
 
@@ -323,16 +330,15 @@ function inputRightRight() {
 }
 
 function toggleFullScreen() {
-   var doc = window.document;
-   var docEl = doc.documentElement;
+    var doc = window.document;
+    var docEl = doc.documentElement;
 
-   var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-   var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+    var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-   if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-       requestFullScreen.call(docEl);
-   }
-   else {
-       cancelFullScreen.call(doc);
-   }
+    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+    } else {
+        cancelFullScreen.call(doc);
+    }
 }
