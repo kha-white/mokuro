@@ -29,6 +29,10 @@ class OverlayGenerator:
         self.kwargs = kwargs
         self.mpocr = None
 
+    def init_models(self):
+        if self.mpocr is None:
+            self.mpocr = MangaPageOcr(**self.kwargs)
+
     def process_dir(self, path, is_demo=False):
         path = Path(path)
         out_dir = path.parent
@@ -49,8 +53,7 @@ class OverlayGenerator:
             if json_path.is_file():
                 result = load_json(json_path)
             else:
-                if self.mpocr is None:
-                    self.mpocr = MangaPageOcr(**self.kwargs)
+                self.init_models()
                 result = self.mpocr(img_path)
                 json_path.parent.mkdir(parents=True, exist_ok=True)
                 dump_json(result, json_path)
