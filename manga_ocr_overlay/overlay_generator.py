@@ -33,16 +33,17 @@ class OverlayGenerator:
         if self.mpocr is None:
             self.mpocr = MangaPageOcr(**self.kwargs)
 
-    def process_dir(self, path, is_demo=False):
+    def process_dir(self, path, as_one_file=True, is_demo=False):
         path = Path(path)
         out_dir = path.parent
 
         results_dir = out_dir / '_ocr' / path.name
         results_dir.mkdir(parents=True, exist_ok=True)
 
-        shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
-        shutil.copy(STYLES_PATH, out_dir / 'styles.css')
-        shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
+        if not as_one_file:
+            shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
+            shutil.copy(STYLES_PATH, out_dir / 'styles.css')
+            shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
 
         img_paths = [p for p in sorted(path.glob('**/*')) if p.is_file() and p.suffix in ('.jpg', '.jpeg', '.png')]
 
@@ -61,10 +62,10 @@ class OverlayGenerator:
             page_html = self.get_page_html(result, img_path.relative_to(out_dir))
             page_htmls.append(page_html)
 
-        index_html = self.get_index_html(page_htmls, is_demo)
+        index_html = self.get_index_html(page_htmls, as_one_file, is_demo)
         (out_dir / path.name).with_suffix('.html').write_text(index_html, encoding='utf-8')
 
-    def get_index_html(self, page_htmls, is_demo=False):
+    def get_index_html(self, page_htmls, as_one_file=True, is_demo=False):
         doc, tag, text = Doc().tagtext()
 
         with tag('html'):
@@ -74,7 +75,12 @@ class OverlayGenerator:
                 '<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no"/>')
 
             with tag('head'):
-                with tag('link', rel='stylesheet', href='styles.css'): pass
+                if as_one_file:
+                    with tag('style'):
+                        doc.asis(STYLES_PATH.read_text())
+                else:
+                    with tag('link', rel='stylesheet', href='styles.css'):
+                        pass
 
             with tag('body'):
                 self.top_menu(doc, tag, text, len(page_htmls))
@@ -105,11 +111,18 @@ class OverlayGenerator:
                     with tag('a', id='rightAPage', href='#'):
                         pass
 
-                with tag('script', src='panzoom.min.js'):
-                    pass
+                if as_one_file:
+                    with tag('script'):
+                        doc.asis(PANZOOM_PATH.read_text())
 
-                with tag('script', src='script.js'):
-                    pass
+                    with tag('script'):
+                        doc.asis(SCRIPT_PATH.read_text())
+                else:
+                    with tag('script', src='panzoom.min.js'):
+                        pass
+
+                    with tag('script', src='script.js'):
+                        pass
 
         html = doc.getvalue()
         return html
