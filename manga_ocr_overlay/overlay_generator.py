@@ -196,6 +196,7 @@ class OverlayGenerator:
                 option_toggle('menuEditableText', 'editable text ', False)
                 option_select('menuFontSize', 'font size: ',
                               ['auto', 9, 10, 11, 12, 14, 16, 18, 20, 24, 32, 40, 48, 60])
+                option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about')
 
     def get_page_html(self, result, img_path):
