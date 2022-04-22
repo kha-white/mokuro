@@ -169,6 +169,8 @@ body {
     box-shadow: 0px 0px 8px 0px var(--color3a);
     z-index: 1000;
     border-radius: 3px;
+    max-height: 90vh;
+    overflow-y:auto;
 }
 
 .dropdown-content .dropdown-option {
