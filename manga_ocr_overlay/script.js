@@ -17,6 +17,7 @@ let defaultState = {
     editableText: false,
     displayOCR: true,
     fontSize: "auto",
+    eInkMode: false,
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -30,18 +31,22 @@ function loadState() {
 
     if (newState !== null) {
         state = JSON.parse(newState);
-
-        document.getElementById("menuR2l").checked = state.r2l;
-        document.getElementById("menuCtrlToPan").checked = state.ctrlToPan;
-        document.getElementById("menuDoublePageView").checked = !state.singlePageView;
-        document.getElementById("menuHasCover").checked = state.hasCover;
-        document.getElementById("menuTextBoxBorders").checked = state.textBoxBorders;
-        document.getElementById("menuEditableText").checked = state.editableText;
-        document.getElementById("menuDisplayOCR").checked = state.displayOCR;
-        document.getElementById('menuFontSize').value = state.fontSize;
+        updateUI();
     }
 
     updateProperties();
+}
+
+function updateUI() {
+    document.getElementById("menuR2l").checked = state.r2l;
+    document.getElementById("menuCtrlToPan").checked = state.ctrlToPan;
+    document.getElementById("menuDoublePageView").checked = !state.singlePageView;
+    document.getElementById("menuHasCover").checked = state.hasCover;
+    document.getElementById("menuTextBoxBorders").checked = state.textBoxBorders;
+    document.getElementById("menuEditableText").checked = state.editableText;
+    document.getElementById("menuDisplayOCR").checked = state.displayOCR;
+    document.getElementById('menuFontSize').value = state.fontSize;
+    document.getElementById('menuEInkMode').checked = state.eInkMode;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -119,6 +124,12 @@ function updateProperties() {
         r.style.setProperty('--textBoxFontSize', state.fontSize + 'pt');
         pc.classList.add('textBoxFontSizeOverride');
     }
+
+    if (state.eInkMode) {
+        document.getElementById('topMenu').classList.add("notransition");
+    } else {
+        document.getElementById('topMenu').classList.remove("notransition");
+    }
 }
 
 document.getElementById('menuR2l').addEventListener('click', function () {
@@ -162,6 +173,15 @@ document.getElementById('menuDisplayOCR').addEventListener('click', function () 
     updateProperties();
 }, false);
 
+document.getElementById('menuEInkMode').addEventListener('click', function () {
+    state.eInkMode = document.getElementById("menuEInkMode").checked;
+    saveState();
+    updateProperties();
+    if (state.eInkMode) {
+        eInkRefresh();
+    }
+}, false);
+
 document.getElementById('menuResetZoom').addEventListener('click', resetZoom, false);
 document.getElementById('menuFitToWidth').addEventListener('click', fitToWidth, false);
 document.getElementById('menuFitToScreen').addEventListener('click', fitToScreen, false);
@@ -176,6 +196,7 @@ document.getElementById('menuAbout').addEventListener('click', function () {
 document.getElementById('menuReset').addEventListener('click', function () {
     let page_idx = state.page_idx;
     state = JSON.parse(JSON.stringify(defaultState));
+    updateUI();
     updatePage(page_idx);
     updateProperties();
 }, false);
@@ -358,6 +379,9 @@ function updatePage(new_page_idx) {
 
     saveState();
     fitToScreen();
+    if (state.eInkMode) {
+        eInkRefresh();
+    }
 }
 
 function firstPage() {
@@ -420,4 +444,13 @@ function toggleFullScreen() {
     } else {
         cancelFullScreen.call(doc);
     }
+}
+
+function eInkRefresh() {
+    pc.classList.add("inverted");
+    document.body.style.backgroundColor = "black";
+    setTimeout(function () {
+        pc.classList.remove("inverted");
+        document.body.style.backgroundColor = r.style.getPropertyValue("--colorBackground");
+    }, 300);
 }

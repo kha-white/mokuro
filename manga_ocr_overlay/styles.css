@@ -72,6 +72,11 @@ body {
     overflow: visible;
 }
 
+#pagesContainer.inverted {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
 .page {
     display: none;
     float: left;
@@ -143,6 +148,10 @@ body {
     white-space: nowrap;
 }
 
+#topMenu.notransition {
+    transition: none;
+}
+
 #topMenu.hidden {
     overflow: hidden;
     max-width: 2.5em;
@@ -194,7 +203,7 @@ body {
     z-index: 1000;
     border-radius: 3px;
     max-height: 90vh;
-    overflow-y:auto;
+    overflow-y: auto;
 }
 
 .dropdown-content .dropdown-option {
