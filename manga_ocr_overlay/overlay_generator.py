@@ -17,9 +17,22 @@ ICONS_PATH = Path(__file__).parent.parent / 'assets' / 'icons'
 
 ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/manga-ocr-overlay" target="_blank">manga-ocr-overlay</a> version {__version__}</p>
+<p>Instructions:</p>
+<ul>
+<li>Navigate pages with:
+    <ul>
+    <li>menu buttons</li>
+    <li>Page Up, Page Down, Home, End keys</li>
+    <li>by clicking left/right edge of the screen</li>
+    </ul>
+<li>Click &#10005; button to hide the menu. To bring it back, clip top-left corner of the screen.</li>
+<li>Select "editable boxes" option, to edit text recognized by OCR. Changes are not saved, it's only for ad-hoc fixes when using look-up dictionary.</li>
+<li>E-ink mode turns off animations and simulates display refresh on each page turn.</li>
+</ul>
 """
 
 ABOUT_DEMO = ABOUT + """
+<br/>
 <p>This demo contains excerpt from <a href="http://www.manga109.org/en/download_s.html" target="_blank">Manga109-s dataset</a>.</p>
 <p>うちの猫’ず日記 &copy; がぁさん</p>
 """
@@ -125,6 +138,10 @@ class OverlayGenerator:
                     with tag('script', src='script.js'):
                         pass
 
+                    if is_demo:
+                        with tag('script'):
+                            doc.asis('showAboutOnStart=true;')
+
         html = doc.getvalue()
         return html
 
@@ -213,7 +230,7 @@ class OverlayGenerator:
                               ['auto', 9, 10, 11, 12, 14, 16, 18, 20, 24, 32, 40, 48, 60])
                 option_toggle('menuEInkMode', 'e-ink mode ')
                 option_click('menuReset', 'reset settings')
-                option_click('menuAbout', 'about')
+                option_click('menuAbout', 'about/help')
 
     def get_page_html(self, result, img_path):
         doc, tag, text = Doc().tagtext()
