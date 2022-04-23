@@ -18,6 +18,7 @@ let defaultState = {
     displayOCR: true,
     fontSize: "auto",
     eInkMode: false,
+    defaultZoomMode: "fit to screen",
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -47,6 +48,7 @@ function updateUI() {
     document.getElementById("menuDisplayOCR").checked = state.displayOCR;
     document.getElementById('menuFontSize').value = state.fontSize;
     document.getElementById('menuEInkMode').checked = state.eInkMode;
+    document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -89,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     updatePage(state.page_idx);
-    fitToScreen();
 
     if (showAboutOnStart) {
         document.getElementById('popupAbout').style.display = 'block';
@@ -182,9 +183,9 @@ document.getElementById('menuEInkMode').addEventListener('click', function () {
     }
 }, false);
 
-document.getElementById('menuResetZoom').addEventListener('click', resetZoom, false);
-document.getElementById('menuFitToWidth').addEventListener('click', fitToWidth, false);
-document.getElementById('menuFitToScreen').addEventListener('click', fitToScreen, false);
+document.getElementById('menuOriginalSize').addEventListener('click', zoomOriginal, false);
+document.getElementById('menuFitToWidth').addEventListener('click', zoomFitToWidth, false);
+document.getElementById('menuFitToScreen').addEventListener('click', zoomFitToScreen, false);
 document.getElementById('menuFullScreen').addEventListener('click', toggleFullScreen, false);
 
 document.getElementById('menuAbout').addEventListener('click', function () {
@@ -212,6 +213,12 @@ document.getElementById('menuFontSize').addEventListener('change', (e) => {
     saveState();
     updateProperties();
 });
+
+document.getElementById('menuDefaultZoom').addEventListener('change', (e) => {
+    state.defaultZoomMode = e.target.value;
+    saveState();
+});
+
 
 document.getElementById('pageIdxInput').addEventListener('change', (e) => {
     updatePage(e.target.value - 1);
@@ -261,7 +268,7 @@ document.addEventListener("keydown", function onEvent(e) {
             break;
 
         case "0":
-            fitToScreen();
+            zoomDefault();
             break;
     }
 });
@@ -283,24 +290,24 @@ function getPage(page_idx) {
 }
 
 function getOffsetLeft() {
-    return 5;
+    return 0;
 }
 
 function getOffsetTop() {
-    let offset = 2;
+    let offset = 0;
     let menu = document.getElementById('topMenu');
     if (!menu.classList.contains("hidden")) {
-        offset += menu.getBoundingClientRect().bottom;
+        offset += menu.getBoundingClientRect().bottom + 10;
     }
     return offset;
 }
 
 function getOffsetRight() {
-    return 20;
+    return 0;
 }
 
 function getOffsetBottom() {
-    return 20;
+    return 0;
 }
 
 function getScreenWidth() {
@@ -311,33 +318,70 @@ function getScreenHeight() {
     return window.innerHeight - getOffsetTop() - getOffsetBottom();
 }
 
-function resetPan() {
+function panAlign(align_x, align_y) {
     let scale = pz.getTransform().scale;
-    let x = getOffsetLeft() + (getScreenWidth() - pc.offsetWidth * scale) / 2;
-    let y = getOffsetTop() + (getScreenHeight() - pc.offsetHeight * scale) / 2;
+    let x;
+    let y;
+
+    switch (align_x) {
+        case "left":
+            x = getOffsetLeft();
+            break;
+        case "center":
+            x = getOffsetLeft() + (getScreenWidth() - pc.offsetWidth * scale) / 2;
+            break;
+        case "right":
+            x = getOffsetLeft() + (getScreenWidth() - pc.offsetWidth * scale);
+            break;
+    }
+
+    switch (align_y) {
+        case "top":
+            y = getOffsetTop();
+            break;
+        case "center":
+            y = getOffsetTop() + (getScreenHeight() - pc.offsetHeight * scale) / 2;
+            break;
+        case "bottom":
+            y = getOffsetTop() + (getScreenHeight() - pc.offsetHeight * scale);
+            break;
+    }
+
     pz.moveTo(x, y);
 }
 
-function resetZoom() {
-    pz.moveTo(0, 0);
+
+function zoomOriginal() {
     pz.zoomTo(0, 0, 1 / pz.getTransform().scale);
-    resetPan();
+    panAlign("center", "center");
 }
 
-function fitToWidth() {
-    pz.moveTo(0, 0);
+function zoomFitToWidth() {
     let scale = (1 / pz.getTransform().scale) * (getScreenWidth() / pc.offsetWidth);
     pz.zoomTo(0, 0, scale);
-    resetPan();
+    panAlign("center", "top");
 }
 
-function fitToScreen() {
-    pz.moveTo(0, 0);
+function zoomFitToScreen() {
     let scale_x = getScreenWidth() / pc.offsetWidth;
     let scale_y = getScreenHeight() / pc.offsetHeight;
     let scale = (1 / pz.getTransform().scale) * Math.min(scale_x, scale_y);
     pz.zoomTo(0, 0, scale);
-    resetPan();
+    panAlign("center", "center");
+}
+
+function zoomDefault() {
+    switch (state.defaultZoomMode) {
+        case "fit to screen":
+            zoomFitToScreen();
+            break;
+        case "fit to width":
+            zoomFitToWidth();
+            break;
+        case "original size":
+            zoomOriginal();
+            break;
+    }
 }
 
 function updatePage(new_page_idx) {
@@ -378,7 +422,7 @@ function updatePage(new_page_idx) {
     document.getElementById("pageIdxDisplay").innerHTML = (state.page_idx + 1) + page2_txt + '/' + num_pages;
 
     saveState();
-    fitToScreen();
+    zoomDefault();
     if (state.eInkMode) {
         eInkRefresh();
     }

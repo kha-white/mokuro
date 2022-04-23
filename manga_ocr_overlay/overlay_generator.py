@@ -187,7 +187,13 @@ class OverlayGenerator:
             with tag('div', klass='dropdown-content'):
                 option_click('menuFitToScreen', 'fit to screen')
                 option_click('menuFitToWidth', 'fit to width')
-                option_click('menuResetZoom', 'original size')
+                option_click('menuOriginalSize', 'original size')
+                option_select('menuDefaultZoom', 'on page turn: ', [
+                    'fit to screen',
+                    'fit to width',
+                    'original size',
+                    'keep zoom level',
+                ])
                 option_click('menuFullScreen', 'toggle fullscreen')
                 option_toggle('menuR2l', 'right to left')
                 option_toggle('menuDoublePageView', 'display two pages ')
