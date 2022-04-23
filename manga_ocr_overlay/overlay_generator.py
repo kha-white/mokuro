@@ -3,6 +3,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 import numpy as np
+from loguru import logger
 from tqdm import tqdm
 from yattag import Doc
 
@@ -39,16 +40,25 @@ ABOUT_DEMO = ABOUT + """
 
 
 class OverlayGenerator:
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 pretrained_model_name_or_path='kha-white/manga-ocr-base',
+                 force_cpu=False,
+                 **kwargs):
+        self.pretrained_model_name_or_path = pretrained_model_name_or_path
+        self.force_cpu = force_cpu
         self.kwargs = kwargs
         self.mpocr = None
 
     def init_models(self):
         if self.mpocr is None:
-            self.mpocr = MangaPageOcr(**self.kwargs)
+            self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, **self.kwargs)
 
     def process_dir(self, path, as_one_file=True, is_demo=False):
-        path = Path(path)
+        path = Path(path).expanduser().absolute()
+        assert path.is_dir(), f'{path} must be a directory'
+        if path.stem == '_ocr':
+            logger.info(f'Skipping OCR directory: {path}')
+            return
         out_dir = path.parent
 
         results_dir = out_dir / '_ocr' / path.name
