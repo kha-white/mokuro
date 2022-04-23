@@ -13,6 +13,7 @@ from manga_ocr_overlay.utils import dump_json, load_json
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
 PANZOOM_PATH = Path(__file__).parent.parent / 'assets' / 'panzoom.min.js'
+ICONS_PATH = Path(__file__).parent.parent / 'assets' / 'icons'
 
 ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/manga-ocr-overlay" target="_blank">manga-ocr-overlay</a> version {__version__}</p>
@@ -133,19 +134,19 @@ class OverlayGenerator:
 
         with tag('div', id='topMenu'):
             with tag('button', id='buttonHideMenu', klass='menuButton'):
-                text('✕')
+                doc.asis(self.get_icon('cross-svgrepo-com'))
 
             with tag('button', id='buttonLeftLeft', klass='menuButton'):
-                text('|<')
+                doc.asis(self.get_icon('chevron-left-double-svgrepo-com'))
 
             with tag('button', id='buttonLeft', klass='menuButton'):
-                text('<')
+                doc.asis(self.get_icon('chevron-left-svgrepo-com'))
 
             with tag('button', id='buttonRight', klass='menuButton'):
-                text('>')
+                doc.asis(self.get_icon('chevron-right-svgrepo-com'))
 
             with tag('button', id='buttonRightRight', klass='menuButton'):
-                text('>|')
+                doc.asis(self.get_icon('chevron-right-double-svgrepo-com'))
 
             with tag('input', 'required', type='number', id='pageIdxInput',
                      min=1, max=num_pages, value=1, size=3):
@@ -182,19 +183,25 @@ class OverlayGenerator:
 
         with tag('div', klass='dropdown'):
             with tag('button', id='dropbtn', klass='menuButton'):
-                text('☰')
+                doc.asis(self.get_icon('menu-hamburger-svgrepo-com'))
 
             with tag('div', klass='dropdown-content'):
-                option_click('menuFitToScreen', 'fit to screen')
-                option_click('menuFitToWidth', 'fit to width')
-                option_click('menuOriginalSize', 'original size')
+                with tag('div', klass='buttonRow'):
+                    with tag('button', id='menuFitToScreen', klass='menuButton'):
+                        doc.asis(self.get_icon('expand-svgrepo-com'))
+                    with tag('button', id='menuFitToWidth', klass='menuButton'):
+                        doc.asis(self.get_icon('expand-width-svgrepo-com'))
+                    with tag('button', id='menuOriginalSize', klass='menuButton'):
+                        text('1:1')
+                    with tag('button', id='menuFullScreen', klass='menuButton'):
+                        doc.asis(self.get_icon('fullscreen-svgrepo-com'))
+
                 option_select('menuDefaultZoom', 'on page turn: ', [
                     'fit to screen',
                     'fit to width',
                     'original size',
                     'keep zoom level',
                 ])
-                option_click('menuFullScreen', 'toggle fullscreen')
                 option_toggle('menuR2l', 'right to left')
                 option_toggle('menuDoublePageView', 'display two pages ')
                 option_toggle('menuHasCover', 'first page is cover ')
@@ -273,3 +280,7 @@ class OverlayGenerator:
 
         style = ' '.join(f'{k}:{v};' for k, v in style.items())
         return style
+
+    @staticmethod
+    def get_icon(name):
+        return (ICONS_PATH / name).with_suffix('.svg').read_text()
