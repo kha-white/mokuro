@@ -128,7 +128,13 @@ class OverlayGenerator:
         return html
 
     def top_menu(self, doc, tag, text, num_pages):
+        with tag('a', id='showMenuA', href='#'):
+            pass
+
         with tag('div', id='topMenu'):
+            with tag('button', id='buttonHideMenu', klass='menuButton'):
+                text('✕')
+
             with tag('button', id='buttonLeftLeft', klass='menuButton'):
                 text('|<')
 

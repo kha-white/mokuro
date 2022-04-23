@@ -196,6 +196,18 @@ document.getElementById('pageIdxInput').addEventListener('change', (e) => {
     updatePage(e.target.value - 1);
 })
 
+document.getElementById('buttonHideMenu').addEventListener('click', function () {
+    // document.getElementById('topMenu').style.display = "none";
+    document.getElementById('showMenuA').style.display = "inline-block";
+    document.getElementById('topMenu').classList.add("hidden");
+}, false);
+
+document.getElementById('showMenuA').addEventListener('click', function () {
+    // document.getElementById('topMenu').style.display = "initial";
+    document.getElementById('showMenuA').style.display = "none";
+    document.getElementById('topMenu').classList.remove("hidden");
+}, false);
+
 document.getElementById('buttonLeftLeft').addEventListener('click', inputLeftLeft, false);
 document.getElementById('buttonLeft').addEventListener('click', inputLeft, false);
 document.getElementById('buttonRight').addEventListener('click', inputRight, false);
@@ -254,7 +266,12 @@ function getOffsetLeft() {
 }
 
 function getOffsetTop() {
-    return document.getElementById('topMenu').getBoundingClientRect().bottom + 2;
+    let offset = 2;
+    let menu = document.getElementById('topMenu');
+    if (!menu.classList.contains("hidden")) {
+        offset += menu.getBoundingClientRect().bottom;
+    }
+    return offset;
 }
 
 function getOffsetRight() {
