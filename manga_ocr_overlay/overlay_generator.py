@@ -8,13 +8,14 @@ from tqdm import tqdm
 from yattag import Doc
 
 from manga_ocr_overlay import __version__
+from manga_ocr_overlay.env import ASSETS_PATH
 from manga_ocr_overlay.manga_page_ocr import MangaPageOcr
 from manga_ocr_overlay.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
-PANZOOM_PATH = Path(__file__).parent.parent / 'assets' / 'panzoom.min.js'
-ICONS_PATH = Path(__file__).parent.parent / 'assets' / 'icons'
+PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
+ICONS_PATH = ASSETS_PATH / 'icons'
 
 ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/manga-ocr-overlay" target="_blank">manga-ocr-overlay</a> version {__version__}</p>

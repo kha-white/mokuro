@@ -1,0 +1,2 @@
+recursive-include manga_ocr_overlay/assets *
+include manga_ocr_overlay/*.js manga_ocr_overlay/*.css
