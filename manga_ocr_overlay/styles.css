@@ -119,11 +119,11 @@ body {
 #showMenuA {
     display: none;
     position: fixed;
-    left:0;
-    top:0;
-    width:3em;
-    height:3em;
-    z-index:1000;
+    left: 0;
+    top: 0;
+    width: 3em;
+    height: 3em;
+    z-index: 1000;
     background-color: rgba(0, 0, 0, 0);
 }
 
@@ -139,13 +139,13 @@ body {
     transition: all 1s ease-in, max-width 0.5s ease-out;
     visibility: visible;
     opacity: 1;
-    max-width:100vw;
-    overflow:hidden;
-    white-space:nowrap;
+    max-width: 100vw;
+    white-space: nowrap;
 }
 
 #topMenu.hidden {
-    max-width:2.5em;
+    overflow: hidden;
+    max-width: 2.5em;
     visibility: hidden;
     opacity: 0;
 }
