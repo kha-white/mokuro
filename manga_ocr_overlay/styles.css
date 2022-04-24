@@ -1,6 +1,6 @@
 :root {
     --textBoxDisplay: initial;
-    --textBoxBorderHoverColor: rgba(237, 28, 36, 0.3);
+    --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
     --textBoxFontSize: 1em;
 
     --colorBackground: #C4C3D0;
@@ -35,7 +35,7 @@ body {
 }
 
 .pageContainer:hover .textBox {
-    border: 1px solid var(--textBoxBorderHoverColor);
+    border: 2px solid var(--textBoxBorderHoverColor);
 }
 
 .textBox {

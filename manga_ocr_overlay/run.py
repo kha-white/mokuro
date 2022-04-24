@@ -7,19 +7,29 @@ from manga_ocr_overlay import OverlayGenerator
 
 
 def run(*paths,
-        parent_path=None,
+        parent_dir=None,
         pretrained_model_name_or_path='kha-white/manga-ocr-base',
         force_cpu=False,
         as_one_file=True,
+        disable_confirmation=False,
         ):
-    ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu)
-
     paths = [Path(p).expanduser().absolute() for p in paths]
 
-    if parent_path is not None:
-        for p in Path(parent_path).expanduser().absolute().iterdir():
+    if parent_dir is not None:
+        for p in Path(parent_dir).expanduser().absolute().iterdir():
             if p.is_dir() and p.stem != '_ocr' and p not in paths:
                 paths.append(p)
+
+    print(f'\nPaths to process (each path will be treated as one volume):')
+    for p in paths:
+        print(p)
+
+    if not disable_confirmation:
+        inp = input('Continue? [yes/no]\n')
+        if inp.lower() not in ('y', 'yes'):
+            return
+
+    ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu)
 
     num_sucessful = 0
     for i, path in enumerate(paths):

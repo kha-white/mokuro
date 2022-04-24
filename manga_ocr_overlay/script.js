@@ -32,9 +32,9 @@ function loadState() {
 
     if (newState !== null) {
         state = JSON.parse(newState);
-        updateUI();
     }
 
+    updateUI();
     updateProperties();
 }
 
