@@ -87,10 +87,14 @@ class OverlayGenerator:
             page_html = self.get_page_html(result, img_path.relative_to(out_dir))
             page_htmls.append(page_html)
 
-        index_html = self.get_index_html(page_htmls, as_one_file, is_demo)
+        if is_demo:
+            title = f'mokuro {__version__} demo'
+        else:
+            title = f'{path.name} | mokuro'
+        index_html = self.get_index_html(page_htmls, title, as_one_file, is_demo)
         (out_dir / path.name).with_suffix('.html').write_text(index_html, encoding='utf-8')
 
-    def get_index_html(self, page_htmls, as_one_file=True, is_demo=False):
+    def get_index_html(self, page_htmls, title, as_one_file=True, is_demo=False):
         doc, tag, text = Doc().tagtext()
 
         with tag('html'):
@@ -100,6 +104,9 @@ class OverlayGenerator:
                 '<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no"/>')
 
             with tag('head'):
+                with tag('title'):
+                    text(title)
+
                 if as_one_file:
                     with tag('style'):
                         doc.asis(STYLES_PATH.read_text())
