@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-long_description = (Path(__file__).parent / "README.md").read_text('utf-8').split('# Usage')[0]
+long_description = (Path(__file__).parent / "README.md").read_text('utf-8').split('# Installation')[0]
 
 setup(
     name="mokuro",
