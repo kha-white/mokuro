@@ -4,7 +4,7 @@ let r = document.querySelector(':root');
 let pz;
 let showAboutOnStart = false;
 
-let storageKey = "manga-ocr-overlay_" + window.location.pathname;
+let storageKey = "mokuro_" + window.location.pathname;
 
 let defaultState = {
     page_idx: 0,

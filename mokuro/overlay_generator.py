@@ -7,10 +7,10 @@ from loguru import logger
 from tqdm import tqdm
 from yattag import Doc
 
-from manga_ocr_overlay import __version__
-from manga_ocr_overlay.env import ASSETS_PATH
-from manga_ocr_overlay.manga_page_ocr import MangaPageOcr
-from manga_ocr_overlay.utils import dump_json, load_json
+from mokuro import __version__
+from mokuro.env import ASSETS_PATH
+from mokuro.manga_page_ocr import MangaPageOcr
+from mokuro.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
@@ -18,7 +18,7 @@ PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
 ICONS_PATH = ASSETS_PATH / 'icons'
 
 ABOUT = f"""
-<p>HTML overlay generated with <a href="https://github.com/kha-white/manga-ocr-overlay" target="_blank">manga-ocr-overlay</a> version {__version__}</p>
+<p>HTML overlay generated with <a href="https://github.com/kha-white/mokuro" target="_blank">mokuro</a> version {__version__}</p>
 <p>Instructions:</p>
 <ul>
 <li>Navigate pages with:

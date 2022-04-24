@@ -9,15 +9,15 @@ See demo: https://kha-white.github.io/manga-demo
 Clone the repo and install dependencies:
 
 ```bash
-git clone --recurse-submodules https://github.com/kha-white/manga-ocr-overlay.git
-pip3 install -r manga-ocr-overlay/comic_text_detector/requirements.txt
-pip3 install -r manga-ocr-overlay/requirements.txt
+git clone --recurse-submodules https://github.com/kha-white/mokuro.git
+pip3 install -r mokuro/comic_text_detector/requirements.txt
+pip3 install -r mokuro/requirements.txt
 ```
 
 Generate HTML overlay:
 
 ```python
-from manga_ocr_overlay import OverlayGenerator
+from mokuro import OverlayGenerator
 
 ovg = OverlayGenerator()
 ovg.process_dir('/path/to/manga/vol1')

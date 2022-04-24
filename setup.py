@@ -5,12 +5,12 @@ from setuptools import setup, find_packages
 long_description = (Path(__file__).parent / "README.md").read_text('utf-8').split('# Usage')[0]
 
 setup(
-    name="manga-ocr-overlay",
+    name="mokuro",
     version='0.1.0',
     description="Browser reader for manga with selectable text",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/kha-white/manga-ocr-overlay",
+    url="https://github.com/kha-white/mokuro",
     author="Maciej Budyś",
     author_email="kha-white@mail.com",
     license="GPLv3",
@@ -40,7 +40,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "manga_ocr_overlay=manga_ocr_overlay.__main__:main",
+            "mokuro=mokuro.__main__:main",
         ]
     },
 )

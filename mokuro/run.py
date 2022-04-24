@@ -3,7 +3,7 @@ from pathlib import Path
 import fire
 from loguru import logger
 
-from manga_ocr_overlay import OverlayGenerator
+from mokuro import OverlayGenerator
 
 
 def run(*paths,

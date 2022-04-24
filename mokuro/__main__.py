@@ -1,6 +1,6 @@
 import fire
 
-from manga_ocr_overlay.run import run
+from mokuro.run import run
 
 
 def main():
