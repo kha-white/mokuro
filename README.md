@@ -4,6 +4,10 @@ Read Japanese manga with selectable text inside a browser.
 
 **See demo: https://kha-white.github.io/manga-demo**
 
+https://user-images.githubusercontent.com/22717958/164993274-3e8d1650-9be3-457d-84cb-f92f9598cd5a.mp4
+
+<sup>Demo contains excerpt from [Manga109-s dataset](http://www.manga109.org/en/download_s.html). うちの猫’ず日記 © がぁさん</sup>
+
 mokuro is aimed towards Japanese learners, who want to read manga in Japanese with a pop-up dictionary like [Yomichan](https://github.com/FooSoft/yomichan).
 It works like this:
 1. Perform text detection and OCR for each page.
