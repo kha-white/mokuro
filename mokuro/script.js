@@ -352,12 +352,14 @@ function panAlign(align_x, align_y) {
 
 
 function zoomOriginal() {
+    pz.moveTo(0, 0);
     pz.zoomTo(0, 0, 1 / pz.getTransform().scale);
     panAlign("center", "center");
 }
 
 function zoomFitToWidth() {
     let scale = (1 / pz.getTransform().scale) * (getScreenWidth() / pc.offsetWidth);
+    pz.moveTo(0, 0);
     pz.zoomTo(0, 0, scale);
     panAlign("center", "top");
 }
@@ -366,6 +368,7 @@ function zoomFitToScreen() {
     let scale_x = getScreenWidth() / pc.offsetWidth;
     let scale_y = getScreenHeight() / pc.offsetHeight;
     let scale = (1 / pz.getTransform().scale) * Math.min(scale_x, scale_y);
+    pz.moveTo(0, 0);
     pz.zoomTo(0, 0, scale);
     panAlign("center", "center");
 }
