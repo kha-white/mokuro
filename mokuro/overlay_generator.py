@@ -92,7 +92,7 @@ class OverlayGenerator:
         else:
             title = f'{path.name} | mokuro'
         index_html = self.get_index_html(page_htmls, title, as_one_file, is_demo)
-        (out_dir / path.name).with_suffix('.html').write_text(index_html, encoding='utf-8')
+        (out_dir / (path.name + '.html')).write_text(index_html, encoding='utf-8')
 
     def get_index_html(self, page_htmls, title, as_one_file=True, is_demo=False):
         doc, tag, text = Doc().tagtext()
