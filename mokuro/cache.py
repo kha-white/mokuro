@@ -12,7 +12,7 @@ class cache:
     @property
     def comic_text_detector(self):
         path = self.root / 'comictextdetector.pt'
-        url = 'https://github.com/zyddnys/manga-image-translator/releases/download/beta-0.2.1/comictextdetector.pt'
+        url = 'https://github.com/zyddnys/manga-image-translator/releases/download/beta-0.3/comictextdetector.pt'
 
         self._download_if_needed(path, url)
         return path
