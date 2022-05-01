@@ -20,6 +20,8 @@ and [manga-ocr](https://github.com/kha-white/manga-ocr) for OCR.
 
 Try running on your manga in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kha-white/mokuro/blob/master/notebooks/mokuro_demo.ipynb)
 
+For a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro, check out [Xelieu's guide](https://rentry.co/lazyXel).
+
 # Installation
 
 You need Python 3.6, 3.7, 3.8 or 3.9. Unfortunately, PyTorch does not support Python 3.10 yet.
