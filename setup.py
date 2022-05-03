@@ -6,7 +6,7 @@ long_description = (Path(__file__).parent / "README.md").read_text('utf-8').spli
 
 setup(
     name="mokuro",
-    version='0.1.2',
+    version='0.1.3',
     description="Browser reader for manga with selectable text",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -24,8 +24,6 @@ setup(
         "loguru",
         "manga-ocr>=0.1.7",
         "numpy",
-        "onnx>=1.9.0",
-        "onnx-simplifier>=0.3.6",
         "opencv-python>=4.1.2",
         "Pillow>=7.1.2",
         "pyclipper",
