@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from PIL import Image
+from loguru import logger
 from scipy.signal.windows import gaussian
 
 from comic_text_detector.inference import TextDetector
@@ -26,6 +27,7 @@ class MangaPageOcr:
         self.max_ratio_hor = max_ratio_hor
         self.anchor_window = anchor_window
 
+        logger.info('Initializing text detector')
         self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size,
                                           device='cpu',
                                           act='leaky')

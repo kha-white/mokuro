@@ -20,12 +20,16 @@ def run(*paths,
             if p.is_dir() and p.stem != '_ocr' and p not in paths:
                 paths.append(p)
 
-    print(f'\nPaths to process (each path will be treated as one volume):')
+    if len(paths) == 0:
+        logger.error('Found no paths to process. Did you set the paths correctly?')
+        return
+
+    print(f'\nPaths to process:\n')
     for p in paths:
         print(p)
 
     if not disable_confirmation:
-        inp = input('Continue? [yes/no]\n')
+        inp = input('\nEach of the paths above will be treated as one volume. Continue? [yes/no]\n')
         if inp.lower() not in ('y', 'yes'):
             return
 
@@ -41,7 +45,7 @@ def run(*paths,
         else:
             num_sucessful += 1
 
-    logger.info(f'Processed succesfully: {num_sucessful}/{len(paths)}')
+    logger.info(f'Processed successfully: {num_sucessful}/{len(paths)}')
 
 
 if __name__ == '__main__':
