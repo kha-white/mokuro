@@ -49,6 +49,12 @@ mokuro /path/to/manga/vol1
 
 This will generate `/path/to/manga/vol1.html` file, which you can open in a browser.
 
+If your path contains spaces, enclose it in double quotes, like this:
+
+```bash
+mokuro "/path/to/manga/volume 1"
+```
+
 ## Run on multiple volumes
 
 ```bash
