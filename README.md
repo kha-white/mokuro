@@ -22,6 +22,10 @@ Try running on your manga in Colab: [![Open In Colab](https://colab.research.goo
 
 For a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro, check out [Xelieu's guide](https://rentry.co/lazyXel).
 
+See also:
+- [Mokuro2Pdf](https://github.com/Kartoffel0/Mokuro2Pdf), cli Ruby script to generate pdf files with selectable text from Mokuro's html overlay
+- [Xelieu's guide](https://rentry.co/lazyXel), a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro (and many other useful tips)
+
 # Installation
 
 You need Python 3.6, 3.7, 3.8 or 3.9. Unfortunately, PyTorch does not support Python 3.10 yet.
