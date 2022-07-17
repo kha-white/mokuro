@@ -20,7 +20,9 @@ and [manga-ocr](https://github.com/kha-white/manga-ocr) for OCR.
 
 Try running on your manga in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kha-white/mokuro/blob/master/notebooks/mokuro_demo.ipynb)
 
-For a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro, check out [Xelieu's guide](https://rentry.co/lazyXel).
+See also:
+- [Mokuro2Pdf](https://github.com/Kartoffel0/Mokuro2Pdf), cli Ruby script to generate pdf files with selectable text from Mokuro's html overlay
+- [Xelieu's guide](https://rentry.co/lazyXel), a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro (and many other useful tips)
 
 # Installation
 
