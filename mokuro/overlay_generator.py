@@ -70,7 +70,7 @@ class OverlayGenerator:
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
 
-        img_paths = [p for p in sorted(path.glob('**/*')) if p.is_file() and p.suffix in ('.jpg', '.jpeg', '.png')]
+        img_paths = [p for p in sorted(path.glob('**/*')) if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
 
         page_htmls = []
 
