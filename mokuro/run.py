@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import fire
+import zipfile
 from loguru import logger
 
 from mokuro import OverlayGenerator
@@ -39,6 +40,11 @@ def run(*paths,
     for i, path in enumerate(paths):
         logger.info(f'Processing {i + 1}/{len(paths)}: {path}')
         try:
+            if path.match('*.cbz'):
+                logger.info(f'Extracting {path}')
+                with zipfile.ZipFile(path, 'r') as zip_ref:
+                    zip_ref.extractall(path.with_suffix(''))
+                path = path.with_suffix('')
             ovg.process_dir(path, as_one_file=as_one_file)
         except Exception:
             logger.exception(f'Error while processing {path}')
