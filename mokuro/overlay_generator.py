@@ -72,6 +72,8 @@ class OverlayGenerator:
 
         img_paths = [p for p in sorted(path.glob('**/*')) if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
 
+        self.sort_by_folder_names(img_paths)
+
         page_htmls = []
 
         for img_path in tqdm(img_paths, desc='Processing pages...'):
@@ -93,6 +95,19 @@ class OverlayGenerator:
             title = f'{path.name} | mokuro'
         index_html = self.get_index_html(page_htmls, title, as_one_file, is_demo)
         (out_dir / (path.name + '.html')).write_text(index_html, encoding='utf-8')
+
+    # Sort by folder, then by file name.  This prevents "folder 10" from appearing before "folder 2".
+    # This is very basic sorting, and would be better served by utilzing a natural sort library.
+    @staticmethod
+    def sort_by_folder_names(img_paths):
+        sort_width = 1
+        for img_path in img_paths:
+            parent_folder_width = len(str(img_paths[0].parent.name))
+            if sort_width < parent_folder_width:
+                sort_width = parent_folder_width
+        sort_width += 1
+        sort_format = '{0:0>' + str(sort_width) + '}'
+        img_paths.sort(key=lambda x: (sort_format.format(str(x.parent.name)).lower(), sort_format.format(str(x.name)).lower()))
 
     def get_index_html(self, page_htmls, title, as_one_file=True, is_demo=False):
         doc, tag, text = Doc().tagtext()
