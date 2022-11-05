@@ -4,9 +4,12 @@ manga-ocr
 numpy
 opencv-python
 Pillow
+pyclipper
 pytest
 requests
 scipy
 sentencepiece
+shapely
+torchsummary
 tqdm
 yattag
