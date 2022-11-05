@@ -4,6 +4,7 @@ manga-ocr
 numpy
 opencv-python
 Pillow
+pytest
 requests
 scipy
 tqdm
