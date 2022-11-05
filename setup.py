@@ -29,6 +29,7 @@ setup(
         "pyclipper",
         "requests",
         "scipy",
+        "sentencepiece",
         "shapely",
         "torch>=1.7.0",
         "torchsummary",

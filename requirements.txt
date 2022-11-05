@@ -7,5 +7,6 @@ Pillow
 pytest
 requests
 scipy
+sentencepiece
 tqdm
 yattag
