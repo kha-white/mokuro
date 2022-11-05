@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: mokuro
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v3
