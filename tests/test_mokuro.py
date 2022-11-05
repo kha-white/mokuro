@@ -15,7 +15,7 @@ def test_mokuro(tmp_path):
     logger.info(f'volumes path: {volumes_path}')
 
     shutil.copytree(TEST_DATA_ROOT / 'volumes/vol1', volumes_path / 'vol1')
-    run(parent_dir=volumes_path, disable_confirmation=True)
+    run(parent_dir=volumes_path, force_cpu=True, disable_confirmation=True)
 
     json_paths = sorted((volumes_path / '_ocr/vol1').iterdir())
     expected_json_paths = sorted((TEST_DATA_ROOT / 'volumes/_ocr/vol1').iterdir())
