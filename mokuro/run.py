@@ -2,6 +2,7 @@ from pathlib import Path
 
 import fire
 from loguru import logger
+from natsort import natsorted
 
 from mokuro import OverlayGenerator
 
@@ -23,6 +24,8 @@ def run(*paths,
     if len(paths) == 0:
         logger.error('Found no paths to process. Did you set the paths correctly?')
         return
+
+    paths = natsorted(paths)
 
     print(f'\nPaths to process:\n')
     for p in paths:

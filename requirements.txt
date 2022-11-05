@@ -1,6 +1,7 @@
 fire
 loguru
 manga-ocr
+natsort
 numpy
 opencv-python
 Pillow

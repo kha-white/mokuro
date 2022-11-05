@@ -23,6 +23,7 @@ setup(
         "fire",
         "loguru",
         "manga-ocr>=0.1.7",
+        "natsort",
         "numpy",
         "opencv-python>=4.1.2",
         "Pillow>=7.1.2",
