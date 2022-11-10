@@ -19,6 +19,7 @@ let defaultState = {
     fontSize: "auto",
     eInkMode: false,
     defaultZoomMode: "fit to screen",
+    toggleOCRTextBoxes: false,
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -49,6 +50,7 @@ function updateUI() {
     document.getElementById('menuFontSize').value = state.fontSize;
     document.getElementById('menuEInkMode').checked = state.eInkMode;
     document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
+    document.getElementById('menuToggleOCRTextBoxes').checked = state.toggleOCRTextBoxes;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -119,6 +121,39 @@ function updateProperties() {
         r.style.setProperty('--textBoxDisplay', 'none');
     }
 
+    if (state.toggleOCRTextBoxes) {
+        // Force a hovered state on the clicked .textBox, until the .textBox is clicked off of.
+        let textBoxes = document.querySelectorAll('.textBox');
+        for (let i = 0; i < textBoxes.length; i++) {
+            textBoxes[i].addEventListener('click', function (e) {
+                if (state.toggleOCRTextBoxes) {
+                    if (this.classList.contains('hovered')) {
+                        this.classList.remove('hovered');
+                    } else {
+                        this.classList.add('hovered');
+                        // Remove hovered state from all other .textBoxes
+                        for (let j = 0; j < textBoxes.length; j++) {
+                            if (i !== j) {
+                                textBoxes[j].classList.remove('hovered');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // When clicking off of a .textBox, remove the hovered state.
+        document.addEventListener('click', function (e) {
+            if (state.toggleOCRTextBoxes) {
+                if (e.target.closest('.textBox') === null) {
+                    let textBoxes = document.querySelectorAll('.textBox');
+                    for (let i = 0; i < textBoxes.length; i++) {
+                        textBoxes[i].classList.remove('hovered');
+                    }
+                }
+            }
+        });
+    } 
+    
     if (state.fontSize === 'auto') {
         pc.classList.remove('textBoxFontSizeOverride');
     } else {
@@ -181,6 +216,12 @@ document.getElementById('menuEInkMode').addEventListener('click', function () {
     if (state.eInkMode) {
         eInkRefresh();
     }
+}, false);
+
+document.getElementById('menuToggleOCRTextBoxes').addEventListener('click', function () {
+    state.toggleOCRTextBoxes = document.getElementById("menuToggleOCRTextBoxes").checked;
+    saveState();
+    updateProperties();
 }, false);
 
 document.getElementById('menuOriginalSize').addEventListener('click', zoomOriginal, false);

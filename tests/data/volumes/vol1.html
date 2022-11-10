@@ -71,6 +71,16 @@ body {
     display: table;
 }
 
+.hovered {
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0);
+    z-index: 999 !important;
+}
+
+.hovered p {
+    display: table;
+}
+
 #pagesContainer {
     display: inline-flex;
     flex-direction: row;
@@ -289,7 +299,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
-</style></head><body><a id="showMenuA" href="#"></a><div id="topMenu"><button id="buttonHideMenu" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(5 5)"><path d="m10.5 10.5-10-10z"/><path d="m10.5.5-10 10"/></g></svg></button><button id="buttonLeftLeft" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(5 6)"><path d="m8.5 8.5-4-4 4-4"/><path d="m4.5 8.5-4-4 4-4"/></g></svg></button><button id="buttonLeft" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 8.5-4-4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(7 6)"/></svg></button><button id="buttonRight" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="m.5 8.5 4-4-4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(9 6)"/></svg></button><button id="buttonRightRight" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(7 6)"><path d="m.5 8.5 4-4-4-4"/><path d="m4.5 8.5 4-4-4-4"/></g></svg></button><input required type="number" id="pageIdxInput" min="1" max="8" value="1" size="3"></input><span id="pageIdxDisplay"></span><span style="color:rgba(255,255,255,0.1);font-size:1px;">。</span><div class="dropdown"><button id="dropbtn" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 6.5h12"/><path d="m4.498 10.5h11.997"/><path d="m4.5 14.5h11.995"/></g></svg></button><div class="dropdown-content"><div class="buttonRow"><button id="menuFitToScreen" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 5.5v-5h-5"/><path d="m16.5.5-6 5.929"/><path d="m5.5 16.5-5 .023v-5.023"/><path d="m6.5 10.5-6 6"/></g></svg></button><button id="menuFitToWidth" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(1 2)"><path d="m.5.5v16.021"/><path d="m18.5.5v16.021"/><path d="m12.507 12.515 4-4-4-4.015"/><path d="m6.507 12.515-4-4 4-4.015"/><path d="m16.5 8.5h-14"/></g></svg></button><button id="menuOriginalSize" class="menuButton">1:1</button><button id="menuFullScreen" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 5.5v-4.978l-5.5.014"/><path d="m16.5.522-6 5.907"/><path d="m11 16.521 5.5.002-.013-5.5"/><path d="m16.5 16.429-6-5.907"/><path d="m.5 5.5v-5h5.5"/><path d="m6.5 6.429-6-5.907"/><path d="m6 16.516-5.5.007v-5.023"/><path d="m6.5 10.5-6 6"/></g></svg></button></div><label class="dropdown-option">on page turn: <select id="menuDefaultZoom"><option value="fit to screen">fit to screen</option><option value="fit to width">fit to width</option><option value="original size">original size</option><option value="keep zoom level">keep zoom level</option></select></label><label class="dropdown-option">right to left<input type="checkbox" id="menuR2l"></input></label><label class="dropdown-option">display two pages <input type="checkbox" id="menuDoublePageView"></input></label><label class="dropdown-option">first page is cover <input type="checkbox" id="menuHasCover"></input></label><label class="dropdown-option">ctrl+mouse to move <input type="checkbox" id="menuCtrlToPan"></input></label><label class="dropdown-option">OCR enabled <input type="checkbox" id="menuDisplayOCR"></input></label><label class="dropdown-option">display boxes outlines <input type="checkbox" id="menuTextBoxBorders"></input></label><label class="dropdown-option">editable text <input type="checkbox" id="menuEditableText"></input></label><label class="dropdown-option">font size: <select id="menuFontSize"><option value="auto">auto</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="32">32</option><option value="40">40</option><option value="48">48</option><option value="60">60</option></select></label><label class="dropdown-option">e-ink mode <input type="checkbox" id="menuEInkMode"></input></label><a href="#" class="dropdown-option" id="menuReset">reset settings</a><a href="#" class="dropdown-option" id="menuAbout">about/help</a></div></div></div><div id="dimOverlay"></div><div id="popupAbout" class="popup">
+</style></head><body><a id="showMenuA" href="#"></a><div id="topMenu"><button id="buttonHideMenu" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(5 5)"><path d="m10.5 10.5-10-10z"/><path d="m10.5.5-10 10"/></g></svg></button><button id="buttonLeftLeft" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(5 6)"><path d="m8.5 8.5-4-4 4-4"/><path d="m4.5 8.5-4-4 4-4"/></g></svg></button><button id="buttonLeft" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 8.5-4-4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(7 6)"/></svg></button><button id="buttonRight" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="m.5 8.5 4-4-4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(9 6)"/></svg></button><button id="buttonRightRight" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(7 6)"><path d="m.5 8.5 4-4-4-4"/><path d="m4.5 8.5 4-4-4-4"/></g></svg></button><input required type="number" id="pageIdxInput" min="1" max="8" value="1" size="3"></input><span id="pageIdxDisplay"></span><span style="color:rgba(255,255,255,0.1);font-size:1px;">。</span><div class="dropdown"><button id="dropbtn" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 6.5h12"/><path d="m4.498 10.5h11.997"/><path d="m4.5 14.5h11.995"/></g></svg></button><div class="dropdown-content"><div class="buttonRow"><button id="menuFitToScreen" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 5.5v-5h-5"/><path d="m16.5.5-6 5.929"/><path d="m5.5 16.5-5 .023v-5.023"/><path d="m6.5 10.5-6 6"/></g></svg></button><button id="menuFitToWidth" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(1 2)"><path d="m.5.5v16.021"/><path d="m18.5.5v16.021"/><path d="m12.507 12.515 4-4-4-4.015"/><path d="m6.507 12.515-4-4 4-4.015"/><path d="m16.5 8.5h-14"/></g></svg></button><button id="menuOriginalSize" class="menuButton">1:1</button><button id="menuFullScreen" class="menuButton"><svg width="21px" height="21px" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 2)"><path d="m16.5 5.5v-4.978l-5.5.014"/><path d="m16.5.522-6 5.907"/><path d="m11 16.521 5.5.002-.013-5.5"/><path d="m16.5 16.429-6-5.907"/><path d="m.5 5.5v-5h5.5"/><path d="m6.5 6.429-6-5.907"/><path d="m6 16.516-5.5.007v-5.023"/><path d="m6.5 10.5-6 6"/></g></svg></button></div><label class="dropdown-option">on page turn: <select id="menuDefaultZoom"><option value="fit to screen">fit to screen</option><option value="fit to width">fit to width</option><option value="original size">original size</option><option value="keep zoom level">keep zoom level</option></select></label><label class="dropdown-option">right to left<input type="checkbox" id="menuR2l"></input></label><label class="dropdown-option">display two pages <input type="checkbox" id="menuDoublePageView"></input></label><label class="dropdown-option">first page is cover <input type="checkbox" id="menuHasCover"></input></label><label class="dropdown-option">ctrl+mouse to move <input type="checkbox" id="menuCtrlToPan"></input></label><label class="dropdown-option">OCR enabled <input type="checkbox" id="menuDisplayOCR"></input></label><label class="dropdown-option">display boxes outlines <input type="checkbox" id="menuTextBoxBorders"></input></label><label class="dropdown-option">editable text <input type="checkbox" id="menuEditableText"></input></label><label class="dropdown-option">font size: <select id="menuFontSize"><option value="auto">auto</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="32">32</option><option value="40">40</option><option value="48">48</option><option value="60">60</option></select></label><label class="dropdown-option">e-ink mode <input type="checkbox" id="menuEInkMode"></input></label><label class="dropdown-option">toggle OCR text boxes on click<input type="checkbox" id="menuToggleOCRTextBoxes"></input></label><a href="#" class="dropdown-option" id="menuReset">reset settings</a><a href="#" class="dropdown-option" id="menuAbout">about/help</a></div></div></div><div id="dimOverlay"></div><div id="popupAbout" class="popup">
 <p>HTML overlay generated with <a href="https://github.com/kha-white/mokuro" target="_blank">mokuro</a> version 0.1.4</p>
 <p>Instructions:</p>
 <ul>
@@ -325,6 +335,7 @@ let defaultState = {
     fontSize: "auto",
     eInkMode: false,
     defaultZoomMode: "fit to screen",
+    toggleOCRTextBoxes: false,
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -355,6 +366,7 @@ function updateUI() {
     document.getElementById('menuFontSize').value = state.fontSize;
     document.getElementById('menuEInkMode').checked = state.eInkMode;
     document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
+    document.getElementById('menuToggleOCRTextBoxes').checked = state.toggleOCRTextBoxes;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -425,6 +437,38 @@ function updateProperties() {
         r.style.setProperty('--textBoxDisplay', 'none');
     }
 
+    if (state.toggleOCRTextBoxes) {
+        // Force a hovered state on the clicked .textBox, until the .textBox is clicked off of.
+        let textBoxes = document.querySelectorAll('.textBox');
+        for (let i = 0; i < textBoxes.length; i++) {
+            textBoxes[i].addEventListener('click', function (e) {
+                if (state.toggleOCRTextBoxes) {
+                    if (this.classList.contains('hovered')) {
+                        this.classList.remove('hovered');
+                    } else {
+                        this.classList.add('hovered');
+                        // Remove hovered state from all other .textBoxes
+                        for (let j = 0; j < textBoxes.length; j++) {
+                            if (i !== j) {
+                                textBoxes[j].classList.remove('hovered');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // When clicking off of a .textBox, remove the hovered state.
+        document.addEventListener('click', function (e) {
+            if (state.toggleOCRTextBoxes) {
+                if (e.target.closest('.textBox') === null) {
+                    let textBoxes = document.querySelectorAll('.textBox');
+                    for (let i = 0; i < textBoxes.length; i++) {
+                        textBoxes[i].classList.remove('hovered');
+                    }
+                }
+            }
+        });
+    } 
     if (state.fontSize === 'auto') {
         pc.classList.remove('textBoxFontSizeOverride');
     } else {
@@ -487,6 +531,12 @@ document.getElementById('menuEInkMode').addEventListener('click', function () {
     if (state.eInkMode) {
         eInkRefresh();
     }
+}, false);
+
+document.getElementById('menuToggleOCRTextBoxes').addEventListener('click', function () {
+    state.toggleOCRTextBoxes = document.getElementById("menuToggleOCRTextBoxes").checked;
+    saveState();
+    updateProperties();
 }, false);
 
 document.getElementById('menuOriginalSize').addEventListener('click', zoomOriginal, false);
