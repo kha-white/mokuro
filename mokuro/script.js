@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     updatePage(state.page_idx);
+    initTextBoxes();
 
     if (showAboutOnStart) {
         document.getElementById('popupAbout').style.display = 'block';
@@ -104,6 +105,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function disablePanzoomOnElement(element) {
     return document.getElementById('topMenu').contains(element);
+}
+
+function initTextBoxes() {
+// Add event listeners for toggling ocr text boxes with the toggleOCRTextBoxes option.
+    let textBoxes = document.querySelectorAll('.textBox');
+    for (let i = 0; i < textBoxes.length; i++) {
+        textBoxes[i].addEventListener('click', function (e) {
+            if (state.toggleOCRTextBoxes) {
+                this.classList.add('hovered');
+                // Remove hovered state from all other .textBoxes
+                for (let j = 0; j < textBoxes.length; j++) {
+                    if (i !== j) {
+                        textBoxes[j].classList.remove('hovered');
+                    }
+                }
+            }
+        });
+    }
+// When clicking off of a .textBox, remove the hovered state.
+    document.addEventListener('click', function (e) {
+        if (state.toggleOCRTextBoxes) {
+            if (e.target.closest('.textBox') === null) {
+                let textBoxes = document.querySelectorAll('.textBox');
+                for (let i = 0; i < textBoxes.length; i++) {
+                    textBoxes[i].classList.remove('hovered');
+                }
+            }
+        }
+    });
 }
 
 function updateProperties() {
@@ -121,7 +151,7 @@ function updateProperties() {
         r.style.setProperty('--textBoxDisplay', 'none');
     }
 
-    
+
     if (state.fontSize === 'auto') {
         pc.classList.remove('textBoxFontSizeOverride');
     } else {
@@ -135,33 +165,6 @@ function updateProperties() {
         document.getElementById('topMenu').classList.remove("notransition");
     }
 }
-
-// Add event listeners for toggling ocr text boxes with the toggleOCRTextBoxes option.
-let textBoxes = document.querySelectorAll('.textBox');
-for (let i = 0; i < textBoxes.length; i++) {
-    textBoxes[i].addEventListener('click', function (e) {
-        if (state.toggleOCRTextBoxes) {
-            this.classList.add('hovered');
-            // Remove hovered state from all other .textBoxes
-            for (let j = 0; j < textBoxes.length; j++) {
-                if (i !== j) {
-                    textBoxes[j].classList.remove('hovered');
-                }
-            }
-        }
-    });
-}
-// When clicking off of a .textBox, remove the hovered state.
-document.addEventListener('click', function (e) {
-    if (state.toggleOCRTextBoxes) {
-        if (e.target.closest('.textBox') === null) {
-            let textBoxes = document.querySelectorAll('.textBox');
-            for (let i = 0; i < textBoxes.length; i++) {
-                textBoxes[i].classList.remove('hovered');
-            }
-        }
-    }
-});
 
 document.getElementById('menuR2l').addEventListener('click', function () {
     state.r2l = document.getElementById("menuR2l").checked;
