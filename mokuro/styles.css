@@ -71,6 +71,16 @@ body {
     display: table;
 }
 
+.hovered {
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0);
+    z-index: 999 !important;
+}
+
+.hovered p {
+    display: table;
+}
+
 #pagesContainer {
     display: inline-flex;
     flex-direction: row;
