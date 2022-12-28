@@ -2,7 +2,7 @@ fire
 loguru
 manga-ocr
 natsort
-numpy
+numpy==1.23.0
 opencv-python
 Pillow
 pyclipper
