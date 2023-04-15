@@ -333,6 +333,8 @@ document
 document
   .getElementById('rightAScreen')
   .addEventListener('click', inputRight, false);
+document.getElementById('forward').addEventListener('click', nextPage, false);
+document.getElementById('back').addEventListener('click', prevPage, false);
 
 document.addEventListener('keydown', function onEvent(e) {
   switch (e.key) {
