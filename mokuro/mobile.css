@@ -1,0 +1,335 @@
+:root {
+  --textBoxDisplay: initial;
+  --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
+  --textBoxFontSize: 1em;
+
+  --colorBackground: #000000;
+  --color1: #f9f9fb;
+  --color2: #e2e2e9;
+  --color3: #071013;
+  --color3a: rgba(7, 16, 19, 0.3);
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  background-color: var(--colorBackground);
+}
+
+.notransition {
+  transition: none !important;
+}
+
+#topMenu *,
+.popup * {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.pageContainer * {
+  font-family: 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
+}
+
+.pageContainer {
+  position: relative;
+  margin: 0 auto;
+}
+
+.pageContainer:hover .textBox {
+  border: 2px solid var(--textBoxBorderHoverColor);
+}
+
+.textBox {
+  display: var(--textBoxDisplay);
+  position: absolute;
+  padding: 0;
+  line-height: 1.1em;
+  font-size: 16pt;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.textBox:hover {
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0);
+  z-index: 999 !important;
+}
+
+.textBox p {
+  display: none;
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+  line-height: 1.1em;
+  margin: 0;
+  background-color: rgb(255, 255, 255);
+}
+
+.textBoxFontSizeOverride .textBox p {
+  font-size: var(--textBoxFontSize) !important;
+}
+
+.textBox:hover p {
+  display: table;
+}
+
+.hovered {
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0);
+  z-index: 999 !important;
+}
+
+.hovered p {
+  display: table;
+}
+
+#pagesContainer {
+  /* display: inline-flex; */
+  flex-direction: row;
+  /* overflow: visible; */
+}
+
+#pagesContainer.inverted {
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
+}
+
+.page {
+  display: none;
+  /* float: left; */
+  margin: 0 -1px 0 0;
+}
+
+#leftAPage,
+#rightAPage,
+#leftAScreen,
+#rightAScreen {
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+#leftAPage,
+#rightAPage {
+  /*display: inline-block;*/
+  display: none;
+  position: absolute;
+  top: -5%;
+  width: 10%;
+  height: 110%;
+}
+
+#leftAPage {
+  left: -7%;
+}
+
+#rightAPage {
+  right: -7%;
+}
+
+#leftAScreen,
+#rightAScreen {
+  display: inline-block;
+  position: fixed;
+  top: 10vh;
+  width: 5vw;
+  height: 90vh;
+}
+
+#leftAScreen {
+  left: 0;
+}
+
+#rightAScreen {
+  right: 0;
+}
+
+#showMenuA {
+  display: inline-block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 3em;
+  height: 3em;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+#topMenu {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  margin: 5px;
+  background: var(--color1);
+  border-radius: 3px;
+  box-shadow: 0px 0px 8px 0px var(--color3a);
+  transition: all 0.5s ease-out, max-width 0s ease-in;
+  visibility: visible;
+  opacity: 1;
+  max-width: 100vw;
+  white-space: nowrap;
+}
+
+#topMenu.hidden {
+  max-width: 2.5em;
+  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 1s ease-in, max-width 0.5s ease-out;
+}
+
+#topMenu * {
+  font-size: 1em;
+  vertical-align: middle;
+}
+
+#topMenu input {
+  height: 1.4em;
+  margin: 0 6px;
+}
+
+#pageIdxDisplay {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.menuButton {
+  background-color: rgba(0, 0, 0, 0);
+  color: var(--color3);
+  border: none;
+  width: 2.5em;
+  height: 2.2em;
+  border-radius: 3px;
+}
+
+.menuButton svg {
+  max-height: 1.5em;
+}
+
+.menuButton:hover {
+  background-color: var(--color2);
+}
+
+.dropdown:hover #dropbtn {
+  background-color: var(--color2);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: var(--color1);
+  box-shadow: 0px 0px 8px 0px var(--color3a);
+  z-index: 1000;
+  border-radius: 3px;
+  max-height: 90vh;
+  overflow: hidden;
+  /* overflow-y: auto; */
+}
+
+.dropdown-content .buttonRow {
+  display: flex;
+}
+
+.dropdown-content .menuButton {
+  flex: 1 1 auto;
+  align-self: center;
+}
+
+.dropdown-content .dropdown-option {
+  color: var(--color3);
+  padding: 10px 10px;
+  text-decoration: none;
+  white-space: nowrap;
+  display: block;
+  border-radius: 3px;
+}
+
+.dropdown-content .dropdown-option:hover {
+  background-color: var(--color2);
+}
+
+.dropdown-content .dropdown-option [type='checkbox'] {
+  vertical-align: middle;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+#dimOverlay {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  width: min(720px, 80vw);
+  height: min(480px, 80vh);
+  margin-left: max(-360px, -40vw);
+  margin-top: max(-240px, -40vh);
+  z-index: 1002;
+  background-color: var(--color1);
+  color: var(--color3);
+  box-shadow: 0px 0px 10px 4px var(--color3a);
+  border-radius: 3px;
+  /* overflow: auto; */
+  padding: 20px;
+  box-sizing: border-box;
+  line-height: 1.5em;
+}
+
+/*hide arrows from number input*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.btn {
+  bottom: 5px;
+  position: fixed;
+  background-color: #1513252d; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 150px;
+}
+
+#forward {
+  right: 5px;
+}
+
+#back {
+  left: 5px;
+}
+
+#page-num {
+  left: 50%;
+  bottom: 10px;
+  position: fixed;
+  color: rgba(255, 255, 255, 0.342);
+  font-size: x-large;
+  font-family: 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
+  transform: translate(-50%, 0);
+}
