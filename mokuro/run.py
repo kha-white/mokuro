@@ -13,6 +13,7 @@ def run(*paths,
         force_cpu=False,
         as_one_file=True,
         disable_confirmation=False,
+        mobile=False
         ):
     paths = [Path(p).expanduser().absolute() for p in paths]
 
@@ -42,7 +43,7 @@ def run(*paths,
     for i, path in enumerate(paths):
         logger.info(f'Processing {i + 1}/{len(paths)}: {path}')
         try:
-            ovg.process_dir(path, as_one_file=as_one_file)
+            ovg.process_dir(path, as_one_file=as_one_file, mobile=mobile)
         except Exception:
             logger.exception(f'Error while processing {path}')
         else:

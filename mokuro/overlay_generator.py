@@ -15,6 +15,9 @@ from mokuro.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
+MOBILE_SCRIPT_PATH = Path(__file__).parent / 'mobile.js'
+MOBILE_STYLES_PATH = Path(__file__).parent / 'mobile.css'
+
 PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
 ICONS_PATH = ASSETS_PATH / 'icons'
 
@@ -55,7 +58,7 @@ class OverlayGenerator:
         if self.mpocr is None:
             self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, **self.kwargs)
 
-    def process_dir(self, path, as_one_file=True, is_demo=False):
+    def process_dir(self, path, as_one_file=True, mobile=False, is_demo=False):
         path = Path(path).expanduser().absolute()
         assert path.is_dir(), f'{path} must be a directory'
         if path.stem == '_ocr':
@@ -67,9 +70,13 @@ class OverlayGenerator:
         results_dir.mkdir(parents=True, exist_ok=True)
 
         if not as_one_file:
-            shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
-            shutil.copy(STYLES_PATH, out_dir / 'styles.css')
-            shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
+            if mobile:
+                shutil.copy(MOBILE_SCRIPT_PATH, out_dir / 'mobile.js')
+                shutil.copy(MOBILE_STYLES_PATH, out_dir / 'mobile.css')
+            else:
+                shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
+                shutil.copy(STYLES_PATH, out_dir / 'styles.css')
+                shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
 
         img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
         img_paths = natsorted(img_paths)
@@ -93,17 +100,19 @@ class OverlayGenerator:
             title = f'mokuro {__version__} demo'
         else:
             title = f'{path.name} | mokuro'
-        index_html = self.get_index_html(page_htmls, title, as_one_file, is_demo)
+        index_html = self.get_index_html(page_htmls, title, as_one_file, mobile, is_demo, )
         (out_dir / (path.name + '.html')).write_text(index_html, encoding='utf-8')
 
-    def get_index_html(self, page_htmls, title, as_one_file=True, is_demo=False):
+    def get_index_html(self, page_htmls, title, as_one_file=True, mobile=False, is_demo=False, ):
         doc, tag, text = Doc().tagtext()
 
         with tag('html'):
             doc.asis('<meta content="text/html;charset=utf-8" http-equiv="Content-Type">')
             doc.asis('<meta content="utf-8" http-equiv="encoding">')
-            doc.asis(
-                '<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no"/>')
+            if mobile:
+                doc.asis('<meta name="viewport" content="width=device-width, initial-scale=1"/>')
+            else:
+                doc.asis('<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no"/>')
 
             with tag('head'):
                 with tag('title'):
@@ -111,10 +120,17 @@ class OverlayGenerator:
 
                 if as_one_file:
                     with tag('style'):
-                        doc.asis(STYLES_PATH.read_text())
+                        if mobile:
+                            doc.asis(MOBILE_STYLES_PATH.read_text())
+                        else:
+                            doc.asis(STYLES_PATH.read_text())
                 else:
-                    with tag('link', rel='stylesheet', href='styles.css'):
-                        pass
+                    if mobile:
+                        with tag('link', rel='stylesheet', href='mobile.css'):
+                            pass
+                    else:
+                        with tag('link', rel='stylesheet', href='styles.css'):
+                            pass
 
             with tag('body'):
                 self.top_menu(doc, tag, text, len(page_htmls))
@@ -127,6 +143,15 @@ class OverlayGenerator:
                         doc.asis(ABOUT_DEMO)
                     else:
                         doc.asis(ABOUT)
+
+                with tag('div', id='page-num'):
+                    pass
+
+                with tag('button', id='back', klass='btn'):
+                    pass
+
+                with tag('button', id='forward', klass='btn'):
+                    pass
 
                 with tag('a', id='leftAScreen', href='#'):
                     pass
@@ -146,17 +171,25 @@ class OverlayGenerator:
                         pass
 
                 if as_one_file:
-                    with tag('script'):
-                        doc.asis(PANZOOM_PATH.read_text())
-
-                    with tag('script'):
-                        doc.asis(SCRIPT_PATH.read_text())
+                    if mobile:
+                        with tag('script'):
+                            doc.asis(MOBILE_SCRIPT_PATH.read_text())
+                    else:
+                        with tag('script'):
+                            doc.asis(PANZOOM_PATH.read_text())
+                        with tag('script'):
+                            doc.asis(SCRIPT_PATH.read_text())
                 else:
-                    with tag('script', src='panzoom.min.js'):
-                        pass
+                    if not mobile:
+                        with tag('script', src='panzoom.min.js'):
+                            pass
 
-                    with tag('script', src='script.js'):
-                        pass
+                    if mobile :
+                        with tag('script', src='mobile.js'):
+                            pass
+                    else:
+                        with tag('script', src='script.js'):
+                            pass
 
                     if is_demo:
                         with tag('script'):
