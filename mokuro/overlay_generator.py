@@ -280,7 +280,8 @@ class OverlayGenerator:
                     ])
 
                 option_toggle('menuR2l', 'right to left')
-                option_toggle('menuDoublePageView', 'display two pages ')
+                if not mobile:
+                    option_toggle('menuDoublePageView', 'display two pages ')
                 option_toggle('menuHasCover', 'first page is cover ')
                 if not mobile:
                     option_toggle('menuCtrlToPan', 'ctrl+mouse to move ')

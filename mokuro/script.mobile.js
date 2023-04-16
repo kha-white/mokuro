@@ -57,7 +57,6 @@ function loadState() {
 
 function updateUI() {
   document.getElementById('menuR2l').checked = state.r2l;
-  document.getElementById('menuDoublePageView').checked = !state.singlePageView;
   document.getElementById('menuHasCover').checked = state.hasCover;
   document.getElementById('menuTextBoxBorders').checked = state.textBoxBorders;
   document.getElementById('menuEditableText').checked = state.editableText;
@@ -152,17 +151,6 @@ document.getElementById('menuR2l').addEventListener(
   'click',
   function () {
     state.r2l = document.getElementById('menuR2l').checked;
-    saveState();
-    updatePage(state.page_idx);
-  },
-  false
-);
-
-document.getElementById('menuDoublePageView').addEventListener(
-  'click',
-  function () {
-    state.singlePageView =
-      !document.getElementById('menuDoublePageView').checked;
     saveState();
     updatePage(state.page_idx);
   },
@@ -319,8 +307,8 @@ document
 document
   .getElementById('rightAScreen')
   .addEventListener('click', inputRight, false);
-document.getElementById('forward').addEventListener('click', nextPage, false);
-document.getElementById('back').addEventListener('click', prevPage, false);
+document.getElementById('forward').addEventListener('click', inputRight, false);
+document.getElementById('back').addEventListener('click', inputLeft, false);
 
 document.addEventListener('keydown', function onEvent(e) {
   switch (e.key) {
