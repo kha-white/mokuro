@@ -10,10 +10,11 @@ https://user-images.githubusercontent.com/22717958/164993274-3e8d1650-9be3-457d-
 
 mokuro is aimed towards Japanese learners, who want to read manga in Japanese with a pop-up dictionary like [Yomichan](https://github.com/FooSoft/yomichan).
 It works like this:
+
 1. Perform text detection and OCR for each page.
-3. After processing a whole volume, generate a HTML file, which you can open in a browser.
-4. All processing is done offline (before reading). You can transfer the resulting HTML file together with manga images to
-another device (e.g. your mobile phone) and read there.
+2. After processing a whole volume, generate a HTML file, which you can open in a browser.
+3. All processing is done offline (before reading). You can transfer the resulting HTML file together with manga images to
+   another device (e.g. your mobile phone) and read there.
 
 mokuro uses [comic-text-detector](https://github.com/dmMaze/comic-text-detector) for text detection
 and [manga-ocr](https://github.com/kha-white/manga-ocr) for OCR.
@@ -21,6 +22,7 @@ and [manga-ocr](https://github.com/kha-white/manga-ocr) for OCR.
 Try running on your manga in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kha-white/mokuro/blob/master/notebooks/mokuro_demo.ipynb)
 
 See also:
+
 - [Mokuro2Pdf](https://github.com/Kartoffel0/Mokuro2Pdf), cli Ruby script to generate pdf files with selectable text from Mokuro's html overlay
 - [Xelieu's guide](https://rentry.co/lazyXel), a comprehensive guide on setting up a reading and mining workflow with manga-ocr/mokuro (and many other useful tips)
 
@@ -68,6 +70,7 @@ For each volume, a separate HTML file will be generated.
 ## Run on a directory containing multiple volumes
 
 If your directory structure looks somewhat like this:
+
 ```
 manga_title/
 ├─vol1/
@@ -88,9 +91,11 @@ mokuro --parent_dir manga_title/
 --force_cpu - disable GPU
 --as_one_file - generate separate css and js files instead of embedding everything in html
 --disable_confirmation - run without asking for confirmation
+--mobile - also generate a mobile optimised html file
 ```
 
 # Contact
+
 For any inquiries, please feel free to contact me at kha-white@mail.com
 
 # Acknowledgments
