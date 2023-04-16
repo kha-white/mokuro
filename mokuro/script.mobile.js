@@ -72,6 +72,10 @@ function updateUI() {
     state.toggleOCRTextBoxes;
 }
 
+window.addEventListener('resize', () => {
+  fitToScreen();
+});
+
 document.addEventListener(
   'DOMContentLoaded',
   function () {
@@ -518,10 +522,10 @@ function handleTouchEnd(event) {
   if (touchIds.length === 0) {
     const endX = event.changedTouches[0].clientX;
 
-    if (startX - endX > 120) {
-      nextPage();
-    } else if (startX - endX < -120) {
-      prevPage();
+    if (startX - endX > 130) {
+      inputRight();
+    } else if (startX - endX < -130) {
+      inputLeft();
     }
   }
 }

@@ -8,6 +8,7 @@
   --color2: #e2e2e9;
   --color3: #071013;
   --color3a: rgba(7, 16, 19, 0.3);
+  --color4: rgba(255, 255, 255, 0.342);
 }
 
 body {
@@ -305,14 +306,14 @@ input[type='number'] {
 .btn {
   bottom: 5px;
   position: fixed;
-  background-color: #1513252d; /* Green */
+  background-color: var(--colorBackground);
   border: none;
-  color: white;
+  color: var(--color4);
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 32px;
   width: 150px;
 }
 
@@ -326,9 +327,9 @@ input[type='number'] {
 
 #page-num {
   left: 50%;
-  bottom: 10px;
+  bottom: 20px;
   position: fixed;
-  color: rgba(255, 255, 255, 0.342);
+  color: var(--color4);
   font-size: x-large;
   font-family: 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
   transform: translate(-50%, 0);

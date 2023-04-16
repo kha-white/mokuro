@@ -15,8 +15,8 @@ from mokuro.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
-MOBILE_SCRIPT_PATH = Path(__file__).parent / 'mobile.js'
-MOBILE_STYLES_PATH = Path(__file__).parent / 'mobile.css'
+MOBILE_SCRIPT_PATH = Path(__file__).parent / 'script.mobile.js'
+MOBILE_STYLES_PATH = Path(__file__).parent / 'styles.mobile.css'
 
 PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
 ICONS_PATH = ASSETS_PATH / 'icons'
@@ -70,13 +70,12 @@ class OverlayGenerator:
         results_dir.mkdir(parents=True, exist_ok=True)
 
         if not as_one_file:
+            shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
+            shutil.copy(STYLES_PATH, out_dir / 'styles.css')
+            shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
             if mobile:
-                shutil.copy(MOBILE_SCRIPT_PATH, out_dir / 'mobile.js')
-                shutil.copy(MOBILE_STYLES_PATH, out_dir / 'mobile.css')
-            else:
-                shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
-                shutil.copy(STYLES_PATH, out_dir / 'styles.css')
-                shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
+                shutil.copy(MOBILE_SCRIPT_PATH, out_dir / 'script.mobile.js')
+                shutil.copy(MOBILE_STYLES_PATH, out_dir / 'styles.mobile.css')
 
         img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
         img_paths = natsorted(img_paths)
@@ -101,7 +100,11 @@ class OverlayGenerator:
         else:
             title = f'{path.name} | mokuro'
         index_html = self.get_index_html(page_htmls, title, as_one_file, mobile, is_demo, )
+        index_html = self.get_index_html(page_htmls, title, as_one_file, False, is_demo, )
         (out_dir / (path.name + '.html')).write_text(index_html, encoding='utf-8')
+        if mobile:
+            index_html = self.get_index_html(page_htmls, title, as_one_file, mobile, is_demo, )
+            (out_dir / (path.name + '.mobile.html')).write_text(index_html, encoding='utf-8')
 
     def get_index_html(self, page_htmls, title, as_one_file=True, mobile=False, is_demo=False, ):
         doc, tag, text = Doc().tagtext()
@@ -126,7 +129,7 @@ class OverlayGenerator:
                             doc.asis(STYLES_PATH.read_text())
                 else:
                     if mobile:
-                        with tag('link', rel='stylesheet', href='mobile.css'):
+                        with tag('link', rel='stylesheet', href='styles.mobile.css'):
                             pass
                     else:
                         with tag('link', rel='stylesheet', href='styles.css'):
@@ -148,9 +151,11 @@ class OverlayGenerator:
                     pass
 
                 with tag('button', id='back', klass='btn'):
+                    text('<') 
                     pass
 
                 with tag('button', id='forward', klass='btn'):
+                    text('>') 
                     pass
 
                 with tag('a', id='leftAScreen', href='#'):
@@ -185,7 +190,7 @@ class OverlayGenerator:
                             pass
 
                     if mobile :
-                        with tag('script', src='mobile.js'):
+                        with tag('script', src='script.mobile.js'):
                             pass
                     else:
                         with tag('script', src='script.js'):
