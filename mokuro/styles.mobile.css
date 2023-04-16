@@ -327,10 +327,11 @@ input[type='number'] {
 
 #page-num {
   left: 50%;
-  bottom: 20px;
+  bottom: 18px;
   position: fixed;
   color: var(--color4);
   font-size: x-large;
   font-family: 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
   transform: translate(-50%, 0);
+  z-index: 10;
 }
