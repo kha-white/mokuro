@@ -136,7 +136,7 @@ class OverlayGenerator:
                             pass
 
             with tag('body'):
-                self.top_menu(doc, tag, text, len(page_htmls))
+                self.top_menu(doc, tag, text, len(page_htmls), mobile)
 
                 with tag('div', id='dimOverlay'):
                     pass
@@ -203,7 +203,7 @@ class OverlayGenerator:
         html = doc.getvalue()
         return html
 
-    def top_menu(self, doc, tag, text, num_pages):
+    def top_menu(self, doc, tag, text, num_pages, mobile):
         with tag('a', id='showMenuA', href='#'):
             pass
 
@@ -234,9 +234,9 @@ class OverlayGenerator:
             with tag('span', style='color:rgba(255,255,255,0.1);font-size:1px;'):
                 text('。')
 
-            self.dropdown_menu(doc, tag, text)
+            self.dropdown_menu(doc, tag, text, mobile)
 
-    def dropdown_menu(self, doc, tag, text):
+    def dropdown_menu(self, doc, tag, text, mobile):
         def option_click(id_, text_content):
             with tag('a', href='#', klass='dropdown-option', id=id_):
                 text(text_content)
@@ -261,26 +261,29 @@ class OverlayGenerator:
                 doc.asis(self.get_icon('menu-hamburger-svgrepo-com'))
 
             with tag('div', klass='dropdown-content'):
-                with tag('div', klass='buttonRow'):
-                    with tag('button', id='menuFitToScreen', klass='menuButton'):
-                        doc.asis(self.get_icon('expand-svgrepo-com'))
-                    with tag('button', id='menuFitToWidth', klass='menuButton'):
-                        doc.asis(self.get_icon('expand-width-svgrepo-com'))
-                    with tag('button', id='menuOriginalSize', klass='menuButton'):
-                        text('1:1')
-                    with tag('button', id='menuFullScreen', klass='menuButton'):
-                        doc.asis(self.get_icon('fullscreen-svgrepo-com'))
+                if not mobile:
+                    with tag('div', klass='buttonRow'):
+                        with tag('button', id='menuFitToScreen', klass='menuButton'):
+                            doc.asis(self.get_icon('expand-svgrepo-com'))
+                        with tag('button', id='menuFitToWidth', klass='menuButton'):
+                            doc.asis(self.get_icon('expand-width-svgrepo-com'))
+                        with tag('button', id='menuOriginalSize', klass='menuButton'):
+                            text('1:1')
+                        with tag('button', id='menuFullScreen', klass='menuButton'):
+                            doc.asis(self.get_icon('fullscreen-svgrepo-com'))
 
-                option_select('menuDefaultZoom', 'on page turn: ', [
-                    'fit to screen',
-                    'fit to width',
-                    'original size',
-                    'keep zoom level',
-                ])
+                    option_select('menuDefaultZoom', 'on page turn: ', [
+                        'fit to screen',
+                        'fit to width',
+                        'original size',
+                        'keep zoom level',
+                    ])
+
                 option_toggle('menuR2l', 'right to left')
                 option_toggle('menuDoublePageView', 'display two pages ')
                 option_toggle('menuHasCover', 'first page is cover ')
-                option_toggle('menuCtrlToPan', 'ctrl+mouse to move ')
+                if not mobile:
+                    option_toggle('menuCtrlToPan', 'ctrl+mouse to move ')
                 option_toggle('menuDisplayOCR', 'OCR enabled ')
                 option_toggle('menuTextBoxBorders', 'display boxes outlines ')
                 option_toggle('menuEditableText', 'editable text ')

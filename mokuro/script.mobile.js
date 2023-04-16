@@ -11,13 +11,11 @@ let defaultState = {
   hasCover: false,
   r2l: false,
   singlePageView: true,
-  ctrlToPan: false,
   textBoxBorders: false,
   editableText: false,
   displayOCR: true,
   fontSize: 'auto',
   eInkMode: false,
-  defaultZoomMode: 'fit to screen',
   toggleOCRTextBoxes: false,
 };
 
@@ -59,7 +57,6 @@ function loadState() {
 
 function updateUI() {
   document.getElementById('menuR2l').checked = state.r2l;
-  document.getElementById('menuCtrlToPan').checked = state.ctrlToPan;
   document.getElementById('menuDoublePageView').checked = !state.singlePageView;
   document.getElementById('menuHasCover').checked = state.hasCover;
   document.getElementById('menuTextBoxBorders').checked = state.textBoxBorders;
@@ -67,7 +64,6 @@ function updateUI() {
   document.getElementById('menuDisplayOCR').checked = state.displayOCR;
   document.getElementById('menuFontSize').value = state.fontSize;
   document.getElementById('menuEInkMode').checked = state.eInkMode;
-  document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
 }
@@ -158,15 +154,6 @@ document.getElementById('menuR2l').addEventListener(
     state.r2l = document.getElementById('menuR2l').checked;
     saveState();
     updatePage(state.page_idx);
-  },
-  false
-);
-
-document.getElementById('menuCtrlToPan').addEventListener(
-  'click',
-  function () {
-    state.ctrlToPan = document.getElementById('menuCtrlToPan').checked;
-    saveState();
   },
   false
 );
@@ -282,11 +269,6 @@ document.getElementById('menuFontSize').addEventListener('change', (e) => {
   state.fontSize = e.target.value;
   saveState();
   updateProperties();
-});
-
-document.getElementById('menuDefaultZoom').addEventListener('change', (e) => {
-  state.defaultZoomMode = e.target.value;
-  saveState();
 });
 
 document.getElementById('pageIdxInput').addEventListener('change', (e) => {
@@ -476,6 +458,16 @@ function inputRightRight() {
   } else {
     lastPage();
   }
+}
+
+function eInkRefresh() {
+  pc.classList.add('inverted');
+  document.body.style.backgroundColor = 'black';
+  setTimeout(function () {
+    pc.classList.remove('inverted');
+    document.body.style.backgroundColor =
+      r.style.getPropertyValue('--colorBackground');
+  }, 300);
 }
 
 // get the screen dimensions
