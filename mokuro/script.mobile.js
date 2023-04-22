@@ -17,11 +17,13 @@ let defaultState = {
   fontSize: 'auto',
   eInkMode: false,
   toggleOCRTextBoxes: false,
+  swipeThreshold: 50,
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
 
 function fitToScreen() {
+  const viewportmeta = document.querySelector('meta[name=viewport]');
   const page = getPage(state.page_idx);
   const pageContainer = page.querySelector('div');
   const screenWidth = window.innerWidth;
@@ -36,8 +38,18 @@ function fitToScreen() {
   const translateX = (screenWidth - elementWidth * scale) / 2;
   const translateY = (screenHeight - elementHeight * scale) / 2;
 
+  viewportmeta.setAttribute(
+    'content',
+    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0'
+  );
+
   pc.style.transformOrigin = `top left`;
   pc.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+  viewportmeta.setAttribute(
+    'content',
+    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0'
+  );
 }
 
 function saveState() {
@@ -65,6 +77,7 @@ function updateUI() {
   document.getElementById('menuEInkMode').checked = state.eInkMode;
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
+  document.getElementById('menuSwipeThreshold').value = state.swipeThreshold;
 }
 
 window.addEventListener('resize', () => {
@@ -217,6 +230,16 @@ document.getElementById('menuToggleOCRTextBoxes').addEventListener(
     state.toggleOCRTextBoxes = document.getElementById(
       'menuToggleOCRTextBoxes'
     ).checked;
+    saveState();
+    updateProperties();
+  },
+  false
+);
+
+document.getElementById('menuSwipeThreshold').addEventListener(
+  'input',
+  function (event) {
+    state.swipeThreshold = event.target.value;
     saveState();
     updateProperties();
   },
@@ -398,6 +421,8 @@ function updatePage(new_page_idx) {
   if (state.eInkMode) {
     eInkRefresh();
   }
+
+  fitToScreen();
 }
 
 function firstPage() {
@@ -458,7 +483,6 @@ function eInkRefresh() {
   }, 300);
 }
 
-// get the screen dimensions
 const screenWidth =
   window.innerWidth ||
   document.documentElement.clientWidth ||
@@ -468,14 +492,15 @@ const screenHeight =
   document.documentElement.clientHeight ||
   document.body.clientHeight;
 
-// add event listeners for touchstart and touchmove
 document.addEventListener('touchstart', handleTouchStart);
 document.addEventListener('touchend', handleTouchEnd);
+document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchcancel', handleTouchCancel);
 
-// define variables to store touch coordinates
-let startX, startY;
+let startX;
 let touchIds = [];
+const ongoingTouches = [];
+let distance;
 
 function removeTouch(event) {
   for (let i = 0; i < event.changedTouches.length; i++) {
@@ -488,29 +513,57 @@ function removeTouch(event) {
 }
 
 function handleTouchStart(event) {
-  // store the coordinates of the touch
+  distance = 0;
   startX = event.touches[0].clientX;
-  startY = event.touches[0].clientY;
-  for (let i = 0; i < event.changedTouches.length; i++) {
-    const touch = event.changedTouches[i];
-    touchIds.push(touch.identifier);
+
+  const touches = event.changedTouches;
+
+  for (let i = 0; i < touches.length; i++) {
+    ongoingTouches.push(touches[i]);
   }
 }
 
-function handleTouchEnd(event) {
-  removeTouch(event);
-  if (touchIds.length === 0) {
-    const endX = event.changedTouches[0].clientX;
+function ongoingTouchIndexById(idToFind) {
+  for (let i = 0; i < ongoingTouches.length; i++) {
+    const id = ongoingTouches[i].identifier;
 
-    if (startX - endX > 130) {
-      inputRight();
-    } else if (startX - endX < -130) {
-      inputLeft();
+    if (id === idToFind) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function handleTouchMove(event) {
+  const touches = event.changedTouches;
+
+  for (let i = 0; i < touches.length; i++) {
+    const idx = ongoingTouchIndexById(touches[i].identifier);
+    if (idx === 0) {
+      distance = Math.floor(touches[i].clientX - startX);
+    } else {
+      distance = 0;
     }
   }
 }
 
+function handleTouchEnd(event) {
+  const touches = event.changedTouches;
+  const swipeThreshold = Math.abs((state.swipeThreshold / 100) * screenWidth);
+
+  for (let i = 0; i < touches.length; i++) {
+    const idx = ongoingTouchIndexById(touches[i].identifier);
+    if (idx === 0 && touches.length === 1) {
+      if (distance > swipeThreshold) {
+        inputLeft();
+      } else if (distance < swipeThreshold * -1) {
+        inputRight();
+      }
+    }
+  }
+  distance - 0;
+}
+
 function handleTouchCancel(event) {
-  // decrement the number of active touch points
   removeTouch(event);
 }

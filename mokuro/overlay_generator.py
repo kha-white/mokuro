@@ -255,7 +255,12 @@ class OverlayGenerator:
                     for value in values:
                         with tag('option', value=value):
                             text(value)
+        def option_range(id_, text_content, min, max, value):
+                    with tag('label', klass='dropdown-option'):
+                        text(text_content)
 
+                        with tag('input', type='range', min=min, max=max, value=value, id=id_):
+                            pass
         with tag('div', klass='dropdown'):
             with tag('button', id='dropbtn', klass='menuButton'):
                 doc.asis(self.get_icon('menu-hamburger-svgrepo-com'))
@@ -292,6 +297,8 @@ class OverlayGenerator:
                               ['auto', 9, 10, 11, 12, 14, 16, 18, 20, 24, 32, 40, 48, 60])
                 option_toggle('menuEInkMode', 'e-ink mode ')
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
+                if mobile:
+                    option_range('menuSwipeThreshold', 'swipe threshold', '20', '90', '50')
                 option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about/help')
 
