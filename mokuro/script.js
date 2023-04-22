@@ -20,6 +20,7 @@ let defaultState = {
     eInkMode: false,
     defaultZoomMode: "fit to screen",
     toggleOCRTextBoxes: false,
+    backgroundColor: '#C4C3D0',
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -51,6 +52,7 @@ function updateUI() {
     document.getElementById('menuEInkMode').checked = state.eInkMode;
     document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
     document.getElementById('menuToggleOCRTextBoxes').checked = state.toggleOCRTextBoxes;
+    document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -164,6 +166,10 @@ function updateProperties() {
     } else {
         document.getElementById('topMenu').classList.remove("notransition");
     }
+
+    if (state.backgroundColor) {
+        r.style.setProperty('--colorBackground', state.backgroundColor)
+    }
 }
 
 document.getElementById('menuR2l').addEventListener('click', function () {
@@ -221,6 +227,16 @@ document.getElementById('menuToggleOCRTextBoxes').addEventListener('click', func
     saveState();
     updateProperties();
 }, false);
+
+document.getElementById('menuBackgroundColor').addEventListener(
+    'input',
+    function (event) {
+      state.backgroundColor = event.target.value;
+      saveState();
+      updateProperties();
+    },
+    false
+  );
 
 document.getElementById('menuOriginalSize').addEventListener('click', zoomOriginal, false);
 document.getElementById('menuFitToWidth').addEventListener('click', zoomFitToWidth, false);
