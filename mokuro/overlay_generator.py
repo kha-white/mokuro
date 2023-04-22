@@ -69,6 +69,11 @@ class OverlayGenerator:
         results_dir = out_dir / '_ocr' / path.name
         results_dir.mkdir(parents=True, exist_ok=True)
 
+        if mobile:
+            no_media_file_path = path / '.nomedia'
+            no_media_file = open(no_media_file_path, 'w')
+            no_media_file.close()
+
         if not as_one_file:
             shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
