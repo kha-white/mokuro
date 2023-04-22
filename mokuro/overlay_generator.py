@@ -249,7 +249,6 @@ class OverlayGenerator:
         def option_toggle(id_, text_content):
             with tag('label', klass='dropdown-option'):
                 text(text_content)
-
                 with tag('input', type='checkbox', id=id_):
                     pass
 
@@ -263,8 +262,12 @@ class OverlayGenerator:
         def option_range(id_, text_content, min, max, value):
                     with tag('label', klass='dropdown-option'):
                         text(text_content)
-
                         with tag('input', type='range', min=min, max=max, value=value, id=id_):
+                            pass
+        def option_color(id_, text_content, value):
+                    with tag('label', klass='dropdown-option'):
+                        text(text_content)
+                        with tag('input', type='color',  value=value, id=id_):
                             pass
         with tag('div', klass='dropdown'):
             with tag('button', id='dropbtn', klass='menuButton'):
@@ -304,6 +307,10 @@ class OverlayGenerator:
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
                 if mobile:
                     option_range('menuSwipeThreshold', 'swipe threshold', '20', '90', '50')
+                if mobile:
+                    option_color('menuBackgroundColor', 'background color', '#000')
+                else:
+                    option_color('menuBackgroundColor', 'background color', '#C4C3D0')
                 option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about/help')
 

@@ -18,6 +18,7 @@ let defaultState = {
   eInkMode: false,
   toggleOCRTextBoxes: false,
   swipeThreshold: 50,
+  backgroundColor: '#000',
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -78,6 +79,7 @@ function updateUI() {
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
   document.getElementById('menuSwipeThreshold').value = state.swipeThreshold;
+  document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 
 window.addEventListener('resize', () => {
@@ -157,6 +159,10 @@ function updateProperties() {
     document.getElementById('topMenu').classList.add('notransition');
   } else {
     document.getElementById('topMenu').classList.remove('notransition');
+  }
+
+  if (state.backgroundColor) {
+      r.style.setProperty('--colorBackground', state.backgroundColor)
   }
 }
 
@@ -240,6 +246,16 @@ document.getElementById('menuSwipeThreshold').addEventListener(
   'input',
   function (event) {
     state.swipeThreshold = event.target.value;
+    saveState();
+    updateProperties();
+  },
+  false
+);
+
+document.getElementById('menuBackgroundColor').addEventListener(
+  'input',
+  function (event) {
+    state.backgroundColor = event.target.value;
     saveState();
     updateProperties();
   },
