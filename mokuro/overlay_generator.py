@@ -43,6 +43,13 @@ ABOUT_DEMO = ABOUT + """
 <p>うちの猫’ず日記 &copy; がぁさん</p>
 """
 
+MOBILE_ABOUT = f"""
+<p>This is a temporary <a href="https://github.com/ZXY101/mokuro" target="_blank">fork</a> of <a href="https://github.com/kha-white/mokuro" target="_blank">mokuro</a></p>
+<p>The main aim of this fork is to try and improve the mobile viewing experience</p>
+<p><b>This file should only be be viewed on a mobile device since it relies on the browsers default handling for panning & zooming</b></p>
+<p>To navigate, you can use the buttons in the top menu; the new buttons at the bottom of the screen or swipe to navigate.</p>
+<p>Recommended to be used with <a href="https://github.com/lrorpilla/jidoujisho" target="_blank">jidoujisho</a></p>
+"""
 
 class OverlayGenerator:
     def __init__(self,
@@ -150,7 +157,10 @@ class OverlayGenerator:
                     if is_demo:
                         doc.asis(ABOUT_DEMO)
                     else:
-                        doc.asis(ABOUT)
+                        if mobile:
+                            doc.asis(MOBILE_ABOUT)
+                        else:
+                            doc.asis(ABOUT)
 
                 with tag('div', id='page-num'):
                     pass
