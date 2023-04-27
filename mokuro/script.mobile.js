@@ -17,7 +17,7 @@ let defaultState = {
   fontSize: 'auto',
   eInkMode: false,
   toggleOCRTextBoxes: false,
-  swipeThreshold: 50,
+  swipeThreshold: 25,
   backgroundColor: '#000',
 };
 
