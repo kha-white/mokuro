@@ -163,22 +163,23 @@ class OverlayGenerator:
                     text('>') 
                     pass
 
-                with tag('a', id='leftAScreen', href='#'):
-                    pass
-
-                with tag('a', id='rightAScreen', href='#'):
-                    pass
+                if not mobile:
+                    with tag('a', id='leftAScreen', href='#'):
+                        pass
+                    
+                    with tag('a', id='rightAScreen', href='#'):
+                        pass
 
                 with tag('div', id='pagesContainer'):
                     for i, page_html in enumerate(page_htmls):
                         with tag('div', id=f'page{i}', klass='page'):
                             doc.asis(page_html)
+                    if not mobile:
+                        with tag('a', id='leftAPage', href='#'):
+                            pass
 
-                    with tag('a', id='leftAPage', href='#'):
-                        pass
-
-                    with tag('a', id='rightAPage', href='#'):
-                        pass
+                        with tag('a', id='rightAPage', href='#'):
+                            pass
 
                 if as_one_file:
                     if mobile:

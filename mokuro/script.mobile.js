@@ -334,18 +334,6 @@ document
 document
   .getElementById('buttonRightRight')
   .addEventListener('click', inputRightRight, false);
-document
-  .getElementById('leftAPage')
-  .addEventListener('click', inputLeft, false);
-document
-  .getElementById('leftAScreen')
-  .addEventListener('click', inputLeft, false);
-document
-  .getElementById('rightAPage')
-  .addEventListener('click', inputRight, false);
-document
-  .getElementById('rightAScreen')
-  .addEventListener('click', inputRight, false);
 document.getElementById('forward').addEventListener('click', inputRight, false);
 document.getElementById('back').addEventListener('click', inputLeft, false);
 

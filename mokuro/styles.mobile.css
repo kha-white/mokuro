@@ -99,49 +99,6 @@ body {
   margin: 0 -1px 0 0;
 }
 
-#leftAPage,
-#rightAPage,
-#leftAScreen,
-#rightAScreen {
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0);
-}
-
-#leftAPage,
-#rightAPage {
-  /*display: inline-block;*/
-  display: none;
-  position: absolute;
-  top: -5%;
-  width: 10%;
-  height: 110%;
-}
-
-#leftAPage {
-  left: -7%;
-}
-
-#rightAPage {
-  right: -7%;
-}
-
-#leftAScreen,
-#rightAScreen {
-  display: inline-block;
-  position: fixed;
-  top: 10vh;
-  width: 5vw;
-  height: 90vh;
-}
-
-#leftAScreen {
-  left: 0;
-}
-
-#rightAScreen {
-  right: 0;
-}
-
 #showMenuA {
   display: inline-block;
   position: fixed;
