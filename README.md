@@ -28,6 +28,11 @@ $> pip install git+https://github.com/ZXY101/mokuro.git@master
 (You may need to uninstall mokuro first)
 
 ------
+
+### In use with [jidoujisho](https://github.com/lrorpilla/jidoujisho)
+https://user-images.githubusercontent.com/39561296/234891290-dcd79ce3-e215-4c3d-8f74-98c27917ac7f.mp4
+
+------
 # mokuro
 
 Read Japanese manga with selectable text inside a browser.
