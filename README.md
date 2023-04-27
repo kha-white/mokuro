@@ -1,3 +1,34 @@
+> This is a temporary fork of [mokuro](https://github.com/kha-white/mokuro) that focuses on improving the mobile viewing experience.
+
+# Additions:
+## `mobile` flag:
+Passing in `--mobile True` will generate additional files that are optimised to be viewed on mobile devices, the default files will still be generated.
+
+In the mobile files:
+- panzoom has been stripped out to allow the default pan/zoom behavior
+- panning & zooming is limited to the page size, you can't fly off into the void
+- you can now swipe to navigate (can adjust swipe threshold)
+- easier to access navigation buttons have been added (can be hidden)
+- easier to see page count has been added (can be hidden)
+
+### usage:
+```bash
+$> mokuro my-manga-1 --mobile True --disable_confirmation True
+/// _ocr, my-manga-1.html, my-manga-1.mobile.html
+```
+`my-manga-1.html` being exactly the same as normal and `my-manga-1.mobile.html` being the mobile friendly version.
+
+## Misc:
+You can now set the background color from the top menu.
+
+# Installation
+Pip can install forks of packages directly
+```bash
+$> pip install git+https://github.com/ZXY101/mokuro.git@master
+```
+(You may need to uninstall mokuro first)
+
+------
 # mokuro
 
 Read Japanese manga with selectable text inside a browser.
