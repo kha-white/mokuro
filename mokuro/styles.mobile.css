@@ -1,5 +1,7 @@
 :root {
   --textBoxDisplay: initial;
+  --navDisplay: initial;
+  --pageNumDisplay: initial;
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
   --textBoxFontSize: 1em;
 
@@ -275,14 +277,17 @@ input[type='number'] {
 }
 
 #forward {
+  display: var(--navDisplay);
   right: 5px;
 }
 
 #back {
+  display: var(--navDisplay);
   left: 5px;
 }
 
 #page-num {
+  display: var(--pageNumDisplay);
   left: 50%;
   bottom: 18px;
   position: fixed;

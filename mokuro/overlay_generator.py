@@ -308,8 +308,9 @@ class OverlayGenerator:
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
                 if mobile:
                     option_range('menuSwipeThreshold', 'swipe threshold', '10', '90', '25')
-                if mobile:
                     option_color('menuBackgroundColor', 'background color', '#000')
+                    option_toggle('menuShowNav', 'show bottom navigation')
+                    option_toggle('menuPageNum', 'show page number')
                 else:
                     option_color('menuBackgroundColor', 'background color', '#C4C3D0')
                 option_click('menuReset', 'reset settings')

@@ -19,6 +19,8 @@ let defaultState = {
   toggleOCRTextBoxes: false,
   swipeThreshold: 25,
   backgroundColor: '#000',
+  showNav: true,
+  showPageNum: true
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -80,6 +82,8 @@ function updateUI() {
     state.toggleOCRTextBoxes;
   document.getElementById('menuSwipeThreshold').value = state.swipeThreshold;
   document.getElementById('menuBackgroundColor').value = state.backgroundColor;
+  document.getElementById('menuShowNav').checked = state.showNav;
+  document.getElementById('menuPageNum').checked = state.showPageNum;
 }
 
 window.addEventListener('resize', () => {
@@ -163,6 +167,18 @@ function updateProperties() {
 
   if (state.backgroundColor) {
       r.style.setProperty('--colorBackground', state.backgroundColor)
+  }
+
+  if (state.showNav) {
+    r.style.setProperty('--navDisplay', 'initial');
+  } else {
+    r.style.setProperty('--navDisplay', 'none');
+  }
+
+  if (state.showPageNum) {
+    r.style.setProperty('--pageNumDisplay', 'initial');
+  } else {
+    r.style.setProperty('--pageNumDisplay', 'none');
   }
 }
 
@@ -262,6 +278,26 @@ document.getElementById('menuBackgroundColor').addEventListener(
   false
 );
 
+document.getElementById('menuShowNav').addEventListener(
+  'click',
+  function () {
+    state.showNav = document.getElementById('menuShowNav').checked;
+    saveState();
+    updateProperties();
+  },
+  false
+);
+
+document.getElementById('menuPageNum').addEventListener(
+  'click',
+  function () {
+    state.showPageNum = document.getElementById('menuPageNum').checked;
+    saveState();
+    updateProperties();
+  },
+  false
+);
+
 document.getElementById('menuAbout').addEventListener(
   'click',
   function () {
@@ -305,7 +341,6 @@ document.getElementById('pageIdxInput').addEventListener('change', (e) => {
 document.getElementById('buttonHideMenu').addEventListener(
   'click',
   function () {
-    // document.getElementById('topMenu').style.display = "none";
     document.getElementById('showMenuA').style.display = 'inline-block';
     document.getElementById('topMenu').classList.add('hidden');
   },
@@ -315,7 +350,6 @@ document.getElementById('buttonHideMenu').addEventListener(
 document.getElementById('showMenuA').addEventListener(
   'click',
   function () {
-    // document.getElementById('topMenu').style.display = "initial";
     document.getElementById('showMenuA').style.display = 'none';
     document.getElementById('topMenu').classList.remove('hidden');
   },
