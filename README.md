@@ -25,7 +25,9 @@ You can now set the background color from the top menu.
 ```bash
 $> pip install git+https://github.com/ZXY101/mokuro.git@master
 ```
-(You may need to uninstall mokuro first)
+(You may need to uninstall mokuro first) 
+
+Or use in [Google colab](https://colab.research.google.com/drive/1i2ESDMmqwjpnOQQZx3vKP8Pd8R_Gtz4W?usp=sharing)
 
 ------
 
