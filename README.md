@@ -14,9 +14,24 @@ In the mobile files:
 ### usage:
 ```bash
 $> mokuro my-manga-1 --mobile True --disable_confirmation True
-/// _ocr, my-manga-1.html, my-manga-1.mobile.html
+// _ocr, my-manga-1.html, my-manga-1.mobile.html
 ```
 `my-manga-1.html` being exactly the same as normal and `my-manga-1.mobile.html` being the mobile friendly version.
+
+## `convert_to_mobile` flag:
+To convert existing html files you can use the `convert_to_mobile` option to instantly generate a mobile friendly file without needing to reprocess the manga.
+
+### usage:
+```bash
+$> mokuro --convert_to_mobile "my-manga-1.html"
+// my-manga-1.mobile.html
+```
+You can run the command on a parent directory as well:
+```bash
+$> mokuro --convert_to_mobile "my-manga"
+// my-manga-1.mobile.html, my-manga-2.mobile.html, my-manga-3.mobile.html, ...
+```
+
 
 ## Misc:
 You can now set the background color from the top menu.
