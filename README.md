@@ -22,11 +22,17 @@ $> mokuro my-manga-1 --mobile True --disable_confirmation True
 You can now set the background color from the top menu.
 
 # Installation
-Pip can install forks of packages directly
 ```bash
 $> pip install git+https://github.com/ZXY101/mokuro.git@master
 ```
-(You may need to uninstall mokuro first)
+(You may need to uninstall mokuro first) 
+
+Or use in [Google colab](https://colab.research.google.com/drive/1i2ESDMmqwjpnOQQZx3vKP8Pd8R_Gtz4W?usp=sharing)
+
+------
+
+### In use with [jidoujisho](https://github.com/lrorpilla/jidoujisho)
+https://user-images.githubusercontent.com/39561296/234891290-dcd79ce3-e215-4c3d-8f74-98c27917ac7f.mp4
 
 ------
 # mokuro
