@@ -9,6 +9,7 @@ from mokuro import OverlayGenerator
 
 def run(*paths,
         parent_dir=None,
+        convert_to_mobile=None,
         pretrained_model_name_or_path='kha-white/manga-ocr-base',
         force_cpu=False,
         as_one_file=True,
@@ -16,6 +17,18 @@ def run(*paths,
         mobile=False
         ):
     paths = [Path(p).expanduser().absolute() for p in paths]
+
+    if convert_to_mobile is not None:
+        ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu)
+        path = Path(convert_to_mobile).expanduser().absolute()
+        if (path.is_dir()):
+            logger.info(f'Converting all html files in: {path.name}')
+            for p in Path(path).expanduser().absolute().iterdir():
+                if (p.is_file() and p.suffix == '.html' and p not in paths and ".mobile.html" not in p.name):
+                    ovg.convert_to_mobile(p, as_one_file=as_one_file, mobile=True)
+            return
+        ovg.convert_to_mobile(path, as_one_file=as_one_file, mobile=True)
+        return
 
     if parent_dir is not None:
         for p in Path(parent_dir).expanduser().absolute().iterdir():

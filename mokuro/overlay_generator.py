@@ -65,6 +65,38 @@ class OverlayGenerator:
         if self.mpocr is None:
             self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, **self.kwargs)
 
+    def convert_to_mobile(self, path, as_one_file=True, mobile=True, is_demo=False):
+        out_dir = path.parent
+        path_name = path.name.replace(".html", "")
+        suffix = path.suffix.lower()
+
+        if not path.is_file():
+            logger.error('Invalid file. Did you set the path correctly?')
+            return
+
+        if suffix == '.html':
+            f = open(path, 'r', encoding='utf-8')
+            text = f.read()
+            f.close()
+
+            start = text.find('<div id="pagesContainer">')
+            end = text.find('<script>')
+
+            max_start = text.find('max="') + 5
+            max_end = text.find('"', max_start)
+
+            page_count = text[max_start:max_end]
+            pages = text[start:end]
+            title = f'{path_name} | mokuro'
+            mobile_file = path_name + '.mobile.html'
+
+            index_html = self.get_index_html(title=title, pages=pages, as_one_file=as_one_file, is_demo=is_demo, mobile=True, page_count=page_count )
+            (out_dir / mobile_file).write_text(index_html, encoding='utf-8')
+            logger.info(f'{mobile_file} successfully generated')
+        else:
+            logger.error('Please specify a valid .html file')
+        return
+
     def process_dir(self, path, as_one_file=True, mobile=False, is_demo=False):
         path = Path(path).expanduser().absolute()
         assert path.is_dir(), f'{path} must be a directory'
@@ -111,14 +143,13 @@ class OverlayGenerator:
             title = f'mokuro {__version__} demo'
         else:
             title = f'{path.name} | mokuro'
-        index_html = self.get_index_html(page_htmls, title, as_one_file, mobile, is_demo, )
         index_html = self.get_index_html(page_htmls, title, as_one_file, False, is_demo, )
         (out_dir / (path.name + '.html')).write_text(index_html, encoding='utf-8')
         if mobile:
             index_html = self.get_index_html(page_htmls, title, as_one_file, mobile, is_demo, )
             (out_dir / (path.name + '.mobile.html')).write_text(index_html, encoding='utf-8')
 
-    def get_index_html(self, page_htmls, title, as_one_file=True, mobile=False, is_demo=False, ):
+    def get_index_html(self, page_htmls=None, title='Mokuro', as_one_file=True, mobile=False, is_demo=False, pages=None, page_count=None):
         doc, tag, text = Doc().tagtext()
 
         with tag('html'):
@@ -147,8 +178,12 @@ class OverlayGenerator:
                         with tag('link', rel='stylesheet', href='styles.css'):
                             pass
 
+
             with tag('body'):
-                self.top_menu(doc, tag, text, len(page_htmls), mobile)
+                if page_count is not None:
+                    self.top_menu(doc, tag, text, page_count, mobile)
+                else:
+                    self.top_menu(doc, tag, text, len(page_htmls), mobile)
 
                 with tag('div', id='dimOverlay'):
                     pass
@@ -180,16 +215,19 @@ class OverlayGenerator:
                     with tag('a', id='rightAScreen', href='#'):
                         pass
 
-                with tag('div', id='pagesContainer'):
-                    for i, page_html in enumerate(page_htmls):
-                        with tag('div', id=f'page{i}', klass='page'):
-                            doc.asis(page_html)
-                    if not mobile:
-                        with tag('a', id='leftAPage', href='#'):
-                            pass
+                if pages is not None:
+                    doc.asis(pages)
+                else:
+                    with tag('div', id='pagesContainer'):
+                        for i, page_html in enumerate(page_htmls):
+                            with tag('div', id=f'page{i}', klass='page'):
+                                doc.asis(page_html)
+                        if not mobile:
+                            with tag('a', id='leftAPage', href='#'):
+                                pass
 
-                        with tag('a', id='rightAPage', href='#'):
-                            pass
+                            with tag('a', id='rightAPage', href='#'):
+                                pass
 
                 if as_one_file:
                     if mobile:
@@ -317,7 +355,7 @@ class OverlayGenerator:
                 option_toggle('menuEInkMode', 'e-ink mode ')
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
                 if mobile:
-                    option_range('menuSwipeThreshold', 'swipe threshold', '10', '90', '25')
+                    option_range('menuSwipeThreshold', 'swipe threshold', '10', '90', '35')
                     option_color('menuBackgroundColor', 'background color', '#000')
                     option_toggle('menuShowNav', 'show bottom navigation')
                     option_toggle('menuPageNum', 'show page number')

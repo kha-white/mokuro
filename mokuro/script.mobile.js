@@ -17,7 +17,7 @@ let defaultState = {
   fontSize: 'auto',
   eInkMode: false,
   toggleOCRTextBoxes: false,
-  swipeThreshold: 25,
+  swipeThreshold: 35,
   backgroundColor: '#000',
   showNav: true,
   showPageNum: true
