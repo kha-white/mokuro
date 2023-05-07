@@ -9,7 +9,6 @@ pyclipper
 pytest
 requests
 scipy
-sentencepiece
 shapely
 torchsummary
 tqdm
