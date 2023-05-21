@@ -536,16 +536,16 @@ document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchcancel', handleTouchCancel);
 
 let startX;
-let touchIds = [];
 const ongoingTouches = [];
 let distance;
 
 function removeTouch(event) {
   for (let i = 0; i < event.changedTouches.length; i++) {
     const touch = event.changedTouches[i];
-    const touchIndex = touchIds.indexOf(touch.identifier);
+    const touchIndex = ongoingTouches.indexOf(touch.identifier);
+
     if (touchIndex >= 0) {
-      touchIds.splice(touchIndex, 1);
+      ongoingTouches.splice(touchIndex, 1);
     }
   }
 }
@@ -557,13 +557,13 @@ function handleTouchStart(event) {
   const touches = event.changedTouches;
 
   for (let i = 0; i < touches.length; i++) {
-    ongoingTouches.push(touches[i]);
+    ongoingTouches.push(touches[i].identifier);
   }
 }
 
 function ongoingTouchIndexById(idToFind) {
   for (let i = 0; i < ongoingTouches.length; i++) {
-    const id = ongoingTouches[i].identifier;
+    const id = ongoingTouches[i];
 
     if (id === idToFind) {
       return i;
@@ -600,6 +600,7 @@ function handleTouchEnd(event) {
     }
   }
   distance - 0;
+  removeTouch(event)
 }
 
 function handleTouchCancel(event) {
