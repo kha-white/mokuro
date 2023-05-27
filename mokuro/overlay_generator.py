@@ -356,7 +356,7 @@ class OverlayGenerator:
                 option_toggle('menuEInkMode', 'e-ink mode ')
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
                 if mobile:
-                    option_range('menuSwipeThreshold', 'swipe threshold', '10', '90', '35')
+                    option_range('menuSwipeThreshold', 'swipe threshold', '10', '90', '25')
                     option_color('menuBackgroundColor', 'background color', '#000')
                     option_toggle('menuShowNav', 'show bottom navigation')
                     option_toggle('menuPageNum', 'show page number')

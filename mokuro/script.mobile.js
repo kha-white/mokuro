@@ -553,12 +553,14 @@ document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchcancel', handleTouchCancel);
 
 let startX;
+let startY;
 const ongoingTouches = [];
 let distance;
 
 function removeTouch(event) {
-  for (let i = 0; i < event.changedTouches.length; i++) {
-    const touch = event.changedTouches[i];
+  const touches = event.changedTouches;
+  for (let i = 0; i < touches.length; i++) {
+    const touch = touches[i];
     const touchIndex = ongoingTouches.indexOf(touch.identifier);
 
     if (touchIndex >= 0) {
@@ -568,53 +570,59 @@ function removeTouch(event) {
 }
 
 function handleTouchStart(event) {
+  const touches = event.changedTouches;
+
   distance = 0;
   startX = event.touches[0].clientX;
-
-  const touches = event.changedTouches;
+  startY = event.touches[0].clientY;
 
   for (let i = 0; i < touches.length; i++) {
     ongoingTouches.push(touches[i].identifier);
   }
 }
 
-function ongoingTouchIndexById(idToFind) {
-  for (let i = 0; i < ongoingTouches.length; i++) {
-    const id = ongoingTouches[i];
-
-    if (id === idToFind) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 function handleTouchMove(event) {
   const touches = event.changedTouches;
-  let timeout;
 
   if (ongoingTouches.length === 1) {
-    timeout = setTimeout(() => {
-      distance = Math.floor(touches[0].clientX - startX);
-    }, 50);
+    distanceX = Math.floor(touches[0].clientX - startX);
+    distanceY = Math.floor(touches[0].clientY - startY);
   } else {
-    clearTimeout(timeout);
-    distance = 0;
+    distanceX = 0;
+    distanceY = 0;
   }
 }
 
-function handleTouchEnd(event) {
-  removeTouch(event);
+function handleNavigation() {
   const swipeThreshold = Math.abs((state.swipeThreshold / 100) * screenWidth);
+  const isSwipe = distanceY < 100 && distanceY > 100 * -1;
 
-  if (ongoingTouches.length === 0) {
-    if (distance > swipeThreshold) {
+  if (ongoingTouches.length === 1 && isSwipe) {
+    if (distanceX > swipeThreshold) {
       inputLeft();
-    } else if (distance < swipeThreshold * -1) {
+    } else if (distanceX < swipeThreshold * -1) {
       inputRight();
     }
   }
-  distance = 0;
+}
+
+let timeout;
+let running;
+function handleTouchEnd(event) {
+  if (!running) {
+    running = true;
+    handleNavigation();
+    removeTouch(event);
+    distanceX = 0;
+    distanceY = 0;
+    timeout = setTimeout(() => {
+      running = false;
+    }, 100);
+  } else {
+    removeTouch(event);
+    distanceX = 0;
+    distanceY = 0;
+  }
 }
 
 function handleTouchCancel(event) {
