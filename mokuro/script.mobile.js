@@ -20,7 +20,7 @@ let defaultState = {
   swipeThreshold: 35,
   backgroundColor: '#000',
   showNav: true,
-  showPageNum: true
+  showPageNum: true,
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -77,6 +77,7 @@ function updateUI() {
   document.getElementById('menuEditableText').checked = state.editableText;
   document.getElementById('menuDisplayOCR').checked = state.displayOCR;
   document.getElementById('menuFontSize').value = state.fontSize;
+  document.getElementById('menuFontBold').checked = state.fontBold;
   document.getElementById('menuEInkMode').checked = state.eInkMode;
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
@@ -159,6 +160,12 @@ function updateProperties() {
     pc.classList.add('textBoxFontSizeOverride');
   }
 
+  if (state.fontBold) {
+    r.style.setProperty('--textBoxFontWeight', 'bold');
+  } else {
+    r.style.setProperty('--textBoxFontWeight', 'normal');
+  }
+
   if (state.eInkMode) {
     document.getElementById('topMenu').classList.add('notransition');
   } else {
@@ -166,7 +173,7 @@ function updateProperties() {
   }
 
   if (state.backgroundColor) {
-      r.style.setProperty('--colorBackground', state.backgroundColor)
+    r.style.setProperty('--colorBackground', state.backgroundColor);
   }
 
   if (state.showNav) {
@@ -227,6 +234,16 @@ document.getElementById('menuDisplayOCR').addEventListener(
   'click',
   function () {
     state.displayOCR = document.getElementById('menuDisplayOCR').checked;
+    saveState();
+    updateProperties();
+  },
+  false
+);
+
+document.getElementById('menuFontBold').addEventListener(
+  'click',
+  function () {
+    state.fontBold = document.getElementById('menuFontBold').checked;
     saveState();
     updateProperties();
   },
@@ -574,21 +591,20 @@ function ongoingTouchIndexById(idToFind) {
 
 function handleTouchMove(event) {
   const touches = event.changedTouches;
-  let timeout
+  let timeout;
 
   if (ongoingTouches.length === 1) {
     timeout = setTimeout(() => {
       distance = Math.floor(touches[0].clientX - startX);
-    }, 50)
+    }, 50);
   } else {
-    clearTimeout(timeout)
+    clearTimeout(timeout);
     distance = 0;
   }
 }
 
-
 function handleTouchEnd(event) {
-  removeTouch(event)
+  removeTouch(event);
   const swipeThreshold = Math.abs((state.swipeThreshold / 100) * screenWidth);
 
   if (ongoingTouches.length === 0) {

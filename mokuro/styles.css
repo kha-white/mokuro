@@ -2,6 +2,7 @@
     --textBoxDisplay: initial;
     --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
     --textBoxFontSize: 1em;
+    --textBoxFontWeight: normal;
 
     --colorBackground: #C4C3D0;
     --color1: #f9f9fb;
@@ -27,6 +28,7 @@ body {
 
 .pageContainer * {
     font-family: "Noto Sans JP", "Meiryo", "MS Gothic", sans-serif;
+    font-weight: var(--textBoxFontWeight);
 }
 
 .pageContainer {
