@@ -574,33 +574,31 @@ function ongoingTouchIndexById(idToFind) {
 
 function handleTouchMove(event) {
   const touches = event.changedTouches;
+  let timeout
 
-  for (let i = 0; i < touches.length; i++) {
-    const idx = ongoingTouchIndexById(touches[i].identifier);
-    if (idx === 0) {
-      distance = Math.floor(touches[i].clientX - startX);
-    } else {
-      distance = 0;
-    }
+  if (ongoingTouches.length === 1) {
+    timeout = setTimeout(() => {
+      distance = Math.floor(touches[0].clientX - startX);
+    }, 50)
+  } else {
+    clearTimeout(timeout)
+    distance = 0;
   }
 }
 
+
 function handleTouchEnd(event) {
-  const touches = event.changedTouches;
+  removeTouch(event)
   const swipeThreshold = Math.abs((state.swipeThreshold / 100) * screenWidth);
 
-  for (let i = 0; i < touches.length; i++) {
-    const idx = ongoingTouchIndexById(touches[i].identifier);
-    if (idx === 0 && touches.length === 1) {
-      if (distance > swipeThreshold) {
-        inputLeft();
-      } else if (distance < swipeThreshold * -1) {
-        inputRight();
-      }
+  if (ongoingTouches.length === 0) {
+    if (distance > swipeThreshold) {
+      inputLeft();
+    } else if (distance < swipeThreshold * -1) {
+      inputRight();
     }
   }
-  distance - 0;
-  removeTouch(event)
+  distance = 0;
 }
 
 function handleTouchCancel(event) {
