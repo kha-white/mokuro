@@ -575,6 +575,7 @@ function handleTouchStart(event) {
   distance = 0;
   startX = event.touches[0].clientX;
   startY = event.touches[0].clientY;
+  running = false
 
   for (let i = 0; i < touches.length; i++) {
     ongoingTouches.push(touches[i].identifier);
@@ -595,7 +596,7 @@ function handleTouchMove(event) {
 
 function handleNavigation() {
   const swipeThreshold = Math.abs((state.swipeThreshold / 100) * screenWidth);
-  const isSwipe = distanceY < 100 && distanceY > 100 * -1;
+  const isSwipe = distanceY < 100 && distanceY > 200 * -1;
 
   if (ongoingTouches.length === 1 && isSwipe) {
     if (distanceX > swipeThreshold) {
@@ -607,7 +608,7 @@ function handleNavigation() {
 }
 
 let timeout;
-let running;
+let running = false;
 function handleTouchEnd(event) {
   if (!running) {
     running = true;
