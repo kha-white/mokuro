@@ -494,9 +494,27 @@ function updatePage(new_page_idx) {
 
     saveState();
     zoomDefault();
+    preloadImage()
     if (state.eInkMode) {
         eInkRefresh();
     }
+}
+
+
+const preload = document.createElement('div')
+preload.style.position = 'absolute; width:0; height:0; overflow:hidden; z-index:-1;'
+preload.setAttribute('id', 'preload-image')
+document.body.appendChild(preload)
+
+function preloadImage() {
+  const innerHTML = getPage(state.page_idx + 1)?.innerHTML
+  const regex = /background-image:url\(&quot;([^"]+)&quot;\)/;
+  const match = innerHTML?.match(regex);
+
+  if (match && match[1]) {
+    const backgroundImageUrl = match[1];
+    preload.style.content = `url(${backgroundImageUrl})`
+  }
 }
 
 function firstPage() {
