@@ -3,6 +3,7 @@ let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let pz;
 let showAboutOnStart = false;
+const preload = document.createElement('div')
 
 let storageKey = "mokuro_" + window.location.pathname;
 
@@ -56,8 +57,25 @@ function updateUI() {
     document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 
+function preloadToDom() {
+    preload.style.position = 'absolute; width:0; height:0; overflow:hidden; z-index:-1;';
+    preload.setAttribute('id', 'preload-image');
+    document.body.appendChild(preload);
+}
+  
+function preloadImage() {
+    const page = getPage(state.page_idx + 1);
+    const pageContainer = page?.querySelector('.pageContainer');
+    const backgroundImageUrl = pageContainer?.style?.backgroundImage?.slice(4, -1).replace(/['"]/g, "");
+  
+    if (backgroundImageUrl) {
+      preload.style.content = `url(${backgroundImageUrl})`;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     loadState();
+    preloadToDom();
     num_pages = document.getElementsByClassName("page").length;
 
     pz = panzoom(pc, {
@@ -498,23 +516,6 @@ function updatePage(new_page_idx) {
     if (state.eInkMode) {
         eInkRefresh();
     }
-}
-
-
-const preload = document.createElement('div')
-preload.style.position = 'absolute; width:0; height:0; overflow:hidden; z-index:-1;'
-preload.setAttribute('id', 'preload-image')
-document.body.appendChild(preload)
-
-function preloadImage() {
-  const innerHTML = getPage(state.page_idx + 1)?.innerHTML
-  const regex = /background-image:url\(&quot;([^"]+)&quot;\)/;
-  const match = innerHTML?.match(regex);
-
-  if (match && match[1]) {
-    const backgroundImageUrl = match[1];
-    preload.style.content = `url(${backgroundImageUrl})`
-  }
 }
 
 function firstPage() {

@@ -2,6 +2,7 @@ let num_pages = -1;
 let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let showAboutOnStart = false;
+const preload = document.createElement('div');
 
 let storageKey = 'mokuro_' + window.location.pathname;
 
@@ -87,6 +88,25 @@ function updateUI() {
   document.getElementById('menuPageNum').checked = state.showPageNum;
 }
 
+function preloadToDom() {
+  preload.style.position =
+    'absolute; width:0; height:0; overflow:hidden; z-index:-1;';
+  preload.setAttribute('id', 'preload-image');
+  document.body.appendChild(preload);
+}
+
+function preloadImage() {
+  const page = getPage(state.page_idx + 1);
+  const pageContainer = page?.querySelector('.pageContainer');
+  const backgroundImageUrl = pageContainer?.style?.backgroundImage
+    ?.slice(4, -1)
+    .replace(/['"]/g, '');
+
+  if (backgroundImageUrl) {
+    preload.style.content = `url(${backgroundImageUrl})`;
+  }
+}
+
 window.addEventListener('resize', () => {
   fitToScreen();
 });
@@ -96,6 +116,7 @@ document.addEventListener(
   function () {
     loadState();
     fitToScreen();
+    preloadToDom();
     num_pages = document.getElementsByClassName('page').length;
 
     updatePage(state.page_idx);
@@ -478,23 +499,7 @@ function updatePage(new_page_idx) {
   }
 
   fitToScreen();
-  preloadImage()
-}
-
-const preload = document.createElement('div')
-preload.style.position = 'absolute; width:0; height:0; overflow:hidden; z-index:-1;'
-preload.setAttribute('id', 'preload-image')
-document.body.appendChild(preload)
-
-function preloadImage() {
-  const innerHTML = getPage(state.page_idx + 1)?.innerHTML
-  const regex = /background-image:url\(&quot;([^"]+)&quot;\)/;
-  const match = innerHTML?.match(regex);
-
-  if (match && match[1]) {
-    const backgroundImageUrl = match[1];
-    preload.style.content = `url(${backgroundImageUrl})`
-  }
+  preloadImage();
 }
 
 function firstPage() {
@@ -592,7 +597,7 @@ function handleTouchStart(event) {
   distance = 0;
   startX = event.touches[0].clientX;
   startY = event.touches[0].clientY;
-  running = false
+  running = false;
 
   for (let i = 0; i < touches.length; i++) {
     ongoingTouches.push(touches[i].identifier);
@@ -635,7 +640,6 @@ function handleTouchEnd(event) {
     distanceY = 0;
     timeout = setTimeout(() => {
       running = false;
-
     }, 100);
   } else {
     removeTouch(event);
