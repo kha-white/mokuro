@@ -577,10 +577,12 @@ document.addEventListener('touchcancel', handleTouchCancel);
 let startX;
 let startY;
 const ongoingTouches = [];
-let distance;
+let distanceX;
+let distanceY;
 
 function removeTouch(event) {
   const touches = event.changedTouches;
+
   for (let i = 0; i < touches.length; i++) {
     const touch = touches[i];
     const touchIndex = ongoingTouches.indexOf(touch.identifier);
@@ -594,14 +596,12 @@ function removeTouch(event) {
 function handleTouchStart(event) {
   const touches = event.changedTouches;
 
-  distance = 0;
+  distanceY = 0;
+  distanceX = 0;
   startX = event.touches[0].clientX;
   startY = event.touches[0].clientY;
-  running = false;
 
-  for (let i = 0; i < touches.length; i++) {
-    ongoingTouches.push(touches[i].identifier);
-  }
+  ongoingTouches.push(touches[0].identifier);
 }
 
 function handleTouchMove(event) {
