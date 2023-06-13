@@ -299,3 +299,11 @@ input[type='number'] {
   transform: translate(-50%, 0);
   z-index: 10;
 }
+
+#preload-image {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+}

@@ -89,8 +89,6 @@ function updateUI() {
 }
 
 function preloadToDom() {
-  preload.style.position =
-    'absolute; width:0; height:0; overflow:hidden; z-index:-1;';
   preload.setAttribute('id', 'preload-image');
   document.body.appendChild(preload);
 }
