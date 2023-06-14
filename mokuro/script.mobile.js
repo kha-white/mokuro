@@ -2,7 +2,7 @@ let num_pages = -1;
 let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let showAboutOnStart = false;
-const preload = document.getElementById('preload-image')
+const preload = document.getElementById('preload-image');
 
 let storageKey = 'mokuro_' + window.location.pathname;
 
