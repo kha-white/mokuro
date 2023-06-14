@@ -2,7 +2,7 @@ let num_pages = -1;
 let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let showAboutOnStart = false;
-const preload = document.createElement('div');
+const preload = document.getElementById('preload-image')
 
 let storageKey = 'mokuro_' + window.location.pathname;
 
@@ -88,11 +88,6 @@ function updateUI() {
   document.getElementById('menuPageNum').checked = state.showPageNum;
 }
 
-function preloadToDom() {
-  preload.setAttribute('id', 'preload-image');
-  document.body.appendChild(preload);
-}
-
 function preloadImage() {
   const page = getPage(state.page_idx + 1);
   const pageContainer = page?.querySelector('.pageContainer');
@@ -114,7 +109,6 @@ document.addEventListener(
   function () {
     loadState();
     fitToScreen();
-    preloadToDom();
     num_pages = document.getElementsByClassName('page').length;
 
     updatePage(state.page_idx);

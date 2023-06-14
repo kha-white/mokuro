@@ -3,7 +3,7 @@ let pc = document.getElementById('pagesContainer');
 let r = document.querySelector(':root');
 let pz;
 let showAboutOnStart = false;
-const preload = document.createElement('div')
+const preload = document.getElementById('preload-image')
 
 let storageKey = "mokuro_" + window.location.pathname;
 
@@ -57,11 +57,6 @@ function updateUI() {
     document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 
-function preloadToDom() {
-    preload.setAttribute('id', 'preload-image');
-    document.body.appendChild(preload);
-}
-  
 function preloadImage() {
     const page = getPage(state.page_idx + 1);
     const pageContainer = page?.querySelector('.pageContainer');
@@ -74,7 +69,6 @@ function preloadImage() {
 
 document.addEventListener('DOMContentLoaded', function () {
     loadState();
-    preloadToDom();
     num_pages = document.getElementsByClassName("page").length;
 
     pz = panzoom(pc, {

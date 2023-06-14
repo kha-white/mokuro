@@ -296,7 +296,7 @@ body {
     height: 0;
     overflow: hidden;
     z-index: -1;
-  }
+}
 
 /*hide arrows from number input*/
 input::-webkit-outer-spin-button,

@@ -229,6 +229,9 @@ class OverlayGenerator:
                             with tag('a', id='rightAPage', href='#'):
                                 pass
 
+                with tag('div', id='preload-image'):
+                    pass
+
                 if as_one_file:
                     if mobile:
                         with tag('script'):
