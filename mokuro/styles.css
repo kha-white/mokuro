@@ -3,6 +3,7 @@
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
   --textBoxFontSize: 1em;
   --textBoxFontWeight: normal;
+  --connectButtonDisplay: inline-block
 
   --colorBackground: #c4c3d0;
   --color1: #f9f9fb;
@@ -71,6 +72,71 @@ body {
 
 .textBox:hover p {
   display: table;
+}
+
+.connect-button {
+  display: var(--connectButtonDisplay);
+  opacity: 0;
+  position: absolute;
+  margin-right: calc(var(--textBoxFontSize) / 1.5 * -1);
+  margin-top: calc(var(--textBoxFontSize) / 1.5 * -1);
+  cursor: pointer;
+  background-color: #6feef7ec;
+  border: 1px rgb(0, 0, 0) solid;
+  border-radius: 50%;
+  width: calc(var(--textBoxFontSize) / 1.5);
+  height: calc(var(--textBoxFontSize) / 1.5);
+}
+
+.textBox:hover .connect-button {
+  opacity: 1;
+}
+
+.textBox:hover .connect-button svg {
+  max-height: 1.5em;
+}
+
+.modal {
+  border-radius: 6px;
+  border: 1px black solid;
+  min-width: 40vw;
+}
+
+.dialog-button {
+  background-color: #323f49; /* Green */
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#sentence-input {
+  width: 100%;
+  resize: none;
+  display: block;
+}
+
+#dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#crop-image {
+  display: block;
+  max-height: 500px;
+  max-width: 500px;
 }
 
 .hovered {

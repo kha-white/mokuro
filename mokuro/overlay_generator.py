@@ -20,6 +20,8 @@ MOBILE_STYLES_PATH = Path(__file__).parent / 'styles.mobile.css'
 
 PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
 ICONS_PATH = ASSETS_PATH / 'icons'
+CROPPER_JS_PATH = ASSETS_PATH / 'cropper.min.js'
+CROPPER_CSS_PATH = ASSETS_PATH / 'cropper.min.css'
 
 ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/mokuro" target="_blank">mokuro</a> version {__version__}</p>
@@ -117,6 +119,8 @@ class OverlayGenerator:
             shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
+            shutil.copy(CROPPER_JS_PATH, out_dir / 'cropper.min.js')
+            shutil.copy(CROPPER_CSS_PATH, out_dir / 'cropper.min.css')
             if mobile:
                 shutil.copy(MOBILE_SCRIPT_PATH, out_dir / 'script.mobile.js')
                 shutil.copy(MOBILE_STYLES_PATH, out_dir / 'styles.mobile.css')
@@ -180,6 +184,21 @@ class OverlayGenerator:
 
 
             with tag('body'):
+                if not mobile:
+                    with tag('dialog', id='dialog', klass='modal'):
+                        with tag('div', id='dialog-container'):
+                            with tag('h2'):
+                                text('Quick Edit')
+                            with tag('img', id='crop-image'):
+                                pass
+                            with tag('form', id='dialog-actions'):
+                                with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
+                                    text('Cancel')
+                                with tag('textarea', id='sentence-input'):
+                                    pass
+                                with tag('button', klass='dialog-button', id='confirm-btn', formmethod='dialog'):
+                                    text('Confirm')
+
                 if page_count is not None:
                     self.top_menu(doc, tag, text, page_count, mobile)
                 else:
@@ -240,10 +259,18 @@ class OverlayGenerator:
                         with tag('script'):
                             doc.asis(PANZOOM_PATH.read_text())
                         with tag('script'):
+                            doc.asis(CROPPER_JS_PATH.read_text())
+                        with tag('style'):
+                            doc.asis(CROPPER_CSS_PATH.read_text())
+                        with tag('script'):
                             doc.asis(SCRIPT_PATH.read_text())
                 else:
                     if not mobile:
                         with tag('script', src='panzoom.min.js'):
+                            pass
+                        with tag('script', src='cropper.min.js'):
+                            pass
+                        with tag('style', src='cropper.min.css'):
                             pass
 
                     if mobile :
@@ -384,6 +411,8 @@ class OverlayGenerator:
             for result_blk, z_index in zip(result['blocks'], z_idxs):
                 box_style = self.get_box_style(result_blk, z_index, result['img_width'], result['img_height'])
                 with tag('div', klass='textBox', style=box_style):
+                    with tag('div', ('onclick', f'updateLast("{"".join(result_blk["lines"])}", "{quote(str(img_path.as_posix()))}")'), klass='connect-button', ):
+                        pass
                     for line in result_blk['lines']:
                         with tag('p'):
                             text(line)

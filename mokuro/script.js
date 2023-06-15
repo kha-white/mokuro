@@ -691,3 +691,88 @@ function eInkRefresh() {
       r.style.getPropertyValue('--colorBackground');
   }, 300);
 }
+
+function ankiConnect(action, version, params = {}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('error', () => reject('failed to issue request'));
+    xhr.addEventListener('load', () => {
+      try {
+        const response = JSON.parse(xhr.responseText);
+        if (Object.getOwnPropertyNames(response).length != 2) {
+          throw 'response has an unexpected number of fields';
+        }
+        if (!response.hasOwnProperty('error')) {
+          throw 'response is missing required error field';
+        }
+        if (!response.hasOwnProperty('result')) {
+          throw 'response is missing required result field';
+        }
+        if (response.error) {
+          throw response.error;
+        }
+        resolve(response.result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+
+    xhr.open('POST', 'http://127.0.0.1:8765');
+    xhr.send(JSON.stringify({ action, version, params }));
+  });
+}
+
+const dialog = document.getElementById('dialog');
+const sentenceInput = document.getElementById('sentence-input');
+const confirmBtn = dialog.querySelector('#confirm-btn');
+let cropper;
+
+dialog.addEventListener('close', (e) => {
+  pz.resume();
+  cropper.destroy();
+});
+
+function updateLast(sentence, img) {
+  const image = document.getElementById('crop-image');
+  image.setAttribute('src', img);
+  sentenceInput.value = sentence;
+
+  cropper = new Cropper(image, {
+    viewMode: 1,
+    zoomable: false,
+    dragMode: 'none',
+  });
+
+  dialog.showModal();
+  pz.pause();
+}
+
+confirmBtn.addEventListener('click', async (event) => {
+  event.preventDefault();
+
+  const cropped = cropper
+    .getCroppedCanvas()
+    .toDataURL('image/webp')
+    .split(';base64,')[1];
+
+  const notesToday = await ankiConnect('findNotes', 6, { query: 'added:1' });
+  const id = notesToday.sort().at(-1);
+
+  await ankiConnect('guiBrowse', 6, { query: 'nid:1' });
+  await ankiConnect('updateNoteFields', 6, {
+    note: {
+      id,
+      fields: {
+        Sentence: sentenceInput.value,
+      },
+      picture: {
+        filename: `_${id}.webp`,
+        data: cropped,
+        fields: ['Picture'],
+      },
+    },
+  });
+  await ankiConnect('guiBrowse', 6, { query: `nid:${id}` });
+
+  dialog.close();
+});
