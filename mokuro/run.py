@@ -13,8 +13,8 @@ def run(*paths,
         pretrained_model_name_or_path='kha-white/manga-ocr-base',
         force_cpu=False,
         as_one_file=True,
-        disable_confirmation=False,
-        mobile=False
+        disable_confirmation=True,
+        mobile=True
         ):
     paths = [Path(p).expanduser().absolute() for p in paths]
 
