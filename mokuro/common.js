@@ -435,36 +435,38 @@ function ankiConnect(action, version, params = {}) {
   });
 }
 
-confirmBtn.addEventListener('click', async (event) => {
-  event.preventDefault();
-
-  const cropped = cropper
-    .getCroppedCanvas()
-    .toDataURL('image/webp')
-    .split(';base64,')[1];
-
+async function getLastCard() {
   const notesToday = await ankiConnect('findNotes', 6, { query: 'added:1' });
   const id = notesToday.sort().at(-1);
 
+  return { id };
+}
+
+function getCroppedImage() {
+  return cropper
+    .getCroppedCanvas()
+    .toDataURL('image/webp')
+    .split(';base64,')[1];
+}
+
+async function updateLastCard(id, picture, sentence) {
   await ankiConnect('updateNoteFields', 6, {
     note: {
       id,
       fields: {
-        [state.sentenceField]: sentenceInput.value,
+        [state.sentenceField]: sentence,
         [state.pictureField]: '',
       },
       picture: [
         {
           filename: `_${id}.webp`,
-          data: cropped,
+          data: picture,
           fields: [state.pictureField],
         },
       ],
     },
   });
-
-  dialog.close();
-});
+}
 
 function exportSettings() {
   const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(

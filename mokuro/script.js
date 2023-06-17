@@ -356,3 +356,36 @@ function toggleFullScreen() {
     cancelFullScreen.call(doc);
   }
 }
+
+async function inheritHtml(noteId) {
+  const htmlTagRegex = RegExp('<[^>]*>(.*?)</[^>]*>', 'ig');
+
+  const [noteInfo] = await ankiConnect('notesInfo', 6, { notes: [noteId] });
+  const markedUp = noteInfo?.fields[state.sentenceField]?.value;
+  const markedUpWithoutBreaklines = markedUp.replace('<br>', '');
+  let inherited = sentenceInput.value;
+
+  while (true) {
+    const match = htmlTagRegex.exec(markedUpWithoutBreaklines);
+
+    if (match === null || match.length < 2) {
+      break;
+    }
+
+    inherited = inherited.replace(match[1], match[0]);
+  }
+
+  return inherited;
+}
+
+confirmBtn.addEventListener('click', async (event) => {
+  event.preventDefault();
+
+  const cropped = getCroppedImage();
+  const { id } = await getLastCard();
+  const sentence = await inheritHtml(id);
+
+  await updateLastCard(id, cropped, sentence);
+
+  dialog.close();
+});
