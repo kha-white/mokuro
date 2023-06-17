@@ -455,15 +455,12 @@ async function updateLastCard(id, picture, sentence) {
       id,
       fields: {
         [state.sentenceField]: sentence,
-        [state.pictureField]: '',
       },
-      picture: [
-        {
-          filename: `_${id}.webp`,
-          data: picture,
-          fields: [state.pictureField],
-        },
-      ],
+      picture: {
+        filename: `_${id}.webp`,
+        data: picture,
+        fields: [state.pictureField],
+      },
     },
   });
 }
