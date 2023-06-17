@@ -58,3 +58,7 @@
   transform: translate(-50%, 0);
   z-index: 10;
 }
+
+.connect-button {
+  display: none;
+}

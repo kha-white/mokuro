@@ -378,6 +378,13 @@ dialog.addEventListener('close', (e) => {
 });
 
 function updateLast(sentence, img) {
+  const viewportmeta = document.querySelector('meta[name=viewport]');
+
+  viewportmeta.setAttribute(
+    'content',
+    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0'
+  );
+
   const image = document.getElementById('crop-image');
   image.setAttribute('src', img);
   sentenceInput.value = sentence;
@@ -389,6 +396,10 @@ function updateLast(sentence, img) {
   });
 
   dialog.showModal();
+  viewportmeta.setAttribute(
+    'content',
+    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0'
+  );
   if (pz) {
     pz.pause();
   }
@@ -435,7 +446,6 @@ confirmBtn.addEventListener('click', async (event) => {
   const notesToday = await ankiConnect('findNotes', 6, { query: 'added:1' });
   const id = notesToday.sort().at(-1);
 
-  await ankiConnect('guiBrowse', 6, { query: 'nid:1' });
   await ankiConnect('updateNoteFields', 6, {
     note: {
       id,
@@ -449,7 +459,6 @@ confirmBtn.addEventListener('click', async (event) => {
       },
     },
   });
-  await ankiConnect('guiBrowse', 6, { query: `nid:${id}` });
 
   dialog.close();
 });

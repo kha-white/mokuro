@@ -61,21 +61,20 @@ body {
 }
 
 .connect-button {
-  display: var(--connectButtonDisplay);
-  opacity: 0;
   position: absolute;
-  margin-right: calc(var(--textBoxFontSize) / 1.5 * -1);
-  margin-top: calc(var(--textBoxFontSize) / 1.5 * -1);
+  margin-right: calc(var(--textBoxFontSize) * -1);
+  margin-top: calc(var(--textBoxFontSize) * -1);
   cursor: pointer;
   background-color: #6feef7ec;
   border: 1px rgb(0, 0, 0) solid;
   border-radius: 50%;
-  width: calc(var(--textBoxFontSize) / 1.5);
-  height: calc(var(--textBoxFontSize) / 1.5);
+  width: calc(var(--textBoxFontSize));
+  height: calc(var(--textBoxFontSize));
 }
 
 .textBox:hover .connect-button {
   opacity: 1;
+  display: block;
 }
 
 .textBox:hover .connect-button svg {
@@ -121,8 +120,8 @@ body {
 
 #crop-image {
   display: block;
-  max-height: 500px;
-  max-width: 500px;
+  max-height: 400px;
+  max-width: 400px;
 }
 
 .form-item {

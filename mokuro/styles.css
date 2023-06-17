@@ -67,3 +67,6 @@
   right: 0;
 }
 
+.connect-button {
+  opacity: 0;
+}
