@@ -15,6 +15,8 @@ from mokuro.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
+COMMON_SCRIPT_PATH = Path(__file__).parent / 'common.js'
+COMMON_STYLES_PATH = Path(__file__).parent / 'common.css'
 MOBILE_SCRIPT_PATH = Path(__file__).parent / 'script.mobile.js'
 MOBILE_STYLES_PATH = Path(__file__).parent / 'styles.mobile.css'
 
@@ -116,6 +118,8 @@ class OverlayGenerator:
             no_media_file.close()
 
         if not as_one_file:
+            shutil.copy(COMMON_SCRIPT_PATH, out_dir / 'common.js')
+            shutil.copy(COMMON_STYLES_PATH, out_dir / 'common.css')
             shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
@@ -186,6 +190,10 @@ class OverlayGenerator:
                             doc.asis(MOBILE_STYLES_PATH.read_text())
                         else:
                             doc.asis(STYLES_PATH.read_text())
+                    with tag('style'):
+                        doc.asis(CROPPER_CSS_PATH.read_text())
+                    with tag('style'):
+                        doc.asis(COMMON_STYLES_PATH.read_text())
                 else:
                     if mobile:
                         with tag('link', rel='stylesheet', href='styles.mobile.css'):
@@ -193,7 +201,8 @@ class OverlayGenerator:
                     else:
                         with tag('link', rel='stylesheet', href='styles.css'):
                             pass
-
+                    with tag('link', rel='stylesheet', href='common.css'):
+                        pass
 
             with tag('body'):
                 with tag('dialog', id='dialog', klass='modal'):
@@ -276,31 +285,30 @@ class OverlayGenerator:
                     pass
 
                 if as_one_file:
+                    with tag('script'):
+                            doc.asis(COMMON_SCRIPT_PATH.read_text())
+                    with tag('script'):
+                            doc.asis(CROPPER_JS_PATH.read_text())
                     if mobile:
                         with tag('script'):
                             doc.asis(MOBILE_SCRIPT_PATH.read_text())
                     else:
                         with tag('script'):
                             doc.asis(PANZOOM_PATH.read_text())
-                        with tag('script'):
-                            doc.asis(CROPPER_JS_PATH.read_text())
-                        with tag('style'):
-                            doc.asis(CROPPER_CSS_PATH.read_text())
+                        
                         with tag('script'):
                             doc.asis(SCRIPT_PATH.read_text())
                 else:
-                    if not mobile:
-                        with tag('script', src='panzoom.min.js'):
-                            pass
-                        with tag('script', src='cropper.min.js'):
-                            pass
-                        with tag('style', src='cropper.min.css'):
-                            pass
-
+                    with tag('script', src='cropper.min.js'):
+                        pass
+                    with tag('style', src='cropper.min.css'):
+                        pass
                     if mobile :
                         with tag('script', src='script.mobile.js'):
                             pass
                     else:
+                        with tag('script', src='panzoom.min.js'):
+                            pass
                         with tag('script', src='script.js'):
                             pass
 
