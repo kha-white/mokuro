@@ -451,12 +451,15 @@ confirmBtn.addEventListener('click', async (event) => {
       id,
       fields: {
         [state.sentenceField]: sentenceInput.value,
+        [state.pictureField]: '',
       },
-      picture: {
-        filename: `_${id}.webp`,
-        data: cropped,
-        fields: [state.pictureField],
-      },
+      picture: [
+        {
+          filename: `_${id}.webp`,
+          data: cropped,
+          fields: [state.pictureField],
+        },
+      ],
     },
   });
 
