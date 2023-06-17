@@ -155,6 +155,18 @@ class OverlayGenerator:
 
     def get_index_html(self, page_htmls=None, title='Mokuro', as_one_file=True, mobile=False, is_demo=False, pages=None, page_count=None):
         doc, tag, text = Doc().tagtext()
+        def text_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='text', id=id_, klass='text-input'):
+                    pass
+        def file_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='file', id=id_, accept='.json'):
+                    pass
 
         with tag('html'):
             doc.asis('<meta content="text/html;charset=utf-8" http-equiv="Content-Type">')
@@ -184,20 +196,32 @@ class OverlayGenerator:
 
 
             with tag('body'):
-                if not mobile:
-                    with tag('dialog', id='dialog', klass='modal'):
-                        with tag('div', id='dialog-container'):
-                            with tag('h2'):
-                                text('Quick Edit')
-                            with tag('img', id='crop-image'):
+                with tag('dialog', id='dialog', klass='modal'):
+                    with tag('div', klass='dialog-container'):
+                        with tag('h2'):
+                            text('Quick Edit')
+                        with tag('img', id='crop-image'):
+                            pass
+                        with tag('form', id='dialog-actions'):
+                            with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
+                                text('Cancel')
+                            with tag('textarea', id='sentence-input'):
                                 pass
-                            with tag('form', id='dialog-actions'):
-                                with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
-                                    text('Cancel')
-                                with tag('textarea', id='sentence-input'):
-                                    pass
-                                with tag('button', klass='dialog-button', id='confirm-btn', formmethod='dialog'):
-                                    text('Confirm')
+                            with tag('button', klass='dialog-button', id='confirm-btn', formmethod='dialog'):
+                                text('Confirm')
+                with tag('dialog', id='settings-dialog', klass='modal'):
+                    with tag('div', klass='dialog-container'):
+                        with tag('h2'):
+                            text('Advanced settings')
+                            pass
+                        text_input('sentence-field-input', 'Sentence field:')
+                        text_input('picture-field-input', 'Picture field:')
+                        file_input('import-input', 'Import settings:')
+                        with tag('button', id='export-button', klass='dialog-button'):
+                            text('Export settings')
+                        with tag('form', id='dialog-actions'):
+                            with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
+                                text('Close')
 
                 if page_count is not None:
                     self.top_menu(doc, tag, text, page_count, mobile)
@@ -392,6 +416,7 @@ class OverlayGenerator:
                     option_toggle('menuPageNum', 'show page number')
                 else:
                     option_color('menuBackgroundColor', 'background color', '#C4C3D0')
+                option_click('menuAdvanced', 'advanced settings')
                 option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about/help')
 

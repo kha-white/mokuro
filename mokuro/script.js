@@ -22,6 +22,8 @@ let defaultState = {
   defaultZoomMode: 'fit to screen',
   toggleOCRTextBoxes: false,
   backgroundColor: '#C4C3D0',
+  sentenceField: 'Sentence',
+  pictureField: 'Picture',
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -69,6 +71,17 @@ function preloadImage() {
     preload.style.content = `url(${backgroundImageUrl})`;
   }
 }
+
+const sentenceField = document.getElementById('sentence-field-input');
+const pictureField = document.getElementById('picture-field-input');
+const settingsDialog = document.getElementById('settings-dialog');
+
+sentenceField.addEventListener('change', () => {
+  state.sentenceField = sentenceField.value;
+});
+pictureField.addEventListener('change', () => {
+  state.pictureField = pictureField.value;
+});
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -333,6 +346,23 @@ document.getElementById('menuAbout').addEventListener(
   },
   false
 );
+
+document.getElementById('menuAdvanced').addEventListener(
+  'click',
+  () => {
+    settingsDialog.showModal();
+    sentenceField.value = state.sentenceField;
+    pictureField.value = state.pictureField;
+    pictureField.disabled = false;
+    sentenceField.disabled = false;
+    pz.pause();
+  },
+  false
+);
+
+settingsDialog.addEventListener('close', (e) => {
+  pz.resume();
+});
 
 document.getElementById('menuReset').addEventListener(
   'click',
@@ -763,12 +793,12 @@ confirmBtn.addEventListener('click', async (event) => {
     note: {
       id,
       fields: {
-        Sentence: sentenceInput.value,
+        [state.sentenceField]: sentenceInput.value,
       },
       picture: {
         filename: `_${id}.webp`,
         data: cropped,
-        fields: ['Picture'],
+        fields: [state.pictureField],
       },
     },
   });
@@ -776,3 +806,37 @@ confirmBtn.addEventListener('click', async (event) => {
 
   dialog.close();
 });
+
+function exportSettings() {
+  const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+    JSON.stringify(state)
+  )}`;
+  const link = document.createElement('a');
+  link.href = jsonString;
+  link.download = 'settings.json';
+  link.click();
+}
+
+const fileInput = document.getElementById('import-input');
+const exportButton = document.getElementById('export-button');
+
+fileInput.addEventListener('change', importSettings);
+exportButton.addEventListener('click', exportSettings);
+
+function importSettings() {
+  const [file] = fileInput.files;
+  const reader = new FileReader();
+
+  reader.addEventListener('load', () => {
+    const page_idx = state.page_idx;
+    state = JSON.parse(reader.result);
+    updateUI();
+    updatePage(page_idx);
+    updateProperties();
+    location.reload();
+  });
+
+  if (file) {
+    reader.readAsText(file);
+  }
+}

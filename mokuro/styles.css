@@ -121,7 +121,7 @@ body {
   display: block;
 }
 
-#dialog-container {
+.dialog-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -137,6 +137,17 @@ body {
   display: block;
   max-height: 500px;
   max-width: 500px;
+}
+
+.form-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+  padding: 10px 0 10px 0;
+}
+
+.text-input {
+  width: 50%;
 }
 
 .hovered {
