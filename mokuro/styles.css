@@ -1,6 +1,7 @@
 :root {
   --connectButtonDisplay: inline-block
   --colorBackground: #c4c3d0;
+  --connectButtonDisplay: block;
   /* common */
   --textBoxDisplay: initial;
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
@@ -65,8 +66,4 @@
 
 #rightAScreen {
   right: 0;
-}
-
-.connect-button {
-  opacity: 0;
 }

@@ -3,6 +3,7 @@
   --pageNumDisplay: initial;
   --colorBackground: #000;
   --color4: rgba(255, 255, 255, 0.342);
+  --connectButtonDisplay: none;
   /* common */
   --textBoxDisplay: initial;
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
@@ -57,8 +58,4 @@
   font-family: 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
   transform: translate(-50%, 0);
   z-index: 10;
-}
-
-.connect-button {
-  display: none;
 }

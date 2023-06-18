@@ -1,3 +1,7 @@
+:root {
+  --sentenceInputDisplay: block;
+}
+
 body {
   overflow: hidden;
   margin: 0;
@@ -61,6 +65,8 @@ body {
 }
 
 .connect-button {
+  display: var(--connectButtonDisplay) !important;
+  opacity: 0;
   position: absolute;
   margin-right: calc(var(--textBoxFontSize) * -1);
   margin-top: calc(var(--textBoxFontSize) * -1);
@@ -103,7 +109,7 @@ body {
 #sentence-input {
   width: 100%;
   resize: none;
-  display: block;
+  display: var(--sentenceInputDisplay);
 }
 
 .dialog-container {

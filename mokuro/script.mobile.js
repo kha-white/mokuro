@@ -14,6 +14,9 @@ const defaultState = {
   backgroundColor: '#000',
   showNav: true,
   showPageNum: true,
+  connectEnabled: false,
+  editSentence: true,
+  cropImage: true,
   sentenceField: 'Sentence',
   pictureField: 'Picture',
 };
@@ -137,6 +140,18 @@ function updateProperties() {
     r.style.setProperty('--pageNumDisplay', 'initial');
   } else {
     r.style.setProperty('--pageNumDisplay', 'none');
+  }
+
+  if (state.connectEnabled) {
+    r.style.setProperty('--connectButtonDisplay', 'block');
+  } else {
+    r.style.setProperty('--connectButtonDisplay', 'none');
+  }
+
+  if (state.editSentence) {
+    r.style.setProperty('--sentenceInputDisplay', 'block');
+  } else {
+    r.style.setProperty('--sentenceInputDisplay', 'none');
   }
 }
 

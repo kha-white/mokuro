@@ -13,6 +13,9 @@ const defaultState = {
   defaultZoomMode: 'fit to screen',
   toggleOCRTextBoxes: false,
   backgroundColor: '#C4C3D0',
+  connectEnabled: false,
+  editSentence: true,
+  cropImage: true,
   sentenceField: 'Sentence',
   pictureField: 'Picture',
 };
@@ -129,6 +132,18 @@ function updateProperties() {
 
   if (state.backgroundColor) {
     r.style.setProperty('--colorBackground', state.backgroundColor);
+  }
+
+  if (state.connectEnabled) {
+    r.style.setProperty('--connectButtonDisplay', 'block');
+  } else {
+    r.style.setProperty('--connectButtonDisplay', 'none');
+  }
+
+  if (state.editSentence) {
+    r.style.setProperty('--sentenceInputDisplay', 'block');
+  } else {
+    r.style.setProperty('--sentenceInputDisplay', 'none');
   }
 }
 

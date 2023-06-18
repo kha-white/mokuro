@@ -36,15 +36,37 @@ function preloadImage() {
   }
 }
 
+const connectEnabled = document.getElementById('connect-enabled');
+const editSentence = document.getElementById('edit-sentence-enabled');
+const cropImage = document.getElementById('crop-enabled');
 const sentenceField = document.getElementById('sentence-field-input');
 const pictureField = document.getElementById('picture-field-input');
 const settingsDialog = document.getElementById('settings-dialog');
 
+connectEnabled.addEventListener('change', () => {
+  state.connectEnabled = connectEnabled.checked;
+  saveState();
+  updateProperties();
+});
+editSentence.addEventListener('change', () => {
+  state.editSentence = editSentence.checked;
+  saveState();
+  updateProperties();
+});
+cropImage.addEventListener('change', () => {
+  state.cropImage = cropImage.checked;
+  saveState();
+  updateProperties();
+});
 sentenceField.addEventListener('change', () => {
   state.sentenceField = sentenceField.value;
+  saveState();
+  updateProperties();
 });
 pictureField.addEventListener('change', () => {
   state.pictureField = pictureField.value;
+  saveState();
+  updateProperties();
 });
 
 function initTextBoxes() {
@@ -176,6 +198,9 @@ document.getElementById('menuAdvanced').addEventListener(
   'click',
   () => {
     settingsDialog.showModal();
+    connectEnabled.checked = state.connectEnabled;
+    editSentence.checked = state.editSentence;
+    cropImage.checked = state.cropImage;
     sentenceField.value = state.sentenceField;
     pictureField.value = state.pictureField;
     pictureField.disabled = false;
@@ -377,35 +402,43 @@ dialog.addEventListener('close', (e) => {
   cropper.destroy();
 });
 
-function updateLast(sentence, img) {
-  const viewportmeta = document.querySelector('meta[name=viewport]');
+async function updateLast(sentence, img) {
+  if (state.cropImage) {
+    const viewportmeta = document.querySelector('meta[name=viewport]');
 
-  viewportmeta.setAttribute(
-    'content',
-    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0'
-  );
+    viewportmeta.setAttribute(
+      'content',
+      'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0'
+    );
 
-  const image = document.getElementById('crop-image');
-  image.setAttribute('src', img);
-  sentenceInput.value = sentence;
+    const image = document.getElementById('crop-image');
+    image.setAttribute('src', img);
+    sentenceInput.value = sentence;
 
-  cropper = new Cropper(image, {
-    viewMode: 1,
-    zoomable: false,
-    dragMode: 'none',
-  });
+    cropper = new Cropper(image, {
+      viewMode: 1,
+      zoomable: false,
+      dragMode: 'none',
+    });
 
-  dialog.showModal();
-  viewportmeta.setAttribute(
-    'content',
-    'initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0'
-  );
-  if (pz) {
-    pz.pause();
+    dialog.showModal();
+    viewportmeta.setAttribute(
+      'content',
+      'initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0'
+    );
+    if (pz) {
+      pz.pause();
+    }
+  } else {
+    const { id } = await getLastCard();
+    const url = new URL(img, document.baseURI).href;
+    const picture = await getImage(url);
+
+    await updateLastCard(id, picture, sentence);
   }
 }
 
-function ankiConnect(action, version, params = {}) {
+function ankiConnect(action, version = 6, params = {}) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.addEventListener('error', () => reject('failed to issue request'));
@@ -449,13 +482,35 @@ function getCroppedImage() {
     .split(';base64,')[1];
 }
 
+function getImage(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', () => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        resolve(reader.result.split(';base64,')[1]);
+      });
+      reader.readAsDataURL(xhr.response);
+    });
+
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.overrideMimeType('image/webp');
+    xhr.send();
+  });
+}
+
 async function updateLastCard(id, picture, sentence) {
+  const fields = state.editSentence
+    ? {
+        [state.sentenceField]: sentence,
+      }
+    : {};
+
   await ankiConnect('updateNoteFields', 6, {
     note: {
       id,
-      fields: {
-        [state.sentenceField]: sentence,
-      },
+      fields,
       picture: {
         filename: `_${id}.webp`,
         data: picture,

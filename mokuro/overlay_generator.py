@@ -165,6 +165,12 @@ class OverlayGenerator:
                     text(text_content)
                 with tag('input', type='text', id=id_, klass='text-input'):
                     pass
+        def toggle_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='checkbox', id=id_):
+                    pass
         def file_input(id_, text_content):
             with tag('label', klass='form-item'):
                 with tag('label'):
@@ -223,6 +229,9 @@ class OverlayGenerator:
                         with tag('h2'):
                             text('Advanced settings')
                             pass
+                        toggle_input('connect-enabled', 'Enable anki connect integration?')
+                        toggle_input('edit-sentence-enabled', 'Update sentence field?')
+                        toggle_input('crop-enabled', 'Crop picture before updating note?')
                         text_input('sentence-field-input', 'Sentence field:')
                         text_input('picture-field-input', 'Picture field:')
                         file_input('import-input', 'Import settings:')
