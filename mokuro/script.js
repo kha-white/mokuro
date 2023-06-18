@@ -404,3 +404,8 @@ confirmBtn.addEventListener('click', async (event) => {
 
   dialog.close();
 });
+
+document.getElementById('snackbar').addEventListener('click', async () => {
+  const { id } = await getLastCard();
+  await ankiConnect('guiBrowse', 6, { query: `nid:${id}` });
+});

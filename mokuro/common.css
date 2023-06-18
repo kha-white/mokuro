@@ -1,5 +1,6 @@
 :root {
   --sentenceInputDisplay: block;
+  --connectColor: #6feef7ec;
 }
 
 body {
@@ -71,7 +72,7 @@ body {
   margin-right: calc(var(--textBoxFontSize) * -1);
   margin-top: calc(var(--textBoxFontSize) * -1);
   cursor: pointer;
-  background-color: #6feef7ec;
+  background-color: var(--connectColor);
   border: 1px rgb(0, 0, 0) solid;
   border-radius: 50%;
   width: calc(var(--textBoxFontSize));
@@ -312,6 +313,72 @@ body {
   height: 0;
   overflow: hidden;
   z-index: -1;
+}
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: var(--connectColor);
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  border: 1px solid black;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 /*hide arrows from number input*/

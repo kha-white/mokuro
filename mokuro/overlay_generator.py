@@ -240,6 +240,8 @@ class OverlayGenerator:
                         with tag('form', id='dialog-actions'):
                             with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
                                 text('Close')
+                with tag('div', id='snackbar'):
+                    pass
 
                 if page_count is not None:
                     self.top_menu(doc, tag, text, page_count, mobile)

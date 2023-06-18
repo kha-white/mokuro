@@ -507,7 +507,7 @@ async function updateLastCard(id, picture, sentence) {
       }
     : {};
 
-  await ankiConnect('updateNoteFields', 6, {
+  ankiConnect('updateNoteFields', 6, {
     note: {
       id,
       fields,
@@ -517,6 +517,8 @@ async function updateLastCard(id, picture, sentence) {
         fields: [state.pictureField],
       },
     },
+  }).then(() => {
+    showSnackbar('Card  updated');
   });
 }
 
@@ -552,4 +554,14 @@ function importSettings() {
   if (file) {
     reader.readAsText(file);
   }
+}
+
+function showSnackbar(message) {
+  const snackbar = document.getElementById('snackbar');
+  snackbar.innerHTML = message;
+  snackbar.className = 'show';
+
+  setTimeout(() => {
+    snackbar.className = snackbar.className.replace('show', '');
+  }, 1500);
 }
