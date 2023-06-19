@@ -501,6 +501,13 @@ function getImage(url) {
 }
 
 async function updateLastCard(id, picture, sentence) {
+  const timeSinceCardCreated = Math.floor((Date.now() - id) / 60000);
+
+  if (timeSinceCardCreated > 5) {
+    showSnackbar('Error: Card created over 5 minutes ago', 3000);
+    return;
+  }
+
   const fields = state.editSentence
     ? {
         [state.sentenceField]: sentence,
