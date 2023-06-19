@@ -37,7 +37,7 @@ function updateUI() {
   document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
-  document.getElementById('menuEasyNav').value = state.easyNav;
+  document.getElementById('menuEasyNav').checked = state.easyNav;
   document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 

@@ -71,13 +71,21 @@
 
 .nav-btn {
   display: var(--navBtnDisplay) !important;
+  position: absolute;
   background-color: transparent;
   border: none;
   cursor: pointer;
   display: inline-block;
-  width: 50vw;
+  height: 100%;
+  width: 500px;
+}
+
+#left-nav {
+  margin-left: -500px;
+  left: 0;;
 }
 
 #right-nav {
-  order: 4;
+  margin-right: -500px;
+  right: 0;;
 }
