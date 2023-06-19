@@ -2,6 +2,7 @@
   --connectButtonDisplay: inline-block
   --colorBackground: #c4c3d0;
   --connectButtonDisplay: block;
+  --navBtnDisplay: block;
   /* common */
   --textBoxDisplay: initial;
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
@@ -66,4 +67,17 @@
 
 #rightAScreen {
   right: 0;
+}
+
+.nav-btn {
+  display: var(--navBtnDisplay) !important;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  width: 50vw;
+}
+
+#right-nav {
+  order: 4;
 }

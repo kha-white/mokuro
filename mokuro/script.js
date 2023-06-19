@@ -16,6 +16,7 @@ const defaultState = {
   connectEnabled: false,
   editSentence: true,
   cropImage: true,
+  easyNav: true,
   sentenceField: 'Sentence',
   pictureField: 'Picture',
 };
@@ -36,6 +37,7 @@ function updateUI() {
   document.getElementById('menuDefaultZoom').value = state.defaultZoomMode;
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
+  document.getElementById('menuEasyNav').value = state.easyNav;
   document.getElementById('menuBackgroundColor').value = state.backgroundColor;
 }
 
@@ -134,6 +136,12 @@ function updateProperties() {
     r.style.setProperty('--colorBackground', state.backgroundColor);
   }
 
+  if (state.easyNav) {
+    r.style.setProperty('--navBtnDisplay', 'block');
+  } else {
+    r.style.setProperty('--navBtnDisplay', 'none');
+  }
+
   if (state.connectEnabled) {
     r.style.setProperty('--connectButtonDisplay', 'block');
   } else {
@@ -163,6 +171,16 @@ document.getElementById('menuDoublePageView').addEventListener(
       !document.getElementById('menuDoublePageView').checked;
     saveState();
     updatePage(state.page_idx);
+  },
+  false
+);
+
+document.getElementById('menuEasyNav').addEventListener(
+  'click',
+  function () {
+    state.easyNav = document.getElementById('menuEasyNav').checked;
+    saveState();
+    updateProperties();
   },
   false
 );
@@ -408,4 +426,30 @@ confirmBtn.addEventListener('click', async (event) => {
 document.getElementById('snackbar').addEventListener('click', async () => {
   const { id } = await getLastCard();
   await ankiConnect('guiBrowse', 6, { query: `nid:${id}` });
+});
+
+let start;
+let end;
+
+document.getElementById('left-nav').addEventListener('mousedown', () => {
+  start = new Date();
+});
+document.getElementById('right-nav').addEventListener('mousedown', () => {
+  start = new Date();
+});
+document.getElementById('left-nav').addEventListener('mouseup', () => {
+  end = new Date();
+  const clickDuration = end - start;
+
+  if (clickDuration < 200) {
+    inputLeft();
+  }
+});
+document.getElementById('right-nav').addEventListener('mouseup', () => {
+  end = new Date();
+  const clickDuration = end - start;
+
+  if (clickDuration < 200) {
+    inputRight();
+  }
 });

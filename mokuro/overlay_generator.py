@@ -263,13 +263,14 @@ class OverlayGenerator:
                 with tag('div', id='page-num'):
                     pass
 
-                with tag('button', id='back', klass='btn'):
-                    text('<') 
-                    pass
+                if mobile:
+                    with tag('button', id='back', klass='btn'):
+                        text('<') 
+                        pass
 
-                with tag('button', id='forward', klass='btn'):
-                    text('>') 
-                    pass
+                    with tag('button', id='forward', klass='btn'):
+                        text('>')
+                        pass
 
                 if not mobile:
                     with tag('a', id='leftAScreen', href='#'):
@@ -282,6 +283,8 @@ class OverlayGenerator:
                     doc.asis(pages)
                 else:
                     with tag('div', id='pagesContainer'):
+                        with tag('button', id='left-nav', klass='nav-btn'):
+                            pass;
                         for i, page_html in enumerate(page_htmls):
                             with tag('div', id=f'page{i}', klass='page'):
                                 doc.asis(page_html)
@@ -291,6 +294,8 @@ class OverlayGenerator:
 
                             with tag('a', id='rightAPage', href='#'):
                                 pass
+                        with tag('button', id='right-nav', klass='nav-btn'):
+                            pass;
 
                 with tag('div', id='preload-image'):
                     pass
@@ -434,6 +439,7 @@ class OverlayGenerator:
                     option_toggle('menuShowNav', 'show bottom navigation')
                     option_toggle('menuPageNum', 'show page number')
                 else:
+                    option_toggle('menuEasyNav', 'enable side navigation')
                     option_color('menuBackgroundColor', 'background color', '#C4C3D0')
                 option_click('menuAdvanced', 'advanced settings')
                 option_click('menuReset', 'reset settings')
