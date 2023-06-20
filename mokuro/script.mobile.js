@@ -12,6 +12,7 @@ const defaultState = {
   toggleOCRTextBoxes: false,
   swipeThreshold: 35,
   backgroundColor: '#000',
+  menuPreloadAmount: 5,
   showNav: true,
   showPageNum: true,
   connectEnabled: false,
@@ -66,6 +67,7 @@ function updateUI() {
   document.getElementById('menuToggleOCRTextBoxes').checked =
     state.toggleOCRTextBoxes;
   document.getElementById('menuSwipeThreshold').value = state.swipeThreshold;
+  document.getElementById('menuPreloadAmount').value = state.preloadAmount;
   document.getElementById('menuBackgroundColor').value = state.backgroundColor;
   document.getElementById('menuShowNav').checked = state.showNav;
   document.getElementById('menuPageNum').checked = state.showPageNum;

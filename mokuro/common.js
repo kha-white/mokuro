@@ -32,12 +32,17 @@ function getBackgroundImage(page) {
 }
 
 function preloadImage() {
-  const page = getPage(state.page_idx + 1);
-  const backgroundImageUrl = getBackgroundImage(page);
+  let preloadContent = '';
 
-  if (backgroundImageUrl) {
-    preload.style.content = `url(${backgroundImageUrl})`;
+  for (let i = 0; i < state.preloadAmount; i++) {
+    const page = getPage(state.page_idx + i);
+    const backgroundImageUrl = getBackgroundImage(page);
+
+    if (backgroundImageUrl) {
+      preloadContent += `url(${backgroundImageUrl}) `;
+    }
   }
+  preload.style.content = preloadContent;
 }
 
 const connectEnabled = document.getElementById('connect-enabled');
@@ -601,3 +606,13 @@ function showSnackbar(message) {
     snackbar.className = snackbar.className.replace('show', '');
   }, 1500);
 }
+
+document.getElementById('menuPreloadAmount').addEventListener(
+  'input',
+  function (event) {
+    state.preloadAmount = event.target.value;
+    saveState();
+    updateProperties();
+  },
+  false
+);

@@ -444,6 +444,7 @@ class OverlayGenerator:
                 else:
                     option_toggle('menuEasyNav', 'enable side navigation')
                     option_color('menuBackgroundColor', 'background color', '#C4C3D0')
+                option_range('menuPreloadAmount', 'preload amount (0-10)', '0', '10', '5')
                 option_click('menuAdvanced', 'advanced settings')
                 option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about/help')

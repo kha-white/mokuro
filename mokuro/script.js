@@ -13,6 +13,7 @@ const defaultState = {
   defaultZoomMode: 'fit to screen',
   toggleOCRTextBoxes: false,
   backgroundColor: '#C4C3D0',
+  menuPreloadAmount: 5,
   connectEnabled: false,
   editSentence: true,
   cropImage: true,
@@ -40,6 +41,7 @@ function updateUI() {
     state.toggleOCRTextBoxes;
   document.getElementById('menuEasyNav').checked = state.easyNav;
   document.getElementById('menuBackgroundColor').value = state.backgroundColor;
+  document.getElementById('menuPreloadAmount').value = state.preloadAmount;
 }
 
 document.addEventListener(
