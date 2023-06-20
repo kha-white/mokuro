@@ -17,6 +17,7 @@ const defaultState = {
   connectEnabled: false,
   editSentence: true,
   cropImage: true,
+  overwriteImage: true,
   sentenceField: 'Sentence',
   pictureField: 'Picture',
 };
@@ -332,15 +333,3 @@ function handleTouchEnd(event) {
 function handleTouchCancel(event) {
   removeTouch(event);
 }
-
-confirmBtn.addEventListener('click', async (event) => {
-  event.preventDefault();
-
-  const cropped = getCroppedImage();
-  const { id } = await getLastCard();
-  const sentence = sentenceInput.value;
-
-  await updateLastCard(id, cropped, sentence);
-
-  dialog.close();
-});

@@ -39,6 +39,7 @@ function preloadImage() {
 const connectEnabled = document.getElementById('connect-enabled');
 const editSentence = document.getElementById('edit-sentence-enabled');
 const cropImage = document.getElementById('crop-enabled');
+const overwriteImage = document.getElementById('overwrite-enabled');
 const sentenceField = document.getElementById('sentence-field-input');
 const pictureField = document.getElementById('picture-field-input');
 const settingsDialog = document.getElementById('settings-dialog');
@@ -55,6 +56,11 @@ editSentence.addEventListener('change', () => {
 });
 cropImage.addEventListener('change', () => {
   state.cropImage = cropImage.checked;
+  saveState();
+  updateProperties();
+});
+overwriteImage.addEventListener('change', () => {
+  state.overwriteImage = overwriteImage.checked;
   saveState();
   updateProperties();
 });
@@ -201,6 +207,7 @@ document.getElementById('menuAdvanced').addEventListener(
     connectEnabled.checked = state.connectEnabled;
     editSentence.checked = state.editSentence;
     cropImage.checked = state.cropImage;
+    overwriteImage.checked = state.overwriteImage;
     sentenceField.value = state.sentenceField;
     pictureField.value = state.pictureField;
     pictureField.disabled = false;
@@ -500,7 +507,7 @@ function getImage(url) {
   });
 }
 
-async function updateLastCard(id, picture, sentence) {
+async function updateLastCard(id, picture) {
   const timeSinceCardCreated = Math.floor((Date.now() - id) / 60000);
 
   if (timeSinceCardCreated > 5) {
@@ -508,11 +515,16 @@ async function updateLastCard(id, picture, sentence) {
     return;
   }
 
-  const fields = state.editSentence
-    ? {
-        [state.sentenceField]: sentence,
-      }
-    : {};
+  const fields = {};
+
+  if (state.editSentence) {
+    const sentence = await inheritHtml(id);
+    fields[state.sentenceField] = sentence;
+  }
+
+  if (state.overwriteImage) {
+    fields[state.pictureField] = '';
+  }
 
   ankiConnect('updateNoteFields', 6, {
     note: {
@@ -528,6 +540,17 @@ async function updateLastCard(id, picture, sentence) {
     showSnackbar('Card  updated');
   });
 }
+
+confirmBtn.addEventListener('click', async (event) => {
+  event.preventDefault();
+
+  const cropped = getCroppedImage();
+  const { id } = await getLastCard();
+
+  await updateLastCard(id, cropped);
+
+  dialog.close();
+});
 
 function exportSettings() {
   const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(

@@ -17,6 +17,7 @@ const defaultState = {
   editSentence: true,
   cropImage: true,
   easyNav: true,
+  overwriteImage: true,
   sentenceField: 'Sentence',
   pictureField: 'Picture',
 };
@@ -410,18 +411,6 @@ async function inheritHtml(noteId) {
 
   return inherited;
 }
-
-confirmBtn.addEventListener('click', async (event) => {
-  event.preventDefault();
-
-  const cropped = getCroppedImage();
-  const { id } = await getLastCard();
-  const sentence = await inheritHtml(id);
-
-  await updateLastCard(id, cropped, sentence);
-
-  dialog.close();
-});
 
 document.getElementById('snackbar').addEventListener('click', async () => {
   const { id } = await getLastCard();

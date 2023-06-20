@@ -230,8 +230,9 @@ class OverlayGenerator:
                             text('Advanced settings')
                             pass
                         toggle_input('connect-enabled', 'Enable anki connect integration?')
-                        toggle_input('edit-sentence-enabled', 'Update sentence field?')
+                        toggle_input('edit-sentence-enabled', 'Enable sentence grabbing?')
                         toggle_input('crop-enabled', 'Crop picture before updating note?')
+                        toggle_input('overwrite-enabled', 'Overwrite picture?')
                         text_input('sentence-field-input', 'Sentence field:')
                         text_input('picture-field-input', 'Picture field:')
                         file_input('import-input', 'Import settings:')
