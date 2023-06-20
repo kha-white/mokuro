@@ -4,6 +4,7 @@
   --colorBackground: #000;
   --color4: rgba(255, 255, 255, 0.342);
   --connectButtonDisplay: none;
+  --sentenceConnectButtonDisplay: none;
   /* common */
   --textBoxDisplay: initial;
   --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);

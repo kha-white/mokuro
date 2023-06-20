@@ -24,12 +24,16 @@ function loadState() {
   updateProperties();
 }
 
-function preloadImage() {
-  const page = getPage(state.page_idx + 1);
+function getBackgroundImage(page) {
   const pageContainer = page?.querySelector('.pageContainer');
-  const backgroundImageUrl = pageContainer?.style?.backgroundImage
+  return pageContainer?.style?.backgroundImage
     ?.slice(4, -1)
     .replace(/['"]/g, '');
+}
+
+function preloadImage() {
+  const page = getPage(state.page_idx + 1);
+  const backgroundImageUrl = getBackgroundImage(page);
 
   if (backgroundImageUrl) {
     preload.style.content = `url(${backgroundImageUrl})`;
@@ -519,7 +523,9 @@ async function updateLastCard(id, picture) {
 
   if (state.editSentence) {
     const sentence = await inheritHtml(id);
-    fields[state.sentenceField] = sentence;
+    if (sentence) {
+      fields[state.sentenceField] = sentence;
+    }
   }
 
   if (state.overwriteImage) {

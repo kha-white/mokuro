@@ -47,6 +47,7 @@ document.addEventListener(
   function () {
     loadState();
     num_pages = document.getElementsByClassName('page').length;
+    generateConnectButtons();
 
     pz = panzoom(pc, {
       bounds: true,
@@ -147,12 +148,15 @@ function updateProperties() {
     r.style.setProperty('--connectButtonDisplay', 'block');
   } else {
     r.style.setProperty('--connectButtonDisplay', 'none');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'none');
   }
 
-  if (state.editSentence) {
+  if (state.editSentence && state.connectEnabled) {
     r.style.setProperty('--sentenceInputDisplay', 'block');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'block');
   } else {
     r.style.setProperty('--sentenceInputDisplay', 'none');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'none');
   }
 }
 
@@ -420,13 +424,18 @@ document.getElementById('snackbar').addEventListener('click', async () => {
 let start;
 let end;
 
-document.getElementById('left-nav').addEventListener('mousedown', () => {
+const leftNav = document.getElementById('left-nav');
+const rightNav = document.getElementById('right-nav');
+
+leftNav.addEventListener('mousedown', () => {
   start = new Date();
 });
-document.getElementById('right-nav').addEventListener('mousedown', () => {
+
+rightNav.addEventListener('mousedown', () => {
   start = new Date();
 });
-document.getElementById('left-nav').addEventListener('mouseup', () => {
+
+leftNav.addEventListener('mouseup', () => {
   end = new Date();
   const clickDuration = end - start;
 
@@ -434,7 +443,8 @@ document.getElementById('left-nav').addEventListener('mouseup', () => {
     inputLeft();
   }
 });
-document.getElementById('right-nav').addEventListener('mouseup', () => {
+
+rightNav.addEventListener('mouseup', () => {
   end = new Date();
   const clickDuration = end - start;
 
@@ -442,3 +452,24 @@ document.getElementById('right-nav').addEventListener('mouseup', () => {
     inputRight();
   }
 });
+
+function generateConnectButtons() {
+  for (let i = 0; i < num_pages; i++) {
+    const connectBtn = document.getElementById(`connect-${i}`);
+
+    connectBtn.addEventListener('mousedown', () => {
+      start = new Date();
+    });
+
+    connectBtn.addEventListener('mouseup', () => {
+      end = new Date();
+      const clickDuration = end - start;
+
+      if (clickDuration < 200) {
+        const page = getPage(i);
+        const img = getBackgroundImage(page);
+        updateLast('', img);
+      }
+    });
+  }
+}

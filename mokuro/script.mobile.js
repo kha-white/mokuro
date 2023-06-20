@@ -147,9 +147,10 @@ function updateProperties() {
     r.style.setProperty('--connectButtonDisplay', 'block');
   } else {
     r.style.setProperty('--connectButtonDisplay', 'none');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'none');
   }
 
-  if (state.editSentence) {
+  if (state.editSentence && state.connectEnabled) {
     r.style.setProperty('--sentenceInputDisplay', 'block');
   } else {
     r.style.setProperty('--sentenceInputDisplay', 'none');

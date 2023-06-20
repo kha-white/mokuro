@@ -1,7 +1,7 @@
 :root {
-  --connectButtonDisplay: inline-block
   --colorBackground: #c4c3d0;
-  --connectButtonDisplay: block;
+  --connectButtonDisplay: none;
+  --sentenceConnectButtonDisplay: none;
   --navBtnDisplay: block;
   /* common */
   --textBoxDisplay: initial;
@@ -75,17 +75,25 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  display: inline-block;
   height: 100%;
   width: 500px;
 }
 
 #left-nav {
   margin-left: -500px;
-  left: 0;;
+  left: 0;
 }
 
 #right-nav {
   margin-right: -500px;
-  right: 0;;
+  right: 0;
+}
+
+.connect {
+  display: var(--connectButtonDisplay);
+  height: 200px;
+  width: 100%;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
 }

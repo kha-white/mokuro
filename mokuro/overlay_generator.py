@@ -289,10 +289,12 @@ class OverlayGenerator:
                         for i, page_html in enumerate(page_htmls):
                             with tag('div', id=f'page{i}', klass='page'):
                                 doc.asis(page_html)
+                                if not mobile:
+                                    with tag('button', id=f'connect-{i}', klass='connect'):
+                                        pass
                         if not mobile:
                             with tag('a', id='leftAPage', href='#'):
                                 pass
-
                             with tag('a', id='rightAPage', href='#'):
                                 pass
                         with tag('button', id='right-nav', klass='nav-btn'):
