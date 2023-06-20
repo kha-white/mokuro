@@ -334,3 +334,9 @@ function handleTouchEnd(event) {
 function handleTouchCancel(event) {
   removeTouch(event);
 }
+
+document.getElementById('page-num').addEventListener('click', () => {
+  const page = getPage(state.page_idx);
+  const img = getBackgroundImage(page);
+  updateLast('', img);
+});
