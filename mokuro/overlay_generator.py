@@ -420,6 +420,7 @@ class OverlayGenerator:
                         'fit to width',
                         'original size',
                         'keep zoom level',
+                        'keep zoom, go to top',
                     ])
 
                 option_toggle('menuR2l', 'right to left')

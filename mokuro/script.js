@@ -307,6 +307,10 @@ function zoomFitToScreen() {
   panAlign('center', 'center');
 }
 
+function keepZoomStart() {
+  panAlign('center', 'top');
+}
+
 function zoomDefault() {
   switch (state.defaultZoomMode) {
     case 'fit to screen':
@@ -317,6 +321,9 @@ function zoomDefault() {
       break;
     case 'original size':
       zoomOriginal();
+      break;
+    case 'keep zoom, go to top':
+      keepZoomStart();
       break;
   }
 }
