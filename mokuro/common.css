@@ -242,6 +242,7 @@ body {
   z-index: 1000;
   border-radius: 3px;
   max-height: 90vh;
+  max-width: 355px;
   overflow: hidden;
   overflow-y: auto;
 }

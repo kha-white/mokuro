@@ -140,9 +140,9 @@ function updateProperties() {
   }
 
   if (state.showPageNum) {
-    r.style.setProperty('--pageNumDisplay', 'initial');
+    r.style.setProperty('--pageNumOpacity', '1');
   } else {
-    r.style.setProperty('--pageNumDisplay', 'none');
+    r.style.setProperty('--pageNumOpacity', '0');
   }
 
   if (state.connectEnabled) {
@@ -154,8 +154,10 @@ function updateProperties() {
 
   if (state.editSentence && state.connectEnabled) {
     r.style.setProperty('--sentenceInputDisplay', 'block');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'block');
   } else {
     r.style.setProperty('--sentenceInputDisplay', 'none');
+    r.style.setProperty('--sentenceConnectButtonDisplay', 'none');
   }
 }
 
@@ -338,7 +340,9 @@ function handleTouchCancel(event) {
 }
 
 document.getElementById('page-num').addEventListener('click', () => {
-  const page = getPage(state.page_idx);
-  const img = getBackgroundImage(page);
-  updateLast('', img);
+  if (state.connectEnabled) {
+    const page = getPage(state.page_idx);
+    const img = getBackgroundImage(page);
+    updateLast('', img);
+  }
 });

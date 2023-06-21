@@ -283,6 +283,8 @@ class OverlayGenerator:
                 if pages is not None:
                     doc.asis(pages)
                 else:
+                    with tag('div', id='preload-image'):
+                        pass
                     with tag('div', id='pagesContainer'):
                         with tag('button', id='left-nav', klass='nav-btn'):
                             pass;
@@ -299,9 +301,6 @@ class OverlayGenerator:
                                 pass
                         with tag('button', id='right-nav', klass='nav-btn'):
                             pass;
-
-                with tag('div', id='preload-image'):
-                    pass
 
                 if as_one_file:
                     with tag('script'):

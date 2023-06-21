@@ -520,7 +520,7 @@ async function updateLastCard(id, picture) {
   const timeSinceCardCreated = Math.floor((Date.now() - id) / 60000);
 
   if (timeSinceCardCreated > 5) {
-    showSnackbar('Error: Card created over 5 minutes ago', 3000);
+    showSnackbar('Error: Card created over 5 minutes ago');
     return;
   }
 
@@ -604,7 +604,7 @@ function showSnackbar(message) {
 
   setTimeout(() => {
     snackbar.className = snackbar.className.replace('show', '');
-  }, 1500);
+  }, 3000);
 }
 
 document.getElementById('menuPreloadAmount').addEventListener(

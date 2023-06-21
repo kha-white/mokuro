@@ -1,6 +1,6 @@
 :root {
   --navDisplay: initial;
-  --pageNumDisplay: initial;
+  --pageNumOpacity: 1;
   --colorBackground: #000;
   --color4: rgba(255, 255, 255, 0.342);
   --connectButtonDisplay: none;
@@ -50,7 +50,7 @@
 }
 
 #page-num {
-  display: var(--pageNumDisplay);
+  opacity: var(--pageNumOpacity);
   left: 50%;
   bottom: 18px;
   position: fixed;
