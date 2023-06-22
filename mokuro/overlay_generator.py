@@ -69,38 +69,6 @@ class OverlayGenerator:
         if self.mpocr is None:
             self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, **self.kwargs)
 
-    def convert_to_mobile(self, path, as_one_file=True, mobile=True, is_demo=False):
-        out_dir = path.parent
-        path_name = path.name.replace(".html", "")
-        suffix = path.suffix.lower()
-
-        if not path.is_file():
-            logger.error('Invalid file. Did you set the path correctly?')
-            return
-
-        if suffix == '.html':
-            f = open(path, 'r', encoding='utf-8')
-            text = f.read()
-            f.close()
-
-            start = text.find('<div id="pagesContainer">')
-            end = text.find('<script>')
-
-            max_start = text.find('max="') + 5
-            max_end = text.find('"', max_start)
-
-            page_count = text[max_start:max_end]
-            pages = text[start:end]
-            title = f'{path_name} | mokuro'
-            mobile_file = path_name + '.mobile.html'
-
-            index_html = self.get_index_html(title=title, pages=pages, as_one_file=as_one_file, is_demo=is_demo, mobile=True, page_count=page_count )
-            (out_dir / mobile_file).write_text(index_html, encoding='utf-8')
-            logger.info(f'{mobile_file} successfully generated')
-        else:
-            logger.error('Please specify a valid .html file')
-        return
-
     def process_dir(self, path, as_one_file=True, mobile=False, is_demo=False):
         path = Path(path).expanduser().absolute()
         assert path.is_dir(), f'{path} must be a directory'
