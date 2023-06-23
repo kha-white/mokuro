@@ -516,6 +516,27 @@ function getImage(url) {
   });
 }
 
+async function inheritHtml(noteId) {
+  const htmlTagRegex = RegExp('<[^>]*>(.*?)</[^>]*>', 'ig');
+
+  const [noteInfo] = await ankiConnect('notesInfo', 6, { notes: [noteId] });
+  const markedUp = noteInfo?.fields[state.sentenceField]?.value;
+  const markedUpWithoutBreaklines = markedUp.replace('<br>', '');
+  let inherited = sentenceInput.value;
+
+  while (true) {
+    const match = htmlTagRegex.exec(markedUpWithoutBreaklines);
+
+    if (match === null || match.length < 2) {
+      break;
+    }
+
+    inherited = inherited.replace(match[1], match[0]);
+  }
+
+  return inherited;
+}
+
 async function updateLastCard(id, picture) {
   const timeSinceCardCreated = Math.floor((Date.now() - id) / 60000);
 

@@ -404,27 +404,6 @@ function toggleFullScreen() {
   }
 }
 
-async function inheritHtml(noteId) {
-  const htmlTagRegex = RegExp('<[^>]*>(.*?)</[^>]*>', 'ig');
-
-  const [noteInfo] = await ankiConnect('notesInfo', 6, { notes: [noteId] });
-  const markedUp = noteInfo?.fields[state.sentenceField]?.value;
-  const markedUpWithoutBreaklines = markedUp.replace('<br>', '');
-  let inherited = sentenceInput.value;
-
-  while (true) {
-    const match = htmlTagRegex.exec(markedUpWithoutBreaklines);
-
-    if (match === null || match.length < 2) {
-      break;
-    }
-
-    inherited = inherited.replace(match[1], match[0]);
-  }
-
-  return inherited;
-}
-
 document.getElementById('snackbar').addEventListener('click', async () => {
   const { id } = await getLastCard();
   await ankiConnect('guiBrowse', 6, { query: `nid:${id}` });
