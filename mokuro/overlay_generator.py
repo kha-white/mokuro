@@ -15,11 +15,15 @@ from mokuro.utils import dump_json, load_json
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
+COMMON_SCRIPT_PATH = Path(__file__).parent / 'common.js'
+COMMON_STYLES_PATH = Path(__file__).parent / 'common.css'
 MOBILE_SCRIPT_PATH = Path(__file__).parent / 'script.mobile.js'
 MOBILE_STYLES_PATH = Path(__file__).parent / 'styles.mobile.css'
 
 PANZOOM_PATH = ASSETS_PATH / 'panzoom.min.js'
 ICONS_PATH = ASSETS_PATH / 'icons'
+CROPPER_JS_PATH = ASSETS_PATH / 'cropper.min.js'
+CROPPER_CSS_PATH = ASSETS_PATH / 'cropper.min.css'
 
 ABOUT = f"""
 <p>HTML overlay generated with <a href="https://github.com/kha-white/mokuro" target="_blank">mokuro</a> version {__version__}</p>
@@ -65,38 +69,6 @@ class OverlayGenerator:
         if self.mpocr is None:
             self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, **self.kwargs)
 
-    def convert_to_mobile(self, path, as_one_file=True, mobile=True, is_demo=False):
-        out_dir = path.parent
-        path_name = path.name.replace(".html", "")
-        suffix = path.suffix.lower()
-
-        if not path.is_file():
-            logger.error('Invalid file. Did you set the path correctly?')
-            return
-
-        if suffix == '.html':
-            f = open(path, 'r', encoding='utf-8')
-            text = f.read()
-            f.close()
-
-            start = text.find('<div id="pagesContainer">')
-            end = text.find('<script>')
-
-            max_start = text.find('max="') + 5
-            max_end = text.find('"', max_start)
-
-            page_count = text[max_start:max_end]
-            pages = text[start:end]
-            title = f'{path_name} | mokuro'
-            mobile_file = path_name + '.mobile.html'
-
-            index_html = self.get_index_html(title=title, pages=pages, as_one_file=as_one_file, is_demo=is_demo, mobile=True, page_count=page_count )
-            (out_dir / mobile_file).write_text(index_html, encoding='utf-8')
-            logger.info(f'{mobile_file} successfully generated')
-        else:
-            logger.error('Please specify a valid .html file')
-        return
-
     def process_dir(self, path, as_one_file=True, mobile=False, is_demo=False):
         path = Path(path).expanduser().absolute()
         assert path.is_dir(), f'{path} must be a directory'
@@ -114,9 +86,13 @@ class OverlayGenerator:
             no_media_file.close()
 
         if not as_one_file:
+            shutil.copy(COMMON_SCRIPT_PATH, out_dir / 'common.js')
+            shutil.copy(COMMON_STYLES_PATH, out_dir / 'common.css')
             shutil.copy(SCRIPT_PATH, out_dir / 'script.js')
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
+            shutil.copy(CROPPER_JS_PATH, out_dir / 'cropper.min.js')
+            shutil.copy(CROPPER_CSS_PATH, out_dir / 'cropper.min.css')
             if mobile:
                 shutil.copy(MOBILE_SCRIPT_PATH, out_dir / 'script.mobile.js')
                 shutil.copy(MOBILE_STYLES_PATH, out_dir / 'styles.mobile.css')
@@ -151,6 +127,24 @@ class OverlayGenerator:
 
     def get_index_html(self, page_htmls=None, title='Mokuro', as_one_file=True, mobile=False, is_demo=False, pages=None, page_count=None):
         doc, tag, text = Doc().tagtext()
+        def text_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='text', id=id_, klass='text-input'):
+                    pass
+        def toggle_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='checkbox', id=id_):
+                    pass
+        def file_input(id_, text_content):
+            with tag('label', klass='form-item'):
+                with tag('label'):
+                    text(text_content)
+                with tag('input', type='file', id=id_, accept='.json'):
+                    pass
 
         with tag('html'):
             doc.asis('<meta content="text/html;charset=utf-8" http-equiv="Content-Type">')
@@ -170,6 +164,10 @@ class OverlayGenerator:
                             doc.asis(MOBILE_STYLES_PATH.read_text())
                         else:
                             doc.asis(STYLES_PATH.read_text())
+                    with tag('style'):
+                        doc.asis(CROPPER_CSS_PATH.read_text())
+                    with tag('style'):
+                        doc.asis(COMMON_STYLES_PATH.read_text())
                 else:
                     if mobile:
                         with tag('link', rel='stylesheet', href='styles.mobile.css'):
@@ -177,9 +175,43 @@ class OverlayGenerator:
                     else:
                         with tag('link', rel='stylesheet', href='styles.css'):
                             pass
-
+                    with tag('link', rel='stylesheet', href='common.css'):
+                        pass
 
             with tag('body'):
+                with tag('dialog', id='dialog', klass='modal'):
+                    with tag('div', klass='dialog-container'):
+                        with tag('h2'):
+                            text('Quick Edit')
+                        with tag('img', id='crop-image'):
+                            pass
+                        with tag('form', id='dialog-actions'):
+                            with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
+                                text('Cancel')
+                            with tag('textarea', id='sentence-input'):
+                                pass
+                            with tag('button', klass='dialog-button', id='confirm-btn', formmethod='dialog'):
+                                text('Confirm')
+                with tag('dialog', id='settings-dialog', klass='modal'):
+                    with tag('div', klass='dialog-container'):
+                        with tag('h2'):
+                            text('Advanced settings')
+                            pass
+                        toggle_input('connect-enabled', 'Enable anki connect integration?')
+                        toggle_input('edit-sentence-enabled', 'Enable sentence grabbing?')
+                        toggle_input('crop-enabled', 'Crop picture before updating note?')
+                        toggle_input('overwrite-enabled', 'Overwrite picture?')
+                        text_input('sentence-field-input', 'Sentence field:')
+                        text_input('picture-field-input', 'Picture field:')
+                        file_input('import-input', 'Import settings:')
+                        with tag('button', id='export-button', klass='dialog-button'):
+                            text('Export settings')
+                        with tag('form', id='dialog-actions'):
+                            with tag('button', klass='dialog-button', value='cancel', formmethod='dialog'):
+                                text('Close')
+                with tag('div', id='snackbar'):
+                    pass
+
                 if page_count is not None:
                     self.top_menu(doc, tag, text, page_count, mobile)
                 else:
@@ -200,13 +232,14 @@ class OverlayGenerator:
                 with tag('div', id='page-num'):
                     pass
 
-                with tag('button', id='back', klass='btn'):
-                    text('<') 
-                    pass
+                if mobile:
+                    with tag('button', id='back', klass='btn'):
+                        text('<') 
+                        pass
 
-                with tag('button', id='forward', klass='btn'):
-                    text('>') 
-                    pass
+                    with tag('button', id='forward', klass='btn'):
+                        text('>')
+                        pass
 
                 if not mobile:
                     with tag('a', id='leftAScreen', href='#'):
@@ -218,35 +251,50 @@ class OverlayGenerator:
                 if pages is not None:
                     doc.asis(pages)
                 else:
+                    with tag('div', id='preload-image'):
+                        pass
                     with tag('div', id='pagesContainer'):
+                        with tag('button', id='left-nav', klass='nav-btn'):
+                            pass;
                         for i, page_html in enumerate(page_htmls):
                             with tag('div', id=f'page{i}', klass='page'):
                                 doc.asis(page_html)
+                                if not mobile:
+                                    with tag('button', id=f'connect-{i}', klass='connect'):
+                                        pass
                         if not mobile:
                             with tag('a', id='leftAPage', href='#'):
                                 pass
-
                             with tag('a', id='rightAPage', href='#'):
                                 pass
+                        with tag('button', id='right-nav', klass='nav-btn'):
+                            pass;
 
                 if as_one_file:
+                    with tag('script'):
+                            doc.asis(COMMON_SCRIPT_PATH.read_text())
+                    with tag('script'):
+                            doc.asis(CROPPER_JS_PATH.read_text())
                     if mobile:
                         with tag('script'):
                             doc.asis(MOBILE_SCRIPT_PATH.read_text())
                     else:
                         with tag('script'):
                             doc.asis(PANZOOM_PATH.read_text())
+                        
                         with tag('script'):
                             doc.asis(SCRIPT_PATH.read_text())
                 else:
-                    if not mobile:
-                        with tag('script', src='panzoom.min.js'):
-                            pass
-
+                    with tag('script', src='cropper.min.js'):
+                        pass
+                    with tag('style', src='cropper.min.css'):
+                        pass
                     if mobile :
                         with tag('script', src='script.mobile.js'):
                             pass
                     else:
+                        with tag('script', src='panzoom.min.js'):
+                            pass
                         with tag('script', src='script.js'):
                             pass
 
@@ -339,6 +387,7 @@ class OverlayGenerator:
                         'fit to width',
                         'original size',
                         'keep zoom level',
+                        'keep zoom, go to top',
                     ])
 
                 option_toggle('menuR2l', 'right to left')
@@ -361,7 +410,10 @@ class OverlayGenerator:
                     option_toggle('menuShowNav', 'show bottom navigation')
                     option_toggle('menuPageNum', 'show page number')
                 else:
+                    option_toggle('menuEasyNav', 'enable side navigation')
                     option_color('menuBackgroundColor', 'background color', '#C4C3D0')
+                option_range('menuPreloadAmount', 'preload amount (0-10)', '0', '10', '5')
+                option_click('menuAdvanced', 'advanced settings')
                 option_click('menuReset', 'reset settings')
                 option_click('menuAbout', 'about/help')
 
@@ -381,6 +433,8 @@ class OverlayGenerator:
             for result_blk, z_index in zip(result['blocks'], z_idxs):
                 box_style = self.get_box_style(result_blk, z_index, result['img_width'], result['img_height'])
                 with tag('div', klass='textBox', style=box_style):
+                    with tag('div', ('onclick', f'updateLast("{"".join(result_blk["lines"])}", "{quote(str(img_path.as_posix()))}")'), klass='connect-button', ):
+                        pass
                     for line in result_blk['lines']:
                         with tag('p'):
                             text(line)
