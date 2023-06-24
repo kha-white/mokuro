@@ -1,10 +1,31 @@
-> This is a temporary fork of [mokuro](https://github.com/kha-white/mokuro) that focuses on improving the mobile viewing experience.
+> This is a fork of [mokuro](https://github.com/kha-white/mokuro) that adds various improvements and featurs to the manga viewer.
 
 # Additions:
-## `mobile` flag:
-Passing in `--mobile True` will generate additional files that are optimised to be viewed on mobile devices, the default files will still be generated.
+
+## Anki connect integration:
+
+The reader now has an `Advanced settings` modal where you can specify various new settings, including enabling anki connect integration.
+
+When anki connect integration is enabled, it will allow you to instantly add the image and sentence to your last created card. You can configure whether or not to crop the image before adding it to the card as well as various other settings
+
+## Settings importing/exporting:
+
+You can now export your mokuro settings as a `.json` file and import them from any mokuro'd file (that was processed with this fork) to instantly carry your settings over.
+
+This is especially handy so that you do not need to reconfigure your anki connect settings every time you start a new manga.
+
+## Image preloading:
+
+When reading from a server mokuro used to only fetch the image as you navigate to it, this would cause momentary flashes of nothing that would dampen the reading experience.
+
+You can now specify how many pages you would like to preload ahead (up to 10), allowing you to read from a server without worrying about waiting for the page to load.
+
+## `mobile` flag (Default: True):
+
+If true, mokuro will generate additional files that are optimised to be viewed on mobile devices, the default files will still be generated.
 
 In the mobile files:
+
 - panzoom has been stripped out to allow the default pan/zoom behavior
 - panning & zooming is limited to the page size, you can't fly off into the void
 - you can now swipe to navigate (can adjust swipe threshold)
@@ -12,44 +33,39 @@ In the mobile files:
 - easier to see page count has been added (can be hidden)
 
 ### usage:
+
 ```bash
 $> mokuro my-manga-1 --mobile True --disable_confirmation True
 // _ocr, my-manga-1.html, my-manga-1.mobile.html
 ```
+
 `my-manga-1.html` being exactly the same as normal and `my-manga-1.mobile.html` being the mobile friendly version.
 
-## `convert_to_mobile` flag:
-To convert existing html files you can use the `convert_to_mobile` option to instantly generate a mobile friendly file without needing to reprocess the manga.
-
-### usage:
-```bash
-$> mokuro --convert_to_mobile "my-manga-1.html"
-// my-manga-1.mobile.html
-```
-You can run the command on a parent directory as well:
-```bash
-$> mokuro --convert_to_mobile "my-manga"
-// my-manga-1.mobile.html, my-manga-2.mobile.html, my-manga-3.mobile.html, ...
-```
-
-
 ## Misc:
-You can now set the background color from the top menu.
+
+- You can now set the background color.
+- You can now toggle bold font.
+- Add new "on page turn" zoom mode (Keep zoom level but scroll to the top)
+- Easier navigation for normal files (Clicking to the sides of the page will now navigate)
 
 # Installation
+
 ```bash
 $> pip install git+https://github.com/ZXY101/mokuro.git@master
 ```
-(You may need to uninstall mokuro first) 
+
+(You may need to uninstall mokuro first)
 
 Or use in [Google colab](https://colab.research.google.com/drive/1i2ESDMmqwjpnOQQZx3vKP8Pd8R_Gtz4W?usp=sharing)
 
-------
+---
 
 ### In use with [jidoujisho](https://github.com/lrorpilla/jidoujisho)
+
 https://user-images.githubusercontent.com/39561296/234891290-dcd79ce3-e215-4c3d-8f74-98c27917ac7f.mp4
 
-------
+---
+
 # mokuro
 
 Read Japanese manga with selectable text inside a browser.
