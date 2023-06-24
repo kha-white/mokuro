@@ -8,6 +8,8 @@ The reader now has an `Advanced settings` modal where you can specify various ne
 
 When anki connect integration is enabled, it will allow you to instantly add the image and sentence to your last created card. You can configure whether or not to crop the image before adding it to the card as well as various other settings
 
+https://github.com/ZXY101/mokuro/assets/39561296/ade9e655-dcb9-4e99-9244-5df5971cc26b
+
 ## Settings importing/exporting:
 
 You can now export your mokuro settings as a `.json` file and import them from any mokuro'd file (that was processed with this fork) to instantly carry your settings over.
