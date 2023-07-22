@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 from loguru import logger
 from tqdm import tqdm
 
@@ -29,7 +31,14 @@ class MokuroGenerator:
         for img_path_rel in tqdm(img_paths.values(), desc='Processing pages...'):
             try:
                 json_path = (volume.path_ocr_cache / img_path_rel).with_suffix('.json')
-                if no_cache or not json_path.is_file():
+
+                try:
+                    load_json(json_path)
+                    already_processed = True
+                except (FileNotFoundError, JSONDecodeError):
+                    already_processed = False
+
+                if no_cache or not already_processed:
                     self.init_models()
                     result = self.mpocr(volume.path_in / img_path_rel)
                     json_path.parent.mkdir(parents=True, exist_ok=True)
