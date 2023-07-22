@@ -1,0 +1,78 @@
+{
+  "_from": "@codedread/bitjs@^1.0.6",
+  "_id": "@codedread/bitjs@1.0.6",
+  "_inBundle": false,
+  "_integrity": "sha512-MJ1fJtc9w8uvY9ywIM2Ta8Jt99AZsCLM0RWV2Ea4miDNo+eD5vo0ebe8C8W1pWw5IqptbKVOjLSk4NxhLbygWA==",
+  "_location": "/@codedread/bitjs",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@codedread/bitjs@^1.0.6",
+    "name": "@codedread/bitjs",
+    "escapedName": "@codedread%2fbitjs",
+    "scope": "@codedread",
+    "rawSpec": "^1.0.6",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.6"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@codedread/bitjs/-/bitjs-1.0.6.tgz",
+  "_shasum": "72c745b6faf4fccfb34fcb2a092aff47cdab7ea7",
+  "_spec": "@codedread/bitjs@^1.0.6",
+  "_where": "E:\\repos\\mokuro\\reader",
+  "author": {
+    "name": "Jeff Schiller"
+  },
+  "bugs": {
+    "url": "https://github.com/codedread/bitjs/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Binary Tools for JavaScript",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "exports": "./index.js",
+  "homepage": "https://github.com/codedread/bitjs",
+  "keywords": [
+    "binary",
+    "javascript",
+    "archive",
+    "pkzip",
+    "zip",
+    "rar",
+    "tar",
+    "unzip",
+    "unrar",
+    "untar",
+    "file",
+    "codecs",
+    "mp4",
+    "avc",
+    "webm"
+  ],
+  "license": "MIT",
+  "main": "./index.js",
+  "name": "@codedread/bitjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codedread/bitjs.git"
+  },
+  "scripts": {
+    "build-webpshim": "cd build; make",
+    "test": "mocha tests/*.spec.js"
+  },
+  "type": "module",
+  "types": "types/index.d.ts",
+  "version": "1.0.6"
+}

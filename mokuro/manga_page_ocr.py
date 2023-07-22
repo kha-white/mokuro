@@ -35,6 +35,7 @@ class MangaPageOcr:
 
     def __call__(self, img_path):
         img = imread(img_path)
+        assert img is not None, f'Invalid image file: {img_path}'
         H, W, *_ = img.shape
         mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
 

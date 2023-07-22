@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadState();
     num_pages = document.getElementsByClassName("page").length;
 
+    checkImagesAndAlert();
+
     pz = panzoom(pc, {
         bounds: true,
         boundsPadding: 0.05,
@@ -555,4 +557,39 @@ function eInkRefresh() {
         pc.classList.remove("inverted");
         document.body.style.backgroundColor = r.style.getPropertyValue("--colorBackground");
     }, 300);
+}
+
+function checkImage(path) {
+    return new Promise((resolve) => {
+        var img = new Image();
+        img.onload = function () {
+            resolve({path, status: true});
+        };
+        img.onerror = function () {
+            resolve({path, status: false});
+        };
+        img.src = path;
+    });
+}
+
+function checkImages(imagePaths) {
+    let promises = imagePaths.map(path => checkImage(path));
+    return Promise.all(promises);
+}
+
+function checkImagesAndAlert() {
+    let imagePaths = [];
+    for (var i = 0; i < num_pages; i++) {
+        let page = getPage(i);
+        let pc = page.getElementsByClassName("pageContainer")[0];
+        let bg = pc.style.backgroundImage;
+        imagePaths.push(bg.substring(5, bg.length - 2));
+    }
+
+    checkImages(imagePaths).then(results => {
+        let missingImages = results.filter(result => !result.status).map(result => result.path);
+        if (missingImages.length > 0) {
+            alert('Some images are missing. Make sure, that images are stored in the folder next to HTML file.\n' + missingImages.join(',\n'));
+        }
+    });
 }

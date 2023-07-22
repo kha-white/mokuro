@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Documentation of the RAR format</title>
+	<style type="text/css">
+	body {
+		font-size: 12pt;
+		font-family: monospace;
+		margin: 4em;
+	}
+	pre {
+		margin-left: 2em;
+	}
+	section>header>h3+p {
+		margin-left: 4em;
+	}
+	table, th, td {
+		border-width: 1px;
+		border-style: solid;
+		border-color: grey;
+	}
+	table {
+		margin-left: 2em;
+		padding: 2px;
+	}
+	th, td {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	th {
+		background-color: lightgrey;
+	}
+	h2 {
+		border-top: solid;
+		border-width: 1px;
+		margin-top: 2em;
+	}
+	h3 { margin-left: 0.5em; }
+	h4 { margin-left: 1em; }
+	h5 { margin-left: 1.5em; }
+	h6 { margin-left: 2em; }
+	h7 { margin-left: 2.5em; }
+	</style>
+</head>
+<body>
+<header>
+	<h1>The RAR Format</h1>
+</header>
+
+<section>
+<header>
+	<h2 id="intro"><a href="#intro">1 Introduction</a></h2>
+</header>
+
+<p>This document, a work-in-progress, describes the RAR format. It serves a similar role that the <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">ZIP App Note</a> does for the ZIP format.</p>
+
+<p><strong>NOTE 1:</strong> This documentation <strong><em>MUST NOT</em></strong> be used to create RAR-compatible archive programs like <a href="http://www.rarlab.com/">WinRAR</a>. It is only for the purposes of writing decompression software (i.e. unrar) in various languages.  It was reverse-engineered from the UnRAR source located at <a href="http://www.rarlab.com/rar_add.htm">this page</a> with <a href="#credits">Eugene Roshal's</a> permission.</p>
+
+<p><strong>NOTE 2:</strong> This documentation will initially focus on what I believe is Version 3 of the RAR format.</p>
+
+<section>
+<header>
+	<h3 id="license"><a href="#license">1.1 License</a></h3>
+</header>
+
+<p>The author of this document is Jeff Schiller &lt;codedread@gmail.com&gt;. It is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">CC-BY-3.0</a> License.</p>
+
+</section>
+
+</section>
+
+<section>
+<header>
+	<h2 id="format"><a href="#format">2 General Format of a .RAR File</a></h2>
+</header>
+
+<p>Overall .RAR file format:</p>
+
+<pre>
+signature               7 bytes    (0x52 0x61 0x72 0x21 0x1A 0x07 0x00)
+[1st <a href="#volume-header-format">volume header</a>]
+...
+[2nd volume header]
+...
+...
+[nth volume header]
+...
+</pre>
+
+<p>In general, a modern single-volume RAR file has a <a href="#MAIN_HEAD">MAIN_HEAD</a> structure followed by multiple <a href="#FILE_HEAD">FILE_HEAD</a> structures.</p>
+
+<header>
+	<h3 id="volume-header-format"><a href="#volume-header-format">2.1 Volume Header Format</a></h3>
+</header>
+
+<p>The Base Header Block is:</p>
+
+<pre>
+header_crc              2 bytes
+<a href="#header_type">header_type</a>             1 byte
+<a href="#header_flags">header_flags</a>            2 bytes
+header_size             2 bytes
+</pre>
+
+<p>The header_size indicates how many total bytes the header requires. The <a href="#header_type">header_type</a> field determines how the remaining bytes should be interpreted.</p>
+
+<header>
+	<h4 id="header_type"><a href="#header_type">2.1.1 Header Type</a></h4>
+</header>
+
+<p>The header type is 8 bits (1 byte) and can have the following values:</p>
+
+<table>
+	<tr><th>Value</th><th>Type</th></tr>
+	<tr><td>0x72</td><td><a href="#MARK_HEAD">MARK_HEAD</a></td></tr>
+	<tr><td>0x73</td><td><a href="#MAIN_HEAD">MAIN_HEAD</a></td></tr>
+	<tr><td>0x74</td><td><a href="#FILE_HEAD">FILE_HEAD</a></td></tr>
+	<tr><td>0x75</td><td><a href="#COMM_HEAD">COMM_HEAD</a></td></tr>
+	<tr><td>0x76</td><td><a href="#AV_HEAD">AV_HEAD</a></td></tr>
+	<tr><td>0x77</td><td><a href="#SUB_HEAD">SUB_HEAD</a></td></tr>
+	<tr><td>0x78</td><td><a href="#PROTECT_HEAD">PROTECT_HEAD</a></td></tr>
+	<tr><td>0x79</td><td><a href="#SIGN_HEAD">SIGN_HEAD</a></td></tr>
+	<tr><td>0x7a</td><td><a href="#NEWSUB_HEAD">NEWSUB_HEAD</a></td></tr>
+	<tr><td>0x7b</td><td><a href="#ENDARC_HEAD">ENDARC_HEAD</a></td></tr>
+</table>
+
+<header>
+	<h5 id="MARK_HEAD"><a href="#MARK_HEAD">2.1.1.1 MARK_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="MAIN_HEAD"><a href="#MAIN_HEAD">2.1.1.2 MAIN_HEAD</a></h5>
+</header>
+
+<p>The remaining bytes in the volume header for MAIN_HEAD are:</p>
+
+<pre>
+HighPosAv               2 bytes
+PosAV                   4 bytes
+EncryptVer              1 byte (only present if <a href="#MHD_ENCRYPTVER">MHD_ENCRYPTVER</a> is set) 
+</pre>
+
+<header>
+	<h5 id="FILE_HEAD"><a href="#FILE_HEAD">2.1.1.3 FILE_HEAD</a></h5>
+</header>
+
+<p>The remaining bytes in the FILE_HEAD structure are:</p>
+
+<pre>
+PackSize                4 bytes
+UnpSize                 4 bytes
+HostOS                  1 byte
+FileCRC                 4 bytes
+FileTime (mtime)        4 bytes (MS-DOS date/time format)
+UnpVer                  1 byte
+Method                  1 byte
+NameSize                2 bytes
+FileAttr                4 bytes
+HighPackSize            4 bytes (only present if <a href="#LHD_LARGE">LHD_LARGE</a> is set)
+HighUnpSize             4 bytes (only present if <a href="#LHD_LARGE">LHD_LARGE</a> is set)
+FileName                (NameSize) bytes
+Salt                    8 bytes (only present if <a href="#LHD_SALT">LHD_SALT</a> is set)
+<a href="#ext-time-structure">ExtTime Structure</a>       See Description (only present if <a href="#LHD_EXTTIME">LHD_EXTTIME</a> is set)
+Packed Data             (Total Packed Size) bytes
+</pre>
+
+<p>If the LHD_LARGE flag is set, then the archive is large and 64-bits are needed to represent the packed and unpacked size.  HighPackSize is used as the upper 32-bits and PackSize is used as the lower 32-bits for the packed size in bytes.  HighUnpSize is used as the upper 32-bits and UnpSize is used as the lower 32-bits for the unpacked size in bytes.</p>
+
+<header>
+	<h6 id="ext-time-structure"><a href="#ext-time-structure">ExtTime Structure</a></h6>
+</header>
+	
+<p>This structure has 4 sections representing additional time data.</p>
+<p>The first 16 bits contain a set of flags, 4 bits for each section.</p>
+
+<p>Each flag contains:</p>
+<ul>
+	<li>Bit 0: Whether this section is present or not</li>
+	<li>Bit 2: Signals that the MS-DOS date/time should have its seconds increased by 1</li>
+	<ul>
+		<li>MS-DOS date/time format can only store even numbers of seconds. This bit counters this limitation.</li>
+	</ul>
+	<li>Bit 3 and 4: The amount of bytes to be read as the remainder, between 0 and 3</li>
+</ul>
+	
+<p>Each section contains:</p>
+	
+<ul>
+	<li>4 bytes containing an MS-DOS date/time (except for mtime, which is part of FILE_HEAD)</li>
+	<li>0 to 3 bytes containing fractions of seconds in 100ns increments</li>
+        <ul>
+            <li>They form a 24-bit integer, sorted from least significant to most significant bits</li>
+            <li>If fewer than 3 bytes are present, the remaining least significant bits are to be padded with zeroes in order to complete 24-bits</li>
+        </ul>
+</ul>
+	
+<p>Follow the following pseudo-code to read in the ExtTime Structure.</p>
+
+<pre>
+const one_second = 10000000; // 1 second in 100ns intervals => 1E7
+var extTimeFlags = readBits(16)
+
+<b>mtime:</b>
+mtime_rmode = extTimeFlags >> 12
+if ((mtime_rmode & 8)==0) goto ctime
+mtime_count = mtime_rmode & 0x3
+mtime_remainder = 0
+for (var i = 0; i < mtime_count; i++) {
+    mtime_remainder = (readBits(8) << 16) | (mtime_remainder >> 8)
+}
+if ((mtime_rmode & 4)!=0) mtime_remainder += one_second
+
+<b>ctime:</b>
+ctime_rmode = extTimeFlags >> 8
+if ((ctime_rmode & 8)==0) goto atime
+ctime = readBits(32)
+ctime_count = ctime_rmode & 0x3
+ctime_remainder = 0
+for (var i = 0; i < ctime_count; i++) {
+    ctime_remainder = (readBits(8) << 16) | (ctime_remainder >> 8)
+}
+if ((ctime_rmode & 4)!=0) ctime_remainder += one_second
+
+<b>atime:</b>
+atime_rmode = extTimeFlags >> 4
+if ((atime_rmode & 8)==0) goto arctime
+atime = readBits(32)
+atime_count = atime_rmode & 0x3
+atime_remainder = 0
+for (var i = 0; i < atime_count; i++) {
+    atime_remainder = (readBits(8) << 16) | (atime_remainder >> 8)
+}
+if ((atime_rmode & 4)!=0) atime_remainder += one_second
+
+<b>arctime:</b>
+arctime_rmode = extTimeFlags
+if ((arctime_rmode & 8)==0) goto done_exttime
+arctime = readBits(32)
+arctime_count = arctime_rmode & 0x3
+arctime_remainder = 0
+for (var i = 0; i < arctime_count; i++) {
+    arctime_remainder = (readBits(8) << 16) | (arctime_remainder >> 8)
+}
+if ((arctime_rmode & 4)!=0) arctime_remainder += one_second
+
+<b>done_exttime</b>
+</pre>
+
+
+<header>
+	<h5 id="COMM_HEAD"><a href="#COMM_HEAD">2.1.1.4 COMM_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="AV_HEAD"><a href="#AV_HEAD">2.1.1.5 AV_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="SUB_HEAD"><a href="#SUB_HEAD">2.1.1.6 SUB_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="PROTECT_HEAD"><a href="#PROTECT_HEAD">2.1.1.7 PROTECT_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="SIGN_HEAD"><a href="#SIGN_HEAD">2.1.1.8 SIGN_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="NEWSUB_HEAD"><a href="#NEWSUB_HEAD">2.1.1.9 NEWSUB_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h5 id="ENDARC_HEAD"><a href="#ENDARC_HEAD">2.1.1.10 ENDARC_HEAD</a></h5>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h4 id="header_flags"><a href="#header_flags">2.1.2 Header Flags</a></h4>
+</header>
+
+<p>The header flags are 16 bits (2 bytes). Depending on the <a href="#header_type">type</a> of Volume Header, the flags are interpreted differently.</p>
+
+<p>The Main Header Flags are:</p>
+
+<table>
+	<tr><th>Value</th><th>Flag</th></tr>
+	<tr><td>0x0001</td><td><a href="#MHD_VOLUME">MHD_VOLUME</a></td></tr>
+	<tr><td>0x0002</td><td><a href="#MHD_COMMENT">MHD_COMMENT</a></td></tr>
+	<tr><td>0x0004</td><td><a href="#MHD_LOCK">MHD_LOCK</a></td></tr>
+	<tr><td>0x0008</td><td><a href="#MHD_SOLID">MHD_SOLID</a></td></tr>
+	<tr><td>0x0010</td><td><a href="#MHD_PACK_COMMENT">MHD_PACK_COMMENT</a> or MHD_NEWNUMBERING</td></tr>
+	<tr><td>0x0020</td><td><a href="#MHD_AV">MHD_AV</a></td></tr>
+	<tr><td>0x0040</td><td><a href="#MHD_PROTECT">MHD_PROTECT</a></td></tr>
+	<tr><td>0x0080</td><td><a href="#MHD_PASSWORD">MHD_PASSWORD</a></td></tr>
+	<tr><td>0x0100</td><td><a href="#MHD_FIRSTVOLUME">MHD_FIRSTVOLUME</a></td></tr>
+	<tr><td>0x0200</td><td><a href="#MHD_ENCRYPTVER">MHD_ENCRYPTVER</a></td></tr>
+</table>
+
+<p>The File Header Flags are:</p>
+
+<table>
+	<tr><th>Value</th><th>Flag</th></tr>
+	<tr><td>0x0001</td><td><a href="#LHD_SPLIT_BEFORE">LHD_SPLIT_BEFORE</a></td></tr>
+	<tr><td>0x0002</td><td><a href="#LHD_SPLIT_AFTER">LHD_SPLIT_AFTER</a></td></tr>
+	<tr><td>0x0004</td><td><a href="#LHD_PASSWORD">LHD_PASSWORD</a></td></tr>
+	<tr><td>0x0008</td><td><a href="#LHD_COMMENT">LHD_COMMENT</a></td></tr>
+	<tr><td>0x0010</td><td><a href="#LHD_SOLID">LHD_SOLID</a></td></tr>
+	<tr><td>0x0100</td><td><a href="#LHD_LARGE">LHD_LARGE</a></td></tr>
+	<tr><td>0x0200</td><td><a href="#LHD_UNICODE">LHD_UNICODE</a></td></tr>
+	<tr><td>0x0400</td><td><a href="#LHD_SALT">LHD_SALT</a></td></tr>
+	<tr><td>0x0800</td><td><a href="#LHD_VERSION">LHD_VERSION</a></td></tr>
+	<tr><td>0x1000</td><td><a href="#LHD_EXTTIME">LHD_EXTTIME</a></td></tr>
+	<tr><td>0x2000</td><td><a href="#LHD_EXTFLAGS">LHD_EXTFLAGS</a></td></tr>
+</table>
+
+<header>
+	<h5 id="MHD_VOLUME"><a href="#MHD_VOLUME">2.1.2.1 MHD_VOLUME</a></h5>
+</header>
+
+<p>Value 0x0001. TBD</p>
+
+<header>
+	<h5 id="MHD_COMMENT"><a href="#MHD_COMMENT">2.1.2.2 MHD_COMMENT</a></h5>
+</header>
+
+<p>Value 0x0002. TBD</p>
+
+<header>
+	<h5 id="MHD_LOCK"><a href="#MHD_LOCK">2.1.2.3 MHD_LOCK</a></h5>
+</header>
+
+<p>Value 0x0004. TBD</p>
+
+<header>
+	<h5 id="MHD_SOLID"><a href="#MHD_SOLID">2.1.2.4 MHD_SOLID</a></h5>
+</header>
+
+<p>Value 0x0008. TBD</p>
+
+<header>
+	<h5 id="MHD_PACK_COMMENT"><a href="#MHD_PACK_COMMENT">2.1.2.5 MHD_PACK_COMMENT</a></h5>
+</header>
+
+<p>Value 0x0010. TBD</p>
+
+<header>
+	<h5 id="MHD_AV"><a href="#MHD_AV">2.1.2.6 MHD_AV</a></h5>
+</header>
+
+<p>Value 0x0020. TBD</p>
+
+<header>
+	<h5 id="MHD_PROTECT"><a href="#MHD_PROTECT">2.1.2.7 MHD_PROTECT</a></h5>
+</header>
+
+<p>Value 0x0040. TBD</p>
+
+<header>
+	<h5 id="MHD_PASSWORD"><a href="#MHD_PASSWORD">2.1.2.8 MHD_PASSWORD</a></h5>
+</header>
+
+<p>Value 0x0080. TBD</p>
+
+<header>
+	<h5 id="MHD_FIRSTVOLUME"><a href="#MHD_FIRSTVOLUME">2.1.2.9 MHD_FIRSTVOLUME</a></h5>
+</header>
+
+<p>Value 0x0100. TBD</p>
+
+<header>
+	<h5 id="MHD_ENCRYPTVER"><a href="#MHD_ENCRYPTVER">2.1.2.10 MHD_ENCRYPTVER</a></h5>
+</header>
+
+<p>Value 0x0200. Indicates whether encryption is present in the archive volume.</p>
+
+<header>
+	<h5 id="LHD_SPLIT_BEFORE"><a href="#LHD_SPLIT_BEFORE">2.1.2.11 LHD_SPLIT_BEFORE</a></h5>
+</header>
+
+<p>Value 0x0001. TBD</p>
+
+<header>
+	<h5 id="LHD_SPLIT_AFTER"><a href="#LHD_SPLIT_AFTER">2.1.2.12 LHD_SPLIT_AFTER</a></h5>
+</header>
+
+<p>Value 0x0002. TBD</p>
+
+<header>
+	<h5 id="LHD_PASSWORD"><a href="#LHD_PASSWORD">2.1.2.13 LHD_PASSWORD</a></h5>
+</header>
+
+<p>Value 0x0004. TBD</p>
+
+<header>
+	<h5 id="LHD_COMMENT"><a href="#LHD_COMMENT">2.1.2.14 LHD_COMMENT</a></h5>
+</header>
+
+<p>Value 0x0008. TBD</p>
+
+<header>
+	<h5 id="LHD_SOLID"><a href="#LHD_SOLID">2.1.2.15 LHD_SOLID</a></h5>
+</header>
+
+<p>Value 0x0010. TBD</p>
+
+<header>
+	<h5 id="LHD_LARGE"><a href="#LHD_LARGE">2.1.2.16 LHD_LARGE</a></h5>
+</header>
+
+<p>Value 0x0100. Indicates if the archive is large. In this case, 64 bits are used to describe the packed and unpacked size.</p>
+
+<header>
+	<h5 id="LHD_UNICODE"><a href="#LHD_UNICODE">2.1.2.17 LHD_UNICODE</a></h5>
+</header>
+
+<p>Value 0x0200. Indicates if the filename is Unicode.</p>
+
+<header>
+	<h5 id="LHD_SALT"><a href="#LHD_SALT">2.1.2.18 LHD_SALT</a></h5>
+</header>
+
+<p>Value 0x0400. Indicates if the 64-bit salt value is present.</p>
+
+<header>
+	<h5 id="LHD_VERSION"><a href="#LHD_VERSION">2.1.2.19 LHD_VERSION</a></h5>
+</header>
+
+<p>Value 0x0800. TBD</p>
+
+<header>
+	<h5 id="LHD_EXTTIME"><a href="#LHD_EXTTIME">2.1.2.20 LHD_EXTTIME</a></h5>
+</header>
+
+<p>Value 0x1000. The <a href="#ext-time-structure">ExtTime Structure</a> is present in the FILE_HEAD header.</p>
+
+<header>
+	<h5 id="LHD_EXTFLAGS"><a href="#LHD_EXTFLAGS">2.1.2.21 LHD_EXTFLAGS</a></h5>
+</header>
+
+<p>Value 0x2000. TBD</p>
+</section>
+
+<section>
+<header>
+	<h2 id="unpacking"><a href="#unpacking">3 Unpacking</a></h2>
+</header>
+
+<p>Once the header information and packed bytes have been extracted, the packed bytes must then be unpacked.  RAR uses a variety of algorithms for this.  Chief among these are <a href="http://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv compression</a> and <a href="http://en.wikipedia.org/wiki/Prediction_by_partial_matching">Prediction by Partial Matching</a>.  The details of the unpacking are specified in the following subsections based on the values of UnpVer and Method as decoded in the <a href="#FILE_HEAD">FILE_HEAD</a> structure.</p>
+
+<p>If Method is 0x30 (decimal 48), then the packed bytes <em>are</em> the unpacked bytes and no decompression/unpacking is necessary (i.e. the file was not compressed).</p>
+
+<p>Otherwise:</p>
+<table>
+<tr><th>UnpVer Value (decimal)</th><th>Algorithm To Use</th></tr>
+<tr><td>15</td><td><a href="#unpack15">Unpack15</a></td></tr>
+<tr><td>20</td><td rowspan="2"><a href="#unpack20">Unpack20</a></td></tr>
+<tr><td>26</td></tr>
+<tr><td>29</td><td rowspan="2"><a href="#unpack29">Unpack29</a></td></tr>
+<tr><td>36</td></tr>
+</table>
+
+<header>
+	<h3 id="unpack15"><a href="#unpack15">3.1 Unpack15</a></h3>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h3 id="unpack20"><a href="#unpack20">3.2 Unpack20</a></h3>
+</header>
+
+<p>TBD</p>
+
+<header>
+	<h3 id="unpack29"><a href="#unpack29">3.3 Unpack29</a></h3>
+</header>
+
+<p>The structure of packed data consists of N number of blocks.  If the first bit of a block is set, then process the block as a PPM block.  Otherwise, this is an LZ block.</p>
+
+<header>
+	<h4 id="lz-block"><a href="#lz-block">3.3.1 LZ Block</a></h4>
+</header>
+
+<p>The format of a LZ block is:</p>
+
+<pre>
+isPPM                   1 bit
+keepOldTable            1 bit
+<a href="#huffman-code-table">huffmanCodeTable</a>        (variable size)
+</pre>
+
+<header>
+	<h5 id="huffman-code-table"><a href="#huffman-code-table">3.3.1.1 Huffman Code Tables</a></h5>
+</header>
+
+<p>The Huffman Encoding tables consist a series of bit lengths.  For a more thorough treatment of the concepts of Huffman Encoding, see <a href="http://tools.ietf.org/html/rfc1951#page-6">the Deflate spec</a>.  The RAR format uses a set of twenty bit lengths to construct Huffman Codes.  The Huffman Encoding tables in RAR files consist of at most twenty entries of the format:</p>
+
+<pre>
+BitLength               4 bits
+ZeroCount               4 bits (only present if BitLength is 15)
+</pre>
+
+<p>If BitLength is 15, then the next 4 bits are read as ZeroCount.  If the ZeroCount is 0, then the bit length is 15, otherwise (ZeroCount+2) is the number of consecutive zero bit lengths that are in the table.  For instance, if the following 4-bit numbers are present:</p>
+
+<table>
+<tr><td>0x8</td><td>indicates a bit-length of 8</td></tr>
+<td>0x4</td><td>indicates a bit-length of 4</td></tr>
+<td>0x4</td><td>indicates a bit-length of 4</td></tr>
+<td>0x2</td><td>indicates a bit-length of 2</td></tr>
+<td>0xF</td><td rowspan="2">these two 4-bit numbers specify a bit-length of 15</td></tr>
+<td>0x0</td></tr>
+<td>0xF</td><td rowspan="2">these two 4-bit numbers specify a run of 5 zeros</td></tr>
+<td>0x3</td></tr>
+<td>0x9</td><td>indicates a bit-length of 9</td></tr>
+<td>0x3</td><td>indicates a bit-length of 3</td></tr>
+<td>0xF</td><td rowspan="2">these two 4-bit numbers specify a run of 8 zeros</td></tr>
+<td>0x6</td></tr>
+</table>
+
+<p>This example describes a Huffman Encoding Bit Length table of:</p>
+
+<table>
+<tr><th>Code</th><th>Bit Length</th><th>Code</td><th>BitLength</th></tr>
+<tr><td>1</td><td>8</td><td>11</td><td>9</td></tr>
+<tr><td>2</td><td>4</td><td>12</td><td>3</td></tr>
+<tr><td>3</td><td>4</td><td>13</td><td>0</td></tr>
+<tr><td>4</td><td>2</td><td>14</td><td>0</td></tr>
+<tr><td>5</td><td>15</td><td>15</td><td>0</td></tr>
+<tr><td>6</td><td>0</td><td>16</td><td>0</td></tr>
+<tr><td>7</td><td>0</td><td>17</td><td>0</td></tr>
+<tr><td>8</td><td>0</td><td>18</td><td>0</td></tr>
+<tr><td>9</td><td>0</td><td>19</td><td>0</td></tr>
+<tr><td>10</td><td>0</td><td>20</td><td>0</td></tr>
+</table>
+
+<p>Once the twenty bit lengths are obtained, the Huffman Encoding table is constructed by using the following algorithm:</p>
+
+<pre>
+1) Count the number of codes for each code length.  Let
+   LenCount[N] be the number of codes of length N, where N = {1..16}.
+             
+2) Find the decode length and positions:
+
+        N = 0
+        TmpPos[0] = 0
+        DecodePos[0] = 0
+        DecodeLen[0] = 0
+        for (I = 1; I < 16; I++) 
+        {
+            N = 2 * (N+LenCount[I])
+            M = N << (15-I)
+            if (M > 0xFFFF) M = 0xFFFF
+            
+            DecodeLen[I] = (unsigned int)M
+            TmpPos[I] = DecodePos[I] = DecodePos[I-1] + LenCount[I-1]
+        }
+
+3) Assign numerical values to all codes:
+
+        for (I = 0; I < TableSize; I++)
+        {
+            if (BitLength[I] != 0)
+                DecodeNum[ TmpPos[BitLength[I] & 0xF]++ ] = I
+        }
+
+</pre>
+</section>
+
+<section>
+<header>
+	<h2 id="credits"><a href="#credits">Appendix A. Credits</a></h2>
+</header>
+
+<ul>
+<li>Eugene Roshal &lt;roshal@rarlab.com&gt; - creator and owner of the RAR format</li>
+<li>Jeff Schiller &lt;codedread@gmail.com&gt; - creator of this document as part of the <a href="http://github.com/codedread/bitjs/">bitjs</a> project</li>
+<li>Andre Brait &lt;andrebrait@gmail.com&gt; - for documenting the ExtTime structure</li>
+</ul>
+</section>
+
+</body>
+</html>
