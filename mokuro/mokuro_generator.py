@@ -35,7 +35,7 @@ class MokuroGenerator:
                 try:
                     load_json(json_path)
                     already_processed = True
-                except (FileNotFoundError, JSONDecodeError):
+                except (FileNotFoundError, JSONDecodeError, UnicodeDecodeError):
                     already_processed = False
 
                 if no_cache or not already_processed:
