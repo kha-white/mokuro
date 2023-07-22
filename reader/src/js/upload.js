@@ -35,54 +35,76 @@ dropbox.addEventListener("drop", async function (e) {
         await importFromUrl(text);
     }
 
-    const fileHandlesPromises = [...dt.items]
-        .filter((item) => item.kind === 'file')
-        .map((item) => item.getAsFileSystemHandle());
+    let filePromises = [];
 
-    let files = [];
-
-    for await (const handle of fileHandlesPromises) {
-        if (handle.kind === 'directory') {
-            let path = [handle.name];
-            let contents = [];
-
-            await getFilesRecursively(handle, contents, path);
-
-            contents.forEach((file) => {
-                file.path_components = file?.path_components?.join('/');
-            });
-
-            files.push(...contents);
-        } else {
-            let file = await handle.getFile();
-            file.path_components = file.name;
-            files.push(file);
+    for (const item of dt.items) {
+        if (item.kind === 'file') {
+            let entry = item.webkitGetAsEntry();
+            if (entry.isDirectory) {
+                filePromises.push(scanFiles(entry));
+            } else {
+                filePromises.push(item.getAsFile());
+            }
         }
     }
+
+    let files = await Promise.all(filePromises).then(fileArrays => {
+        return [].concat(...fileArrays);
+    });
 
     await processFiles(files);
 
 }, false);
 
+
+function readAllEntries(directoryReader) {
+    return new Promise((resolve, reject) => {
+        let entries = [];
+
+        function readEntries() {
+            directoryReader.readEntries((batch) => {
+                if (batch.length) {
+                    entries = entries.concat(batch);
+                    readEntries();
+                } else {
+                    resolve(entries);
+                }
+            }, reject);
+        }
+
+        readEntries();
+    });
+}
+
+function scanFiles(directoryEntry, path = directoryEntry.name) {
+    return new Promise((resolve, reject) => {
+        let reader = directoryEntry.createReader();
+        readAllEntries(reader).then((entries) => {
+            let filePromises = entries.map(entry => {
+                let fullPath = path + '/' + entry.name;
+                if (entry.isDirectory) {
+                    return scanFiles(entry, fullPath);
+                } else {
+                    return new Promise((resolve, reject) => {
+                        entry.file(file => {
+                            file.fullPath = fullPath;
+                            resolve(file);
+                        }, reject);
+                    });
+                }
+            });
+
+            Promise.all(filePromises).then(fileArrays => {
+                let files = [].concat(...fileArrays);
+                resolve(files);
+            }).catch(reject);
+        }).catch(reject);
+    });
+}
+
 export async function importUrlPrompt() {
     let text = prompt("Enter URL to import:");
     await importFromUrl(text);
-}
-
-
-async function getFilesRecursively(entry, files, path) {
-    if (entry.kind === 'file') {
-        const file = await entry.getFile();
-        file.path_components = path;
-        files.push(file);
-    } else if (entry.kind === 'directory') {
-        for await (const handle of entry.values()) {
-            path.push(handle.name);
-            let newPath = path.map((p) => p);
-            await getFilesRecursively(handle, files, newPath);
-            path.pop();
-        }
-    }
 }
 
 document.getElementById("uploadFile").addEventListener("change", async function () {
@@ -100,7 +122,9 @@ document.getElementById("uploadHelpButton").addEventListener("click", function (
 function parsePath(file) {
     let filepath;
 
-    if ("webkitRelativePath" in file && file.webkitRelativePath) {
+    if ("fullPath" in file) {
+        filepath = file.fullPath;
+    } else if ("webkitRelativePath" in file && file.webkitRelativePath) {
         filepath = file.webkitRelativePath.replace('\\', '/');
     } else if ("path_components" in file) {
         filepath = file.path_components.replace('\\', '/');
