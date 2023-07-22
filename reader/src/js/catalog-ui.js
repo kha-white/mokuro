@@ -92,7 +92,7 @@ export function updateCatalogDisplay() {
             a.classList.add("deleteCatalogItemButton");
             a.href = "#";
             a.addEventListener('click', async function () {
-                await volume.download();
+                deleteVolume(volume.id);
             }, false);
             a.appendChild(document.createTextNode("x"));
 
