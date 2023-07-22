@@ -1,3 +1,3 @@
 recursive-include mokuro/assets *
-include mokuro/*.js mokuro/*.css
+include mokuro/legacy/*.js mokuro/legacy/*.css
 include comic_text_detector/LICENSE

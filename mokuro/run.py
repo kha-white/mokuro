@@ -23,7 +23,7 @@ def run(*paths,
         ):
     if legacy_html:
         logger.warning(
-            'Legacy HTML output is deprecated and will not be further developed.'
+            'Legacy HTML output is deprecated and will not be further developed. '
             'Use .mokuro format and web reader instead.')
         # legacy HTML works only with unzipped output
         unzip = True
