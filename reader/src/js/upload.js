@@ -176,19 +176,31 @@ async function processVolume(volume_to_process) {
     let archiveFile = volume_to_process.archiveFile;
     let files = volume_to_process.files;
 
+    let loadingFromArchive;
+
+    if (Object.keys(files).length >= mokuroData.pages.length) {
+        console.log('Loading volume "' + volumeName + '" from files');
+        loadingFromArchive = false;
+
+    } else if (archiveFile) {
+        console.log('Loading volume "' + volumeName + '" from archive');
+        loadingFromArchive = true;
+
+    } else {
+        console.log('Skipping volume "' + volumeName + '" due to missing files');
+        return;
+    }
+
     let title = await window.catalog.addTitleIfNotExists(mokuroData.title, mokuroData.title_uuid);
     let volume = await title.addVolumeIfNotExists(mokuroData, volumeName, mokuroData.volume_uuid);
 
     await window.catalog.save();
     updateCatalogDisplay();
 
-    if (Object.keys(files).length >= mokuroData.pages.length) {
-        console.log('Loading volume "' + volumeName + '" from files');
-        await volume.addImgs(Object.values(files), Object.keys(files));
-
-    } else {
-        console.log('Loading volume "' + volumeName + '" from archive');
+    if (loadingFromArchive) {
         await loadVolumeFromArchive(volume, volumeName, archiveFile);
+    } else {
+        await volume.addImgs(Object.values(files), Object.keys(files));
     }
 
     await window.catalog.save();
