@@ -6,7 +6,7 @@ long_description = (Path(__file__).parent / "README.md").read_text('utf-8').spli
 
 setup(
     name="mokuro",
-    version='0.1.7',
+    version='0.2.0-beta.1',
     description="Browser reader for manga with selectable text",
     long_description=long_description,
     long_description_content_type="text/markdown",
