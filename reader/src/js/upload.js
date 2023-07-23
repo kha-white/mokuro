@@ -187,7 +187,22 @@ async function processFiles(files) {
         promises.push(processVolume(vtp));
     }
 
-    await Promise.all(promises)
+    let results = await Promise.all(promises);
+    let failed = results.filter(r => !r.loaded);
+    if (failed.length) {
+        let msg = "Failed to load volumes:\n";
+        for (const f of failed) {
+            msg += f.volumeName;
+            if (f.loadingFrom === 'missing') {
+                msg += ': missing volume data';
+            }
+            msg += '\n';
+        }
+
+        msg += '\nMake sure that each .mokuro file is uploaded together with corresponding volume data (images folder or cbz/zip archive).';
+        msg += '\n\nClick "What to upload?" for more information.';
+        alert(msg);
+    }
 
     document.getElementById("uploadForm").reset();
     await window.catalog.save();
@@ -200,19 +215,24 @@ async function processVolume(volume_to_process) {
     let archiveFile = volume_to_process.archiveFile;
     let files = volume_to_process.files;
 
-    let loadingFromArchive;
+    let volumeLoadingStatus = {
+        volumeName: volumeName,
+        loadingFrom: null,
+        loaded: false,
+    };
 
     if (Object.keys(files).length >= mokuroData.pages.length) {
         console.log('Loading volume "' + volumeName + '" from files');
-        loadingFromArchive = false;
+        volumeLoadingStatus.loadingFrom = 'files';
 
     } else if (archiveFile) {
         console.log('Loading volume "' + volumeName + '" from archive');
-        loadingFromArchive = true;
+        volumeLoadingStatus.loadingFrom = 'archive';
 
     } else {
         console.log('Skipping volume "' + volumeName + '" due to missing files');
-        return;
+        volumeLoadingStatus.loadingFrom = 'missing';
+        return volumeLoadingStatus;
     }
 
     let title = await window.catalog.addTitleIfNotExists(mokuroData.title, mokuroData.title_uuid);
@@ -221,14 +241,20 @@ async function processVolume(volume_to_process) {
     await window.catalog.save();
     updateCatalogDisplay();
 
-    if (loadingFromArchive) {
+    if (volumeLoadingStatus.loadingFrom === 'archive') {
         await loadVolumeFromArchive(volume, volumeName, archiveFile);
-    } else {
+    } else if (volumeLoadingStatus.loadingFrom === 'files') {
         await volume.addImgs(Object.values(files), Object.keys(files));
+    } else {
+        throw new Error('Unknown loadingFrom: ' + volumeLoadingStatus.loadingFrom);
     }
+
+    volumeLoadingStatus.loaded = true;
 
     await window.catalog.save();
     updateCatalogDisplay();
+
+    return volumeLoadingStatus;
 }
 
 async function loadVolumeFromArchive(volume, volumeName, archiveFile) {
