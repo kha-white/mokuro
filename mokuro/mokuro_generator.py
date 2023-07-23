@@ -26,6 +26,16 @@ class MokuroGenerator:
     def process_volume(self, volume: Volume, ignore_errors=False, no_cache=False):
         volume.path_ocr_cache.mkdir(parents=True, exist_ok=True)
 
+        if volume.mokuro_data is not None:
+            for page in volume.mokuro_data['pages']:
+                json_path = (volume.path_ocr_cache / page['img_path']).with_suffix('.json')
+                if json_path.is_file():
+                    continue
+                json_path.parent.mkdir(parents=True, exist_ok=True)
+                page = page.copy()
+                page.pop('img_path')
+                dump_json(page, json_path)
+
         img_paths = volume.get_img_paths()
 
         for img_path_rel in tqdm(img_paths.values(), desc='Processing pages...'):
