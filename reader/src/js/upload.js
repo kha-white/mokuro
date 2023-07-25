@@ -1,5 +1,5 @@
 import {setVolumeStatus, updateCatalogDisplay} from "./catalog-ui";
-import {readJSON} from "./utils";
+import {readJSON, requestPersistentStorage} from "./utils";
 import {Unzipper} from "bitjs/archive/decompress.js";
 import mime from "mime";
 import * as path from 'path';
@@ -180,6 +180,10 @@ async function processFiles(files) {
                 volumes_to_process[parsed_path.path_no_ext].archiveFile = file;
             }
         }
+    }
+
+    if (Object.keys(volumes_to_process).length > 0) {
+        await requestPersistentStorage();
     }
 
     let promises = [];
