@@ -1,4 +1,4 @@
-import {appendNewChild} from "./utils";
+import {appendNewChild, formatBytes} from "./utils";
 import {volumeState} from "./state";
 import {loadVolume} from "./load-volume";
 import {Catalog} from "./catalog";
@@ -98,6 +98,21 @@ export function updateCatalogDisplay() {
 
         }
     }
+
+    let catalogStatus = document.getElementById("catalogStatus");
+
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+        navigator.storage.estimate().then(({usage, quota}) => {
+            catalogStatus.textContent = formatBytes(usage) + " / " + formatBytes(quota);
+            if (usage > quota * 0.9 || quota - usage < 1024 * 1024 * 100) {
+                catalogStatus.classList.add("colorRed");
+            } else {
+                catalogStatus.classList.remove("colorRed");
+            }
+
+        });
+    }
+
 }
 
 export function setVolumePageState(volume_id, page_idx, num_pages) {

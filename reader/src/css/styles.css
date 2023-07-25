@@ -13,6 +13,7 @@
     --color4a: #366ea7;
     --color4b: #cddae9;
     --color5: #80ED99;
+    --color6: #f25757;
 
 }
 
@@ -31,6 +32,10 @@ a {
 
 a:hover {
     color: var(--color5);
+}
+
+.colorRed {
+    color: var(--color6);
 }
 
 .notransition {
@@ -448,7 +453,10 @@ a:hover {
 
 #catalogBottomMenu {
     position: absolute;
-    width: 85%;
+    display: flex;
+    justify-content: space-between;
+
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
     bottom: min(10em, 25%);
@@ -456,6 +464,10 @@ a:hover {
     right: 0;
     text-align: center;
     font-size: 0.75em;
+}
+
+#catalogBottomMenu div {
+    margin: 1em 0em;
 }
 
 
