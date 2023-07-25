@@ -21,10 +21,8 @@ addEventListener('activate', e => e.waitUntil(activate()));
 
 addEventListener('fetch', function (event) {
     event.respondWith(
-        caches.open(version).then((cache) =>
-            cache.match(event.request).then((response) =>
-                response || fetch(event.request)
-            )
-        )
+        fetch(event.request).catch(function () {
+            return caches.match(event.request);
+        }),
     );
 });
