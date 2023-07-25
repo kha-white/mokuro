@@ -9,6 +9,30 @@ export function appendNewChild(parentElement, tagName, text = null) {
     return child;
 }
 
+function normalize(inputString) {
+    if (typeof inputString !== 'string') {
+        return inputString;
+    }
+
+    let replacements = {
+        '０': '0',
+        '１': '1',
+        '２': '2',
+        '３': '3',
+        '４': '4',
+        '５': '5',
+        '６': '6',
+        '７': '7',
+        '８': '8',
+        '９': '9'
+    };
+
+    return inputString.replace(/[０１２３４５６７８９]/g, function (match) {
+        return replacements[match];
+    });
+}
+
+
 export function sortByProperty(arr, property, ascending = true, natural = false) {
     let x;
     if (ascending) {
@@ -19,10 +43,10 @@ export function sortByProperty(arr, property, ascending = true, natural = false)
 
     if (natural) {
         let sorter = natsort();
-        return arr.sort((a, b) => sorter(a[property], b[property]));
+        return arr.sort((a, b) => sorter(normalize(a[property]), normalize(b[property])));
     }
 
-    return arr.sort((a, b) => (a[property] > b[property]) ? x : ((b[property] > a[property]) ? -x : 0));
+    return arr.sort((a, b) => (normalize(a[property]) > normalize(b[property])) ? x : ((normalize(b[property]) > normalize(a[property])) ? -x : 0));
 }
 
 export function clip(x, min, max) {
