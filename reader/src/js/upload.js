@@ -6,28 +6,28 @@ import * as path from 'path';
 import {openPopup} from "./popup";
 import {importFromUrl, importVolume} from "./web-import";
 
-let dropbox = document.getElementById("dropbox");
+let dropArea = document.getElementById("popupCatalog");
 
 ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(function (type) {
-    dropbox.addEventListener(type, function (e) {
+    dropArea.addEventListener(type, function (e) {
         e.stopPropagation();
         e.preventDefault();
     }, false);
 });
 
 ["dragover", "dragenter"].forEach(function (type) {
-    dropbox.addEventListener(type, function (e) {
-        dropbox.classList.add("isDragover");
+    dropArea.addEventListener(type, function (e) {
+        dropArea.classList.add("isDragover");
     }, false);
 });
 
 ["dragleave", "dragend", "drop"].forEach(function (type) {
-    dropbox.addEventListener(type, function (e) {
-        dropbox.classList.remove("isDragover");
+    dropArea.addEventListener(type, function (e) {
+        dropArea.classList.remove("isDragover");
     }, false);
 });
 
-dropbox.addEventListener("drop", async function (e) {
+dropArea.addEventListener("drop", async function (e) {
     const dt = e.dataTransfer;
 
     let text = e.dataTransfer.getData('text/plain');
