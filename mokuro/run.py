@@ -30,7 +30,22 @@ def run(*paths,
 
     logger.info('Scanning paths...')
 
-    paths = [Path(p).expanduser().absolute() for p in paths]
+    paths_ = []
+    for path in paths:
+        path_normalized = Path(path).expanduser().absolute()
+
+        try:
+            path_valid = path_normalized.exists()
+        except OSError:
+            path_valid = False
+
+        if path_valid:
+            paths_.append(path_normalized)
+        else:
+            logger.error(f'Invalid path: {path_normalized}')
+            return
+
+    paths = paths_
 
     if parent_dir is not None:
         for p in Path(parent_dir).expanduser().absolute().iterdir():
