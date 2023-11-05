@@ -6,7 +6,6 @@ import numpy as np
 import atexit
 from pathlib import Path
 import shutil
-import tempfile
 import zipfile
 
 class NumpyEncoder(json.JSONEncoder):
@@ -35,23 +34,19 @@ def imread(path, flags=cv2.IMREAD_COLOR):
 def get_supported_file_types():
     return ['.cbz']
 
-def is_supported_input(path):
+def path_is_supported_input(path):
     path_ext = path.suffix.lower()
     return path.is_dir() or path_ext in get_supported_file_types()
-
-def get_temp_dir():
-    temp_dir = Path(tempfile.mkdtemp())
-    atexit.register(shutil.rmtree, temp_dir)
-    return temp_dir
 
 def unzip_if_zipped(path):
     if path.suffix.lower() == '.cbz':
         return unzip_cbz(path)
     return path
 
-def unzip_cbz(path):
-    temp_dir = get_temp_dir()
-    print(f'Unzipping {path} to {temp_dir}')
-    with zipfile.ZipFile(path, 'r') as zip_ref:
-        zip_ref.extractall(temp_dir)
-    return temp_dir
+def unzip_cbz(zip_path):
+    temporary_content_path = zip_path.parent / zip_path.stem
+    atexit.register(shutil.rmtree, temporary_content_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(temporary_content_path)
+    return temporary_content_path
