@@ -44,9 +44,9 @@ def unzip_if_zipped(path):
     return path
 
 def unzip_cbz(zip_path):
-    temporary_content_path = zip_path.parent / zip_path.stem
-    atexit.register(shutil.rmtree, temporary_content_path)
+    content_path = zip_path.parent / zip_path.stem
+    # atexit.register(shutil.rmtree, content_path)
 
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(temporary_content_path)
-    return temporary_content_path
+        zip_ref.extractall(content_path)
+    return content_path

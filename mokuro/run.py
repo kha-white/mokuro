@@ -19,7 +19,10 @@ def run(*paths,
     if parent_dir is not None:
         for p in Path(parent_dir).expanduser().absolute().iterdir():
             if path_is_supported_input(p) and p.stem != '_ocr' and p not in paths:
-                paths.append(p)
+                if p.is_dir() or not p.with_suffix("").exists():
+                    paths.append(p)
+                else:
+                    logger.warning(f"Skipping path '{p}' due to matching directory of same name.")
 
     if len(paths) == 0:
         logger.error('Found no paths to process. Did you set the paths correctly?')
