@@ -31,19 +31,40 @@ def imread(path, flags=cv2.IMREAD_COLOR):
     """cv2.imread, but works with unicode paths"""
     return cv2.imdecode(np.fromfile(path, dtype=np.uint8), flags)
 
+def get_supported_image_types():
+    return ('.jpg', '.jpeg', '.png')
+
 def get_supported_file_types():
-    return ['.cbz']
+    return ('.cbz', '.epub')
 
 def path_is_supported_input(path):
     path_ext = path.suffix.lower()
     return path.is_dir() or path_ext in get_supported_file_types()
 
 def unzip_if_zipped(path):
-    if path.suffix.lower() == '.cbz':
-        return unzip_cbz(path)
+    path_ext = path.suffix.lower()
+    if path_ext in get_supported_file_types():
+        return extract_images_from_zip(path)
     return path
 
+def extract_images_from_zip(zip_path):
+    img_output_path = zip_path.parent / zip_path.stem
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_file_list = zip_ref.namelist()
+        img_exts = get_supported_image_types()
+        [zip_ref.extract(zipped_file, img_output_path) for zipped_file in zip_file_list if zipped_file.lower().endswith(img_exts)]
+    return img_output_path
+
+
 def unzip_cbz(zip_path):
+    content_path = zip_path.parent / zip_path.stem
+    # atexit.register(shutil.rmtree, content_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(content_path)
+    return content_path
+
+def unzip_epub(zip_path):
     content_path = zip_path.parent / zip_path.stem
     # atexit.register(shutil.rmtree, content_path)
 

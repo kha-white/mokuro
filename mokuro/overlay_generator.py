@@ -11,7 +11,7 @@ from yattag import Doc
 from mokuro import __version__
 from mokuro.env import ASSETS_PATH
 from mokuro.manga_page_ocr import MangaPageOcr
-from mokuro.utils import dump_json, load_json
+from mokuro.utils import dump_json, load_json, get_supported_image_types
 
 SCRIPT_PATH = Path(__file__).parent / 'script.js'
 STYLES_PATH = Path(__file__).parent / 'styles.css'
@@ -71,7 +71,7 @@ class OverlayGenerator:
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
 
-        img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
+        img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in get_supported_image_types()]
         img_paths = natsorted(img_paths)
 
         page_htmls = []
