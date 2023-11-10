@@ -43,12 +43,12 @@ def unzip_if_zipped(path):
     path_ext = path.suffix.lower()
     if path_ext in get_supported_file_types():
         if path_ext == '.epub':
-            return extract_images_from_zip(path, exceptions=('cover',))
+            return extract_images_from_zip(path, ignore_files=('cover',))
         else:
             return extract_images_from_zip(path)
     return path
 
-def extract_images_from_zip(zip_path, exceptions=()):
+def extract_images_from_zip(zip_path, ignore_files=()):
     img_output_path = zip_path.parent / zip_path.stem
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_file_list = zip_ref.namelist()
