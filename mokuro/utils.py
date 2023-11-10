@@ -3,9 +3,7 @@ import json
 import cv2
 import numpy as np
 
-import atexit
 from pathlib import Path
-import shutil
 import zipfile
 
 class NumpyEncoder(json.JSONEncoder):
