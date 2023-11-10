@@ -44,30 +44,16 @@ def path_is_supported_input(path):
 def unzip_if_zipped(path):
     path_ext = path.suffix.lower()
     if path_ext in get_supported_file_types():
-        return extract_images_from_zip(path)
+        if path_ext == '.epub':
+            return extract_images_from_zip(path, exceptions=('cover',))
+        else:
+            return extract_images_from_zip(path)
     return path
 
-def extract_images_from_zip(zip_path):
+def extract_images_from_zip(zip_path, exceptions=()):
     img_output_path = zip_path.parent / zip_path.stem
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_file_list = zip_ref.namelist()
         img_exts = get_supported_image_types()
-        [zip_ref.extract(zipped_file, img_output_path) for zipped_file in zip_file_list if zipped_file.lower().endswith(img_exts)]
+        [zip_ref.extract(zipped_file, img_output_path) for zipped_file in zip_file_list if zipped_file.lower().endswith(img_exts) and not zipped_file.startswith(exceptions)]
     return img_output_path
-
-
-def unzip_cbz(zip_path):
-    content_path = zip_path.parent / zip_path.stem
-    # atexit.register(shutil.rmtree, content_path)
-
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(content_path)
-    return content_path
-
-def unzip_epub(zip_path):
-    content_path = zip_path.parent / zip_path.stem
-    # atexit.register(shutil.rmtree, content_path)
-
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(content_path)
-    return content_path
