@@ -53,5 +53,5 @@ def extract_images_from_zip(zip_path, ignore_files=()):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_file_list = zip_ref.namelist()
         img_exts = get_supported_image_types()
-        [zip_ref.extract(zipped_file, img_output_path) for zipped_file in zip_file_list if zipped_file.lower().endswith(img_exts) and not zipped_file.startswith(exceptions)]
+        [zip_ref.extract(zipped_file, img_output_path) for zipped_file in zip_file_list if zipped_file.lower().endswith(img_exts) and not zipped_file.startswith(ignore_files)]
     return img_output_path
