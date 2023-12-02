@@ -20,16 +20,16 @@ class MangaPageOcr:
                  max_ratio_vert=16,
                  max_ratio_hor=8,
                  anchor_window=2,
-                 no_ocr=False,
+                 disable_ocr=False,
                  ):
 
         self.text_height = text_height
         self.max_ratio_vert = max_ratio_vert
         self.max_ratio_hor = max_ratio_hor
         self.anchor_window = anchor_window
-        self.no_ocr = no_ocr
+        self.disable_ocr = disable_ocr
 
-        if not self.no_ocr:
+        if not self.disable_ocr:
             logger.info('Initializing text detector')
             self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size, device='cpu', act='leaky')
             self.mocr = MangaOcr(pretrained_model_name_or_path, force_cpu)
@@ -39,29 +39,31 @@ class MangaPageOcr:
         H, W, *_ = img.shape
         result = {'version': __version__, 'img_width': W, 'img_height': H, 'blocks': []}
 
-        if not self.no_ocr:
-            mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
-            for blk_idx, blk in enumerate(blk_list):
-                result_blk = {'box': list(blk.xyxy), 'vertical': blk.vertical, 'font_size': blk.font_size, 'lines_coords': [], 'lines': []}
+        if self.disable_ocr:
+            return result
 
-                for line_idx, line in enumerate(blk.lines_array()):
+        mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
+        for blk_idx, blk in enumerate(blk_list):
+            result_blk = {'box': list(blk.xyxy), 'vertical': blk.vertical, 'font_size': blk.font_size, 'lines_coords': [], 'lines': []}
+
+            for line_idx, line in enumerate(blk.lines_array()):
+                if blk.vertical:
+                    max_ratio = self.max_ratio_vert
+                else:
+                    max_ratio = self.max_ratio_hor
+
+                line_crops, cut_points = self.split_into_chunks(img, mask_refined, blk, line_idx, textheight=self.text_height, max_ratio=max_ratio, anchor_window=self.anchor_window)
+
+                line_text = ''
+                for line_crop in line_crops:
                     if blk.vertical:
-                        max_ratio = self.max_ratio_vert
-                    else:
-                        max_ratio = self.max_ratio_hor
+                        line_crop = cv2.rotate(line_crop, cv2.ROTATE_90_CLOCKWISE)
+                    line_text += self.mocr(Image.fromarray(line_crop))
 
-                    line_crops, cut_points = self.split_into_chunks(img, mask_refined, blk, line_idx, textheight=self.text_height, max_ratio=max_ratio, anchor_window=self.anchor_window)
+                result_blk['lines_coords'].append(line.tolist())
+                result_blk['lines'].append(line_text)
 
-                    line_text = ''
-                    for line_crop in line_crops:
-                        if blk.vertical:
-                            line_crop = cv2.rotate(line_crop, cv2.ROTATE_90_CLOCKWISE)
-                        line_text += self.mocr(Image.fromarray(line_crop))
-
-                    result_blk['lines_coords'].append(line.tolist())
-                    result_blk['lines'].append(line_text)
-
-                result['blocks'].append(result_blk)
+            result['blocks'].append(result_blk)
 
         return result
 

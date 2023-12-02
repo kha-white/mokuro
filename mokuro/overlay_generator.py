@@ -45,17 +45,17 @@ class OverlayGenerator:
     def __init__(self,
                  pretrained_model_name_or_path='kha-white/manga-ocr-base',
                  force_cpu=False,
-                 no_ocr=False,
+                 disable_ocr=False,
                  **kwargs):
         self.pretrained_model_name_or_path = pretrained_model_name_or_path
         self.force_cpu = force_cpu
         self.kwargs = kwargs
         self.mpocr = None
-        self.no_ocr = no_ocr
+        self.disable_ocr = disable_ocr
 
     def init_models(self):
         if self.mpocr is None:
-            self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, no_ocr=self.no_ocr, **self.kwargs)
+            self.mpocr = MangaPageOcr(self.pretrained_model_name_or_path, self.force_cpu, disable_ocr=self.disable_ocr, **self.kwargs)
 
     def process_dir(self, path, as_one_file=True, is_demo=False):
         path = Path(path).expanduser().absolute()
