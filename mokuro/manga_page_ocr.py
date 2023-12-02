@@ -10,6 +10,9 @@ from mokuro import __version__
 from mokuro.cache import cache
 from mokuro.utils import imread
 
+class InvalidImage(Exception):
+    def __init__(self, message = "Animation file, Corrupted file or Unsupported type"):
+        super().__init__(message)
 
 class MangaPageOcr:
     def __init__(self,
@@ -35,6 +38,8 @@ class MangaPageOcr:
 
     def __call__(self, img_path):
         img = imread(img_path)
+        if img is None:
+            raise InvalidImage()
         H, W, *_ = img.shape
         mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
 
