@@ -73,7 +73,7 @@ class OverlayGenerator:
             shutil.copy(STYLES_PATH, out_dir / 'styles.css')
             shutil.copy(PANZOOM_PATH, out_dir / 'panzoom.min.js')
 
-        img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png')]
+        img_paths = [p for p in path.glob('**/*') if p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png', '.webp')]
         img_paths = natsorted(img_paths)
 
         page_htmls = []
@@ -84,7 +84,11 @@ class OverlayGenerator:
                 result = load_json(json_path)
             else:
                 self.init_models()
-                result = self.mpocr(img_path)
+                try:
+                    result = self.mpocr(img_path)
+                except Exception as e:
+                    logger.error(f'Failed OCR of file "{img_path}": {e}')
+                    continue
                 json_path.parent.mkdir(parents=True, exist_ok=True)
                 dump_json(result, json_path)
 
