@@ -26,7 +26,8 @@ See also:
 
 # Installation
 
-You need Python 3.6, 3.7, 3.8, 3.9, or 3.10. As of April 2023, PyTorch unfortunately does not support Python 3.11 yet, see pytorch/pytorch#86566.
+You need Python 3.6 or newer. Please note, that the newest Python release might not be supported due to a PyTorch dependency, which often breaks with new Python releases and needs some time to catch up.
+Refer to [PyTorch website](https://pytorch.org/get-started/locally/) for a list of supported Python versions.
 
 Some users have reported problems with Python installed from Microsoft Store. If you see an error:
 `ImportError: DLL load failed while importing fugashi: The specified module could not be found.`,
