@@ -13,7 +13,12 @@ def run(*paths,
         force_cpu=False,
         as_one_file=True,
         disable_confirmation=False,
+        disable_ocr=False,
         ):
+    
+    if disable_ocr:
+        logger.info('Running with OCR disabled')
+
     paths = [Path(p).expanduser().absolute() for p in paths]
 
     if parent_dir is not None:
@@ -36,7 +41,7 @@ def run(*paths,
         if inp.lower() not in ('y', 'yes'):
             return
 
-    ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu)
+    ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu, disable_ocr=disable_ocr)
 
     num_sucessful = 0
     for i, path in enumerate(paths):
