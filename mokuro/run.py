@@ -5,7 +5,7 @@ from loguru import logger
 from natsort import natsorted
 
 from mokuro import OverlayGenerator
-
+from mokuro.utils import get_supported_file_types, path_is_supported_input, unzip_if_zipped
 
 def run(*paths,
         parent_dir=None,
@@ -23,8 +23,11 @@ def run(*paths,
 
     if parent_dir is not None:
         for p in Path(parent_dir).expanduser().absolute().iterdir():
-            if p.is_dir() and p.stem != '_ocr' and p not in paths:
-                paths.append(p)
+            if path_is_supported_input(p) and p.stem != '_ocr' and p not in paths:
+                if p.is_dir() or not p.with_suffix("").exists():
+                    paths.append(p)
+                else:
+                    logger.warning(f"Skipping path '{p}' due to matching directory of same name.")
 
     if len(paths) == 0:
         logger.error('Found no paths to process. Did you set the paths correctly?')
@@ -43,17 +46,20 @@ def run(*paths,
 
     ovg = OverlayGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu, disable_ocr=disable_ocr)
 
-    num_sucessful = 0
+    num_successful = 0
     for i, path in enumerate(paths):
         logger.info(f'Processing {i + 1}/{len(paths)}: {path}')
+        if not path_is_supported_input(path):
+            logger.exception(f'Error while processing {path}.\nPath must be a directory or a supported file type: {(", ").join(get_supported_file_types())}.')
         try:
-            ovg.process_dir(path, as_one_file=as_one_file)
-        except Exception:
+            content_path = unzip_if_zipped(path)
+            ovg.process_dir(content_path, as_one_file=as_one_file)
+        except Exception as e:
             logger.exception(f'Error while processing {path}')
         else:
-            num_sucessful += 1
+            num_successful += 1
 
-    logger.info(f'Processed successfully: {num_sucessful}/{len(paths)}')
+    logger.info(f'Processed successfully: {num_successful}/{len(paths)}')
 
 
 if __name__ == '__main__':
