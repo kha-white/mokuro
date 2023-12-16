@@ -1,44 +1,73 @@
 import json
 import shutil
 from pathlib import Path
-import pytest
 
+import pytest
 from loguru import logger
 
 from mokuro.run import run
 
-TEST_DATA_ROOT = Path(__file__).parent / 'data'
 
-@pytest.mark.parametrize("input_path, expected_output_file", [
-    ("vol1", Path("vol1.html")),
-    ("vol1_cbz.cbz", Path("vol1.html")),
-    ("vol1_epub.epub", Path("vol1.html")),
-])
+@pytest.mark.parametrize('input_dir_name', ['test0', 'test1_webp'])
+@pytest.mark.parametrize('disable_ocr', [True, False])
+def test_mokuro(input_dir_name,
+                disable_ocr,
+                tmp_path,
+                input_data_root,
+                expected_results_root,
+                regenerate):
+    input_dir = tmp_path / input_dir_name
+    tag = input_dir_name + ('_disable_ocr' if disable_ocr else '')
+    expected_results_dir = expected_results_root / tag
 
-def test_mokuro(tmp_path, input_path, expected_output_file):
-    volumes_path = tmp_path / 'volumes'
-    volumes_path.mkdir(parents=True, exist_ok=True)
-    logger.info(f'volumes path: {volumes_path}')
+    shutil.copytree(input_data_root / input_dir_name, input_dir)
+    run(parent_dir=input_dir, force_cpu=True, disable_confirmation=True, disable_ocr=disable_ocr)
 
-    test_input_data = TEST_DATA_ROOT / 'volumes' / input_path
-    assert test_input_data.exists()
+    if regenerate:
+        logger.warning('Regenerating expected results')
+        shutil.rmtree(expected_results_dir, ignore_errors=True)
+        shutil.copytree(input_dir, expected_results_dir, ignore=shutil.ignore_patterns('*.jpg', '*.webp'))
 
-    test_input_destination= volumes_path / input_path
-    if test_input_data.is_dir():
-        shutil.copytree(test_input_data, volumes_path / input_path)
-    else:
-        shutil.copy(test_input_data, volumes_path)
-    
-    run(parent_dir=volumes_path, force_cpu=True, disable_confirmation=True)
+    assert (input_dir / 'vol1.html').is_file()
 
-    produced_output_path = volumes_path / test_input_data.with_suffix(expected_output_file.suffix).name
-    assert (produced_output_path).is_file()
+    json_paths = sorted((input_dir / '_ocr/vol1').iterdir())
+    expected_json_paths = sorted((expected_results_dir / '_ocr/vol1').iterdir())
 
-    produced_json_paths = sorted((volumes_path / '_ocr/' / test_input_data.stem).glob('**/*.json'))
-    expected_json_paths = sorted((TEST_DATA_ROOT / 'volumes/_ocr' / expected_output_file.stem).glob('**/*.json'))
+    assert [path.name for path in expected_json_paths] == [path.name for path in json_paths]
 
-    assert len(expected_json_paths) == len(produced_json_paths)
-    for json_path, expected_json_path in zip(produced_json_paths, expected_json_paths):
+    for json_path, expected_json_path in zip(json_paths, expected_json_paths):
+        result = json.loads(json_path.read_text(encoding='utf-8'))
+        expected_result = json.loads(expected_json_path.read_text(encoding='utf-8'))
+
+        assert result == expected_result
+
+
+@pytest.mark.parametrize("input_file", [Path("test2_cbz.cbz"), Path("test3_epub.epub")])
+def test_mokuro_with_manga_file(input_file,
+                                tmp_path,
+                                input_data_root,
+                                expected_results_root,
+                                regenerate):
+    input_file_path = tmp_path / input_file
+    expected_results_dir = expected_results_root / input_file.stem
+
+    shutil.copy(input_data_root / input_file, input_file_path)
+    run(input_file_path, force_cpu=True, disable_confirmation=True)
+
+    if regenerate:
+        logger.warning('Regenerating expected results')
+        shutil.rmtree(expected_results_dir, ignore_errors=True)
+        shutil.copytree(tmp_path, expected_results_dir, ignore=shutil.ignore_patterns('*.jpg', '*.webp'))
+
+
+    assert (input_file_path.with_suffix('.html')).is_file()
+
+    json_paths = sorted((tmp_path / '_ocr' / input_file_path.stem).iterdir())
+    expected_json_paths = sorted((expected_results_dir / '_ocr' / input_file_path.stem).iterdir())
+
+    assert [path.name for path in expected_json_paths] == [path.name for path in json_paths]
+
+    for json_path, expected_json_path in zip(json_paths, expected_json_paths):
         result = json.loads(json_path.read_text(encoding='utf-8'))
         expected_result = json.loads(expected_json_path.read_text(encoding='utf-8'))
 

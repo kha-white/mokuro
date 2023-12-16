@@ -10,6 +10,9 @@ from mokuro import __version__
 from mokuro.cache import cache
 from mokuro.utils import imread
 
+class InvalidImage(Exception):
+    def __init__(self, message = "Animation file, Corrupted file or Unsupported type"):
+        super().__init__(message)
 
 class MangaPageOcr:
     def __init__(self,
@@ -20,35 +23,33 @@ class MangaPageOcr:
                  max_ratio_vert=16,
                  max_ratio_hor=8,
                  anchor_window=2,
+                 disable_ocr=False,
                  ):
 
         self.text_height = text_height
         self.max_ratio_vert = max_ratio_vert
         self.max_ratio_hor = max_ratio_hor
         self.anchor_window = anchor_window
+        self.disable_ocr = disable_ocr
 
-        logger.info('Initializing text detector')
-        self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size,
-                                          device='cpu',
-                                          act='leaky')
-        self.mocr = MangaOcr(pretrained_model_name_or_path, force_cpu)
+        if not self.disable_ocr:
+            logger.info('Initializing text detector')
+            self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size, device='cpu', act='leaky')
+            self.mocr = MangaOcr(pretrained_model_name_or_path, force_cpu)
 
     def __call__(self, img_path):
         img = imread(img_path)
+        if img is None:
+            raise InvalidImage()
         H, W, *_ = img.shape
-        mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
-
         result = {'version': __version__, 'img_width': W, 'img_height': H, 'blocks': []}
 
-        for blk_idx, blk in enumerate(blk_list):
+        if self.disable_ocr:
+            return result
 
-            result_blk = {
-                'box': list(blk.xyxy),
-                'vertical': blk.vertical,
-                'font_size': blk.font_size,
-                'lines_coords': [],
-                'lines': []
-            }
+        mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
+        for blk_idx, blk in enumerate(blk_list):
+            result_blk = {'box': list(blk.xyxy), 'vertical': blk.vertical, 'font_size': blk.font_size, 'lines_coords': [], 'lines': []}
 
             for line_idx, line in enumerate(blk.lines_array()):
                 if blk.vertical:
@@ -56,9 +57,7 @@ class MangaPageOcr:
                 else:
                     max_ratio = self.max_ratio_hor
 
-                line_crops, cut_points = self.split_into_chunks(
-                    img, mask_refined, blk, line_idx,
-                    textheight=self.text_height, max_ratio=max_ratio, anchor_window=self.anchor_window)
+                line_crops, cut_points = self.split_into_chunks(img, mask_refined, blk, line_idx, textheight=self.text_height, max_ratio=max_ratio, anchor_window=self.anchor_window)
 
                 line_text = ''
                 for line_crop in line_crops:

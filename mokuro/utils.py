@@ -30,7 +30,7 @@ def imread(path, flags=cv2.IMREAD_COLOR):
     return cv2.imdecode(np.fromfile(path, dtype=np.uint8), flags)
 
 def get_supported_image_types():
-    return ('.jpg', '.jpeg', '.png')
+    return ('.jpg', '.jpeg', '.png', '.webp')
 
 def get_supported_file_types():
     return ('.cbz', '.epub')
