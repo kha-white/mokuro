@@ -260,6 +260,7 @@ class OverlayGenerator:
                 option_toggle('menuEditableText', 'editable text ')
                 option_select('menuFontSize', 'font size: ',
                               ['auto', 9, 10, 11, 12, 14, 16, 18, 20, 24, 32, 40, 48, 60])
+                option_toggle('menuDarkMode', 'dark mode')
                 option_toggle('menuEInkMode', 'e-ink mode ')
                 option_toggle('menuToggleOCRTextBoxes', 'toggle OCR text boxes on click')
                 option_color('menuBackgroundColor', 'background color', '#C4C3D0')
