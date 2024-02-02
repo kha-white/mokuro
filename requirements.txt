@@ -5,6 +5,7 @@ natsort
 numpy
 opencv-python
 Pillow
+pillow-avif-plugin
 pyclipper
 pytest
 requests
