@@ -1,4 +1,4 @@
-__version__ = '0.1.8'
+__version__ = '0.2.0-beta.7'
 
-from mokuro.manga_page_ocr import MangaPageOcr, InvalidImage
-from mokuro.overlay_generator import OverlayGenerator
+from mokuro.manga_page_ocr import MangaPageOcr
+from mokuro.mokuro_generator import MokuroGenerator

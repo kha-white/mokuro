@@ -10,9 +10,11 @@ from mokuro import __version__
 from mokuro.cache import cache
 from mokuro.utils import imread
 
+
 class InvalidImage(Exception):
-    def __init__(self, message = "Animation file, Corrupted file or Unsupported type"):
+    def __init__(self, message="Animation file, Corrupted file or Unsupported type"):
         super().__init__(message)
+
 
 class MangaPageOcr:
     def __init__(self,
@@ -34,7 +36,8 @@ class MangaPageOcr:
 
         if not self.disable_ocr:
             logger.info('Initializing text detector')
-            self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size, device='cpu', act='leaky')
+            self.text_detector = TextDetector(model_path=cache.comic_text_detector, input_size=detector_input_size,
+                                              device='cpu', act='leaky')
             self.mocr = MangaOcr(pretrained_model_name_or_path, force_cpu)
 
     def __call__(self, img_path):
@@ -49,7 +52,8 @@ class MangaPageOcr:
 
         mask, mask_refined, blk_list = self.text_detector(img, refine_mode=1, keep_undetected_mask=True)
         for blk_idx, blk in enumerate(blk_list):
-            result_blk = {'box': list(blk.xyxy), 'vertical': blk.vertical, 'font_size': blk.font_size, 'lines_coords': [], 'lines': []}
+            result_blk = {'box': list(blk.xyxy), 'vertical': blk.vertical, 'font_size': blk.font_size,
+                          'lines_coords': [], 'lines': []}
 
             for line_idx, line in enumerate(blk.lines_array()):
                 if blk.vertical:
@@ -57,7 +61,9 @@ class MangaPageOcr:
                 else:
                     max_ratio = self.max_ratio_hor
 
-                line_crops, cut_points = self.split_into_chunks(img, mask_refined, blk, line_idx, textheight=self.text_height, max_ratio=max_ratio, anchor_window=self.anchor_window)
+                line_crops, cut_points = self.split_into_chunks(img, mask_refined, blk, line_idx,
+                                                                textheight=self.text_height, max_ratio=max_ratio,
+                                                                anchor_window=self.anchor_window)
 
                 line_text = ''
                 for line_crop in line_crops:
