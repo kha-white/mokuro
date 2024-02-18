@@ -20,7 +20,11 @@ def run(*paths,
         unzip=False,
         legacy_html=True,
         as_one_file=True,
+        disable_ocr=False,
         ):
+    if disable_ocr:
+        logger.info('Running with OCR disabled')
+
     if legacy_html:
         logger.warning(
             'Legacy HTML output is deprecated and will not be further developed. '
@@ -83,7 +87,8 @@ def run(*paths,
         if inp.lower() not in ('y', 'yes'):
             return
 
-    mg = MokuroGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu)
+    mg = MokuroGenerator(pretrained_model_name_or_path=pretrained_model_name_or_path, force_cpu=force_cpu,
+                         disable_ocr=disable_ocr)
 
     with TemporaryDirectory() as tmp_dir:
         tmp_dir = Path(tmp_dir)

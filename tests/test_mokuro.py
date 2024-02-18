@@ -1,26 +1,36 @@
 import json
 import shutil
-from pathlib import Path
 
+import pytest
 from loguru import logger
 
 from mokuro.run import run
 
-TEST_DATA_ROOT = Path(__file__).parent / 'data'
 
+@pytest.mark.parametrize('input_dir_name', ['test0', 'test1_webp'])
+@pytest.mark.parametrize('disable_ocr', [True, False])
+def test_mokuro(input_dir_name,
+                disable_ocr,
+                tmp_path,
+                input_data_root,
+                expected_results_root,
+                regenerate):
+    input_dir = tmp_path / input_dir_name
+    tag = input_dir_name + ('_disable_ocr' if disable_ocr else '')
+    expected_results_dir = expected_results_root / tag
 
-def test_mokuro(tmp_path):
-    volumes_path = tmp_path / 'volumes'
+    shutil.copytree(input_data_root / input_dir_name, input_dir)
+    run(parent_dir=input_dir, force_cpu=True, disable_confirmation=True, disable_ocr=disable_ocr)
 
-    logger.info(f'volumes path: {volumes_path}')
+    if regenerate:
+        logger.warning('Regenerating expected results')
+        shutil.rmtree(expected_results_dir, ignore_errors=True)
+        shutil.copytree(input_dir, expected_results_dir, ignore=shutil.ignore_patterns('*.jpg', '*.webp'))
 
-    shutil.copytree(TEST_DATA_ROOT / 'volumes/vol1', volumes_path / 'vol1')
-    run(parent_dir=volumes_path, force_cpu=True, disable_confirmation=True)
+    assert (input_dir / 'vol1.html').is_file()
 
-    json_paths = sorted((volumes_path / '_ocr/vol1').iterdir())
-    expected_json_paths = sorted((TEST_DATA_ROOT / 'volumes/_ocr/vol1').iterdir())
-
-    assert (volumes_path / 'vol1.html').is_file()
+    json_paths = sorted((input_dir / '_ocr/vol1').iterdir())
+    expected_json_paths = sorted((expected_results_dir / '_ocr/vol1').iterdir())
 
     assert [path.name for path in expected_json_paths] == [path.name for path in json_paths]
 

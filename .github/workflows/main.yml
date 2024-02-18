@@ -33,4 +33,4 @@ jobs:
 
       - name: Test
         run: |
-          pytest mokuro/tests
+          pytest -v mokuro/tests
