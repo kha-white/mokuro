@@ -1,0 +1,539 @@
+:root {
+    --textBoxDisplay: initial;
+    --textBoxBorderHoverColor: rgba(237, 28, 36, 0.5);
+    --textBoxFontSize: 1em;
+
+    --colorBackground: #C4C3D0;
+    --color1: #f9f9fb;
+    --color2: #e2e2e9;
+    --color3: #071013;
+    --color3a: rgba(7, 16, 19, 0.3);
+    --color3b: rgba(7, 16, 19, 0.1);
+    --color4:#028090;
+    --color4a: #366ea7;
+    --color4b: #cddae9;
+    --color5: #80ED99;
+    --color6: #f25757;
+
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    background-color: var(--colorBackground);
+    font-family: "Open Sans", sans-serif;
+    color: var(--color3);
+}
+
+a {
+    color: var(--color4);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color5);
+}
+
+.colorRed {
+    color: var(--color6);
+}
+
+.notransition {
+    transition: none !important;
+}
+
+
+.pageContainer * {
+    font-family: "Noto Sans JP", "Meiryo", "MS Gothic", sans-serif;
+}
+
+.pageContainer {
+    position: relative;
+    margin: 0 auto;
+}
+
+.pageContainer:hover .textBox {
+    border: 2px solid var(--textBoxBorderHoverColor);
+}
+
+.textBox {
+    display: var(--textBoxDisplay);
+    position: absolute;
+    padding: 0;
+    line-height: 1.1em;
+    font-size: 16pt;
+    white-space: nowrap;
+    border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.textBox:hover, .textBox.selected {
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0);
+    z-index: 999 !important;
+}
+
+.textBox p {
+    display: none;
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+    line-height: 1.1em;
+    margin: 0;
+    background-color: rgb(255, 255, 255);
+}
+
+.textBoxFontSizeOverride .textBox p {
+    font-size: var(--textBoxFontSize) !important;
+}
+
+.textBox:hover p, .textBox.selected p {
+    display: table;
+}
+
+#pagesContainer {
+    display: inline-flex;
+    flex-direction: row;
+    overflow: visible;
+}
+
+#pagesContainer.inverted {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.page {
+    display: none;
+    float: left;
+    margin: 0 -1px 0 0;
+}
+
+#leftAPage, #rightAPage, #leftAScreen, #rightAScreen {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#leftAPage, #rightAPage {
+    /*display: inline-block;*/
+    display: none;
+    position: absolute;
+    top: -5%;
+    width: 10%;
+    height: 110%;
+}
+
+#leftAPage {
+    left: -7%;
+}
+
+#rightAPage {
+    right: -7%;
+}
+
+#leftAScreen, #rightAScreen {
+    display: inline-block;
+    position: fixed;
+    top: 10vh;
+    width: 5vw;
+    height: 90vh;
+}
+
+#leftAScreen {
+    left: 0;
+}
+
+#rightAScreen {
+    right: 0;
+}
+
+#showMenuA {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 3em;
+    height: 3em;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#topMenu {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    margin: 5px;
+    background: var(--color1);
+    border-radius: 3px;
+    box-shadow: 0px 0px 8px 0px var(--color3a);
+    transition: all 0.5s ease-out, max-width 0s ease-in;
+    visibility: visible;
+    opacity: 1;
+    max-width: 100vw;
+    white-space: nowrap;
+}
+
+
+#topMenu.hidden {
+    max-width: 2.5em;
+    visibility: hidden;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 1s ease-in, max-width 0.5s ease-out;
+}
+
+#topMenu * {
+    font-size: min(1em, 3.5vw);
+    vertical-align: middle;
+}
+
+#topMenu input {
+    height: 1.4em;
+    margin: 0 6px;
+}
+
+#pageIdxDisplay {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.menuButton {
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--color3);
+    border: none;
+    width: 2.5em;
+    height: 2.2em;
+    border-radius: 3px;
+}
+
+.menuButton svg {
+    max-height: 1.5em;
+}
+
+.menuButton:hover {
+    background-color: var(--color2);
+}
+
+.popupTitle {
+    margin: 10px 10px 10px 40px;
+    font-size: 1.5em;
+}
+
+.popup hr {
+    margin: 0 20px 0 20px;
+    border-top: 1px solid var(--color3a);
+}
+
+.popupCloseButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.dropdown:hover #dropbtn {
+    background-color: var(--color2);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--color1);
+    box-shadow: 0px 0px 8px 0px var(--color3a);
+    z-index: 1000;
+    border-radius: 3px;
+    max-height: 90vh;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.dropdown-content .buttonRow {
+    display: flex;
+}
+
+.dropdown-content .menuButton {
+    flex: 1 1 auto;
+    align-self: center;
+}
+
+
+.dropdown-content .dropdown-option {
+    color: var(--color3);
+    padding: 10px 10px;
+    text-decoration: none;
+    white-space: nowrap;
+    display: block;
+    border-radius: 3px;
+}
+
+.dropdown-content .dropdown-option:hover {
+    background-color: var(--color2);
+}
+
+.dropdown-content .dropdown-option [type="checkbox"] {
+    vertical-align: middle;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+#statusBar {
+    position: fixed;
+    z-index: 1000;
+    bottom: 0;
+    right: 0;
+    margin: 5px;
+    padding: 0;
+
+    font-size: 1em;
+
+
+    background: var(--color1);
+    border-radius: 3px;
+    box-shadow: 0px 0px 8px 0px var(--color3a);
+    transition: all 0.5s ease-out;
+    visibility: visible;
+    opacity: 1;
+    max-width: 100vw;
+}
+
+#statusBar p {
+    margin: 1px;
+}
+
+#dimOverlay {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1002;
+    background-color: var(--color1);
+    color: var(--color3);
+    box-shadow: 0px 0px 10px 4px var(--color3a);
+    border-radius: 3px;
+    overflow: auto;
+    padding: 4px;
+    box-sizing: border-box;
+    line-height: 2em;
+}
+
+.popupContent {
+    margin: 20px;
+}
+
+.popupSmall {
+    top: 50vh;
+    left: 50vw;
+    width: min(720px, 96vw);
+    height: min(640px, 96vh);
+    margin-left: max(-360px, -48vw);
+    margin-top: max(-320px, -48vh);
+}
+
+.popupLarge {
+    top: 50vh;
+    left: 50vw;
+    width: min(96vw, 800px);
+    height: min(96vh, 800px);
+    margin-left: max(-48vw, -400px);
+    margin-top: max(-48vh, -400px);
+}
+
+#settingsDisplay select, .selectOption {
+    height: 100%;
+}
+
+.popup table {
+    width: 96%;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: var(--color1);
+    color: var(--color3);
+}
+
+.settingsLeftCol {
+    width: 50%;
+}
+
+.popup th {
+    background-color: var(--color1);
+    font-weight: 100;
+    font-size: 0.75em;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.popup td {
+    padding: 8px;
+    font-size: 0.75em;
+    vertical-align: middle;
+}
+
+.settingsDivider {
+    float: left;
+    padding: 4px 16px 4px 16px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.selectOption, .colorOption, .resetButton {
+    float: left;
+    vertical-align: middle;
+    height: 2em;
+}
+
+.popup tr:hover {
+    background-color: var(--color2);
+}
+
+.toggleOption {
+    float: left;
+    background: var(--color2);
+    border: 1px solid var(--color3a);
+    border-radius: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.toggleOption input {
+    position: absolute;
+    opacity: 0;
+}
+
+.toggleOption input + label {
+    padding: 4px;
+    min-width: 2em;
+    float: left;
+    color: var(--color3);
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.toggleOption input:checked + label {
+    color: var(--color1);
+    background: var(--color4a);
+}
+
+.alignright {
+    text-align: right;
+}
+
+.alignleft {
+    text-align: left;
+}
+
+#catalogDisplay {
+    overflow: auto;
+    position: absolute;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: min(11em, 35%);
+    background-color: var(--color1);
+}
+
+#catalogBottomMenu {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: min(10em, 25%);
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.75em;
+}
+
+#catalogBottomMenu div {
+    margin: 1em 0em;
+}
+
+
+#dropbox {
+    border: 2px var(--color3a) dashed;
+    background-color: var(--color1);
+    box-shadow: 0px 0px 10px 1px var(--color3b);
+    border-radius: 3px;
+
+    position: absolute;
+    width: 80%;
+    max-width: 1000px;
+    height: min(6em, 20%);
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 2em;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#dropbox.isDragover {
+    background-color: var(--color2);
+}
+
+#dropbox p {
+    margin: 4px 1em;
+    line-height: 1.5em;
+}
+
+.smallText {
+    font-size: 0.75em;
+}
+
+.volumeStats, .volumeStatus, .volumeUrl {
+    margin-left: 0.5em;
+    font-size: 0.75em;
+    line-height: 1em;
+    color: var(--color3);
+}
+
+.deleteCatalogItemButton {
+    display: none;
+    margin-left: 0.5em;
+}
+
+.catalogItem {
+    display: block;
+    width: 100%;
+}
+
+.catalogItem:hover .deleteCatalogItemButton {
+    display: initial;
+}
+
+/*hide arrows from number input*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

@@ -1,0 +1,247 @@
+<html lang="en">
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<meta name="viewport"
+      content="width=device-width, height=device-height,initial-scale=1, minimum-scale=1, user-scalable=no"/>
+
+<head>
+    <title>mokuro</title>
+    <link rel="stylesheet" href="css/styles.css"/>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+</head>
+
+<body>
+<a id="showMenuA" href="#"></a>
+
+<div id="topMenu">
+    <button id="buttonHideMenu" class="menuButton"></button>
+    <button id="buttonLeftLeft" class="menuButton"></button>
+    <button id="buttonLeft" class="menuButton"></button>
+    <button id="buttonRight" class="menuButton"></button>
+    <button id="buttonRightRight" class="menuButton"></button>
+    <input required type="number" id="pageIdxInput" min="1" max="6" value="1" size="3"/>
+    <span id="pageIdxDisplay"></span><span style="color:rgba(255,255,255,0.1);font-size:1px;">。</span>
+
+    <div class="dropdown">
+        <button id="dropbtn" class="menuButton"></button>
+        <div class="dropdown-content">
+            <div class="buttonRow">
+                <button id="menuFitToScreen" class="menuButton"></button>
+                <button id="menuFitToWidth" class="menuButton"></button>
+                <button id="menuOriginalSize" class="menuButton">1:1</button>
+                <button id="menuFullScreen" class="menuButton"></button>
+            </div>
+
+            <a href="#" class="dropdown-option" id="menuCatalog">catalog</a>
+            <a href="#" class="dropdown-option" id="menuCloseVolume">close volume</a>
+            <a href="#" class="dropdown-option" id="menuSettings">settings</a>
+            <a href="#" class="dropdown-option" id="menuAbout">about/help</a>
+        </div>
+    </div>
+</div>
+
+<div id="statusBar">
+    <p id="statusBarText"></p>
+</div>
+
+<div id="dimOverlay"></div>
+
+<div id="popupAbout" class="popup popupSmall">
+
+    <div class="popupTitle">About</div>
+    <hr>
+
+    <button class="popupCloseButton menuButton"></button>
+
+    <div class="popupContent">
+        <p> mokuro reader <span id="versionDisplay"></span></p>
+
+        <p>Instructions:</p>
+        <ul>
+            <li><a href="#" id="openCatalogButton">Open catalog</a> to load a volume</li>
+            <li>Navigate pages with:
+                <ul>
+                    <li>menu buttons</li>
+                    <li>Page Up, Page Down, Home, End keys</li>
+                    <li>by clicking left/right edge of the screen</li>
+                </ul>
+            <li>Click &#10005; button to hide the menu. To bring it back, clip top-left corner of the screen.</li>
+            <li>Select "editable boxes" option, to edit text recognized by OCR. Changes are not saved, it's only for
+                ad-hoc
+                fixes when using look-up dictionary.
+            </li>
+            <li>E-ink mode turns off animations and simulates display refresh on each page turn.</li>
+            <li><a href="#" id="hotkeysButton">List of hotkeys</a></li>
+            <li><a href="#" id="loadDemoButton">Load demo volume</a></li>
+        </ul>
+
+        <p>See source code and detailed instructions on <a href="https://github.com/kha-white/mokuro">GitHub</a>.</p>
+
+        <p class="smallText">The demo contains excerpt from <a href="http://www.manga109.org/en/download_s.html"
+                                                               target="_blank">Manga109-s
+            dataset</a>. うちの猫’ず日記 &copy; がぁさん</p>
+    </div>
+</div>
+
+<div id="popupCatalog" class="popup popupLarge">
+    <div class="popupTitle">Catalog</div>
+    <hr>
+    <button class="popupCloseButton menuButton"></button>
+
+    <div id="catalogDisplay"></div>
+
+    <div id="catalogBottomMenu">
+        <div><a id="resetCatalogButton" href="#">Reset catalog</a></div>
+        <div><span id="catalogStatus"></span></div>
+    </div>
+
+    <div id="dropbox">
+        <form id="uploadForm">
+            <input id="uploadFile" type="file" accept=".mokuro,.zip,.cbz" multiple style="display:none;">
+            <input id="uploadDirectory" type="file" webkitdirectory directory multiple style="display:none;">
+            <input id="uploadUrl" type="text" placeholder="URL" style="display:none;">
+        </form>
+        <p>Drag and drop /
+            <a id="chooseFilesButton" href="#">choose files</a> /
+            <a id="chooseDirectoryButton" href="#">choose directory</a> /
+            <a id="importUrlButton" href="#">import from URL</a>.
+        </p>
+
+        <p class="smallText"><a id="uploadHelpButton" href="#">What to upload?</a></p>
+    </div>
+</div>
+
+<div id="popupUploadHelp" class="popup popupLarge">
+    <div class="popupTitle">Uploading help</div>
+    <hr>
+    <button class="popupCloseButton menuButton"></button>
+
+    <div class="popupContent">
+        <ul>
+            <li>Upload one or more .mokuro files, each paired with respective volume contents.</li>
+            <li>Volume contents can be either zip/cbz files or folders containing jpg/png images.</li>
+            <li>You can upload one folder containing multiple .mokuro + volume content pairs.</li>
+            <li>Uploading folders is not supported on mobile. You need to use "choose files" instead and upload
+                .mokuro + zip/cbz pairs.
+            </li>
+        </ul>
+
+        <p>For example:</p>
+
+        <img src="../assets/uploadExample1.jpg">
+        <img src="../assets/uploadExample2.jpg">
+
+        <p>
+            "import from URL" function allows importing manga from self-hosted or online file server.
+            The URL must point to a .mokuro file or a directory containing .mokuro files.
+            Each .mokuro file must be paired with respective volume contents.
+            The server must include CORS headers allowing cross-origin requests.
+        </p>
+
+        <p>Volumes imported from URL are linked from the server and are accessible as long as the server keeps hosting
+            them, contrary to volumes uploaded from disk, which are stored in browser's storage.</p>
+
+    </div>
+</div>
+
+<div id="popupHotkeys" class="popup popupSmall">
+    <div class="popupTitle">Hotkeys</div>
+    <hr>
+    <button class="popupCloseButton menuButton"></button>
+
+    <div class="popupContent">
+        <table>
+            <tr>
+                <td class="alignright">arrows</td>
+                <td>turn pages / pan page</td>
+            </tr>
+            <tr>
+                <td class="alignright">PageUp/PageDown</td>
+                <td>turn pages</td>
+            </tr>
+            <tr>
+                <td class="alignright">Home</td>
+                <td>first page</td>
+            </tr>
+            <tr>
+                <td class="alignright">End</td>
+                <td>last page</td>
+            </tr>
+            <tr>
+                <td class="alignright">Space</td>
+                <td>next page</td>
+            </tr>
+            <tr>
+                <td class="alignright">+</td>
+                <td>zoom in</td>
+            </tr>
+            <tr>
+                <td class="alignright">-</td>
+                <td>zoom out</td>
+            </tr>
+            <tr>
+                <td class="alignright">0</td>
+                <td>reset zoom</td>
+            </tr>
+            <tr>
+                <td class="alignright">, .</td>
+                <td>navigate volumes</td>
+            </tr>
+            <tr>
+                <td class="alignright">c</td>
+                <td>catalog</td>
+            </tr>
+            <tr>
+                <td class="alignright">s</td>
+                <td>settings</td>
+            </tr>
+            <tr>
+                <td class="alignright">h</td>
+                <td>about/help</td>
+            </tr>
+            <tr>
+                <td class="alignright">Escape</td>
+                <td>close popup</td>
+            </tr>
+            <tr>
+                <td class="alignright">x</td>
+                <td>close volume</td>
+            </tr>
+            <tr>
+                <td class="alignright">r</td>
+                <td>reset volume settings</td>
+            </tr>
+            <tr>
+                <td class="alignright">d</td>
+                <td>single/double page view</td>
+            </tr>
+            <tr>
+                <td class="alignright">j</td>
+                <td>toggle "Japanese reading (right to left)"</td>
+            </tr>
+            <tr>
+                <td class="alignright">p</td>
+                <td>toggle "first page is cover"</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="popupSettings" class="popup popupLarge">
+    <div class="popupTitle">Settings</div>
+    <hr>
+    <button class="popupCloseButton menuButton"></button>
+    <div id="settingsDisplay"></div>
+</div>
+
+<a id="leftAScreen" href="#"></a>
+<a id="rightAScreen" href="#"></a>
+
+<div id="pagesContainer">
+    <a id="leftAPage" href="#"></a>
+    <a id="rightAPage" href="#"></a>
+</div>
+
+<script type="module" src="js/script.js"></script>
+</body>
+</html>
