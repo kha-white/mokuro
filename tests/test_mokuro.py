@@ -31,7 +31,7 @@ def test_mokuro(input_dir_name,
 
     mokuro_paths = sorted(input_dir.glob('*.mokuro'))
     expected_mokuro_paths = sorted(expected_results_dir.glob('*.mokuro'))
-    _validate_cache_jsons(mokuro_paths, expected_mokuro_paths)
+    _validate_mokuro_files(mokuro_paths, expected_mokuro_paths)
 
 
 @pytest.mark.parametrize('input_dir_name', ['test2_zip'])
