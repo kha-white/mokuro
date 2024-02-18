@@ -1,6 +1,7 @@
 from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Sequence, Optional, Union
 
 import fire
 from loguru import logger
@@ -10,25 +11,42 @@ from mokuro.legacy.overlay_generator import generate_legacy_html
 from mokuro.volume import VolumeCollection
 
 
-def run(*paths,
-        parent_dir=None,
-        pretrained_model_name_or_path='kha-white/manga-ocr-base',
-        force_cpu=False,
-        disable_confirmation=False,
-        ignore_errors=False,
-        no_cache=False,
-        unzip=False,
-        legacy_html=True,
-        as_one_file=True,
-        disable_ocr=False,
+def run(*paths: Optional[Sequence[Union[str, Path]]],
+        parent_dir: Optional[Union[str, Path]] = None,
+        pretrained_model_name_or_path: str = 'kha-white/manga-ocr-base',
+        force_cpu: bool = False,
+        disable_confirmation: bool = False,
+        disable_ocr: bool = False,
+        ignore_errors: bool = False,
+        no_cache: bool = False,
+        unzip: bool = False,
+        disable_html: bool = False,
+        as_one_file: bool = True,
         ):
+    """
+    Process manga volumes with mokuro.
+
+    Args:
+        paths: Paths to manga volumes. Volume can ba a directory, a zip file or a cbz file.
+        parent_dir: Parent directory to scan for volumes. If provided, all volumes inside this directory will be processed.
+        pretrained_model_name_or_path: Name or path of the manga-ocr model.
+        force_cpu: Force the use of CPU even if CUDA is available.
+        disable_confirmation: Disable confirmation prompt. If False, the user will be prompted to confirm the list of volumes to be processed.
+        disable_ocr: Disable OCR processing. Generate mokuro/HTML files without OCR results.
+        ignore_errors: Continue processing volumes even if an error occurs.
+        no_cache: Do not use cached OCR results from previous runs (_ocr directories).
+        unzip: Extract volumes in zip/cbz format in their original location.
+        disable_html: Disable legacy HTML output. If True, acts as if --unzip is True.
+        as_one_file: Applies only to legacy HTML. If False, generate separate CSS and JS files instead of embedding them in the HTML file.
+    """
+
     if disable_ocr:
         logger.info('Running with OCR disabled')
 
-    if legacy_html:
+    if not disable_html:
         logger.warning(
-            'Legacy HTML output is deprecated and will not be further developed. '
-            'Use .mokuro format and web reader instead.')
+            "Legacy HTML output is deprecated and will not be further developed. "
+            "It's recommended to use .mokuro format and web reader instead.")
         # legacy HTML works only with unzipped output
         unzip = True
 
@@ -105,7 +123,7 @@ def run(*paths,
             try:
                 volume.unzip(tmp_dir)
                 mg.process_volume(volume, ignore_errors=ignore_errors, no_cache=no_cache)
-                if legacy_html:
+                if not disable_html:
                     generate_legacy_html(volume, as_one_file=as_one_file, ignore_errors=ignore_errors)
 
             except Exception:
