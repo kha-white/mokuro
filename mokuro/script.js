@@ -9,7 +9,7 @@ let storageKey = "mokuro_" + window.location.pathname;
 let defaultState = {
     page_idx: 0,
     page2_idx: -1,
-    hasCover: false,
+    hasCover: true,
     r2l: true,
     singlePageView: false,
     ctrlToPan: false,
