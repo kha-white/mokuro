@@ -14,9 +14,9 @@ class VolumeStatus(Enum):
 
     def __str__(self):
         return {
-            'UNPROCESSED': 'unprocessed',
-            'PARTIALLY_PROCESSED': 'partially processed',
-            'PROCESSED': 'already processed',
+            "UNPROCESSED": "unprocessed",
+            "PARTIALLY_PROCESSED": "partially processed",
+            "PROCESSED": "already processed",
         }[self.name]
 
 
@@ -36,10 +36,10 @@ class Title:
     def set_uuid(self, update_existing=True):
         existing_title_uuids = set()
 
-        for path_mokuro in self.path.glob('*.mokuro'):
+        for path_mokuro in self.path.glob("*.mokuro"):
             mokuro_data = load_json(path_mokuro)
 
-            title_uuid = mokuro_data.get('title_uuid')
+            title_uuid = mokuro_data.get("title_uuid")
             if title_uuid is not None:
                 existing_title_uuids.add(title_uuid)
 
@@ -48,20 +48,20 @@ class Title:
         elif len(existing_title_uuids) == 1:
             self._uuid = existing_title_uuids.pop()
         else:
-            logger.warning('Incosistent title uuids; generating a new one')
+            logger.warning("Incosistent title uuids; generating a new one")
             self._uuid = str(uuid.uuid4())
 
         if update_existing:
-            for path_mokuro in self.path.glob('*.mokuro'):
+            for path_mokuro in self.path.glob("*.mokuro"):
                 mokuro_data = load_json(path_mokuro)
 
-                if mokuro_data.get('title_uuid') != self._uuid:
-                    mokuro_data['title_uuid'] = self._uuid
+                if mokuro_data.get("title_uuid") != self._uuid:
+                    mokuro_data["title_uuid"] = self._uuid
                     dump_json(mokuro_data, path_mokuro)
 
 
 class Volume:
-    format_preference_order = ['', '.cbz', '.zip']
+    format_preference_order = ["", ".cbz", ".zip"]
 
     def __init__(self, path_in):
         self.paths_in = {path_in}
@@ -69,7 +69,7 @@ class Volume:
 
         if self.path_mokuro.is_file():
             self.mokuro_data = load_json(self.path_mokuro)
-            self.uuid = self.mokuro_data.get('volume_uuid')
+            self.uuid = self.mokuro_data.get("volume_uuid")
         else:
             self.mokuro_data = None
             self.uuid = str(uuid.uuid4())
@@ -90,39 +90,41 @@ class Volume:
 
     @property
     def path_ocr_cache(self):
-        return self.path_mokuro.parent / '_ocr' / self.path_mokuro.stem
+        return self.path_mokuro.parent / "_ocr" / self.path_mokuro.stem
 
     @property
     def path_title(self):
         return self.path_mokuro.parent
 
     def get_json_paths(self):
-        json_paths = natsorted(p.relative_to(self.path_ocr_cache) for p in self.path_ocr_cache.glob('**/*.json'))
-        json_paths = {p.with_suffix(''): p for p in json_paths}
+        json_paths = natsorted(p.relative_to(self.path_ocr_cache) for p in self.path_ocr_cache.glob("**/*.json"))
+        json_paths = {p.with_suffix(""): p for p in json_paths}
         return json_paths
 
     def get_img_paths(self):
         assert self.path_in.is_dir()
-        img_paths = natsorted(p.relative_to(self.path_in) for p in self.path_in.glob('**/*') if
-                              p.is_file() and p.suffix.lower() in ('.jpg', '.jpeg', '.png', '.webp'))
-        img_paths = {p.with_suffix(''): p for p in img_paths}
+        img_paths = natsorted(
+            p.relative_to(self.path_in)
+            for p in self.path_in.glob("**/*")
+            if p.is_file() and p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")
+        )
+        img_paths = {p.with_suffix(""): p for p in img_paths}
         return img_paths
 
     def unzip(self, tmp_dir=None):
-        if self.path_in.is_file() and self.path_in.suffix.lower() in {'.zip', '.cbz'}:
-
+        if self.path_in.is_file() and self.path_in.suffix.lower() in {".zip", ".cbz"}:
             if tmp_dir is None:
-                path_dst = self.path_in.with_suffix('')
+                path_dst = self.path_in.with_suffix("")
             else:
                 path_dst = tmp_dir / self.uuid
 
-            logger.info(f'Unzipping {self.path_in}')
+            logger.info(f"Unzipping {self.path_in}")
             unzip(self.path_in, path_dst, correct_duplicated_root=True)
 
             self.paths_in.add(path_dst)
 
     def __str__(self):
-        return f'{self.path_in} ({self.status})'
+        return f"{self.path_in} ({self.status})"
 
 
 class VolumeCollection:
@@ -154,6 +156,6 @@ class VolumeCollection:
 
 def get_path_mokuro(path_in):
     if path_in.is_dir():
-        return path_in.parent / (path_in.name + '.mokuro')
-    if path_in.is_file() and path_in.suffix.lower() in {'.zip', '.cbz'}:
-        return path_in.with_suffix('.mokuro')
+        return path_in.parent / (path_in.name + ".mokuro")
+    if path_in.is_file() and path_in.suffix.lower() in {".zip", ".cbz"}:
+        return path_in.with_suffix(".mokuro")

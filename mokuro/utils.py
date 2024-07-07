@@ -17,12 +17,12 @@ class NumpyEncoder(json.JSONEncoder):
 
 
 def load_json(path):
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def dump_json(obj, path):
-    with open(path, 'w', encoding='utf-8') as f:
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, cls=NumpyEncoder)
 
 
@@ -33,13 +33,13 @@ def imread(path, flags=cv2.IMREAD_COLOR):
 
 def get_path_format(path: Path):
     if path.is_dir():
-        return ''
+        return ""
     else:
         return path.suffix.lower()
 
 
 def unzip(path_src: Path, path_dst: Path, correct_duplicated_root=True):
-    with zipfile.ZipFile(path_src, 'r') as zip_ref:
+    with zipfile.ZipFile(path_src, "r") as zip_ref:
         zip_ref.extractall(path_dst)
 
     if correct_duplicated_root:
