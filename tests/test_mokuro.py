@@ -11,6 +11,8 @@ from mokuro.run import run
     ('test0', True),
     ('test0', False),
     ('test1_webp', True),
+    ('test3_convert_legacy_ocr', False),
+    ('test3_convert_legacy_ocr', True),
 ])
 @pytest.mark.parametrize('disable_ocr', [True, False])
 def test_mokuro(input_dir_name,
@@ -78,8 +80,7 @@ def _setup_and_run(input_dir_name,
     expected_results_dir = expected_results_root / tag
 
     shutil.copytree(input_data_root / input_dir_name, input_dir)
-    run(parent_dir=input_dir, force_cpu=True, disable_confirmation=True, disable_ocr=disable_ocr, unzip=unzip,
-        disable_html=disable_html)
+    run(parent_dir=input_dir, force_cpu=True, disable_confirmation=True, disable_ocr=disable_ocr, unzip=unzip, legacy_html=not disable_html)
 
     if regenerate:
         logger.warning('Regenerating expected results')

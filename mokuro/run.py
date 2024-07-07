@@ -20,7 +20,7 @@ def run(*paths: Optional[Sequence[Union[str, Path]]],
         ignore_errors: bool = False,
         no_cache: bool = False,
         unzip: bool = False,
-        disable_html: bool = False,
+        legacy_html: bool = True,
         as_one_file: bool = True,
         ):
     """
@@ -36,17 +36,19 @@ def run(*paths: Optional[Sequence[Union[str, Path]]],
         ignore_errors: Continue processing volumes even if an error occurs.
         no_cache: Do not use cached OCR results from previous runs (_ocr directories).
         unzip: Extract volumes in zip/cbz format in their original location.
-        disable_html: Disable legacy HTML output. If True, acts as if --unzip is True.
+        legacy_html: Enable legacy HTML output. If True, acts as if --unzip is True.
         as_one_file: Applies only to legacy HTML. If False, generate separate CSS and JS files instead of embedding them in the HTML file.
     """
 
     if disable_ocr:
         logger.info('Running with OCR disabled')
 
-    if not disable_html:
+    if legacy_html:
         logger.warning(
             "Legacy HTML output is deprecated and will not be further developed. "
-            "It's recommended to use .mokuro format and web reader instead.")
+            "It's recommended to use .mokuro format and web reader instead."
+            "Legacy HTML will be disabled by default in the future. To explicitly enable it, run with option --legacy-html."
+        )
         # legacy HTML works only with unzipped output
         unzip = True
 
@@ -123,7 +125,7 @@ def run(*paths: Optional[Sequence[Union[str, Path]]],
             try:
                 volume.unzip(tmp_dir)
                 mg.process_volume(volume, ignore_errors=ignore_errors, no_cache=no_cache)
-                if not disable_html:
+                if legacy_html:
                     generate_legacy_html(volume, as_one_file=as_one_file, ignore_errors=ignore_errors)
 
             except Exception:
