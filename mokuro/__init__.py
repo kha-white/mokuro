@@ -1,4 +1,4 @@
-__version__ = '0.2.0-beta.7'
+from ._version import __version__ as __version__
 
-from mokuro.manga_page_ocr import MangaPageOcr
-from mokuro.mokuro_generator import MokuroGenerator
+from mokuro.manga_page_ocr import MangaPageOcr as MangaPageOcr
+from mokuro.mokuro_generator import MokuroGenerator as MokuroGenerator
