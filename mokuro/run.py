@@ -54,7 +54,7 @@ def run(
     if legacy_html:
         logger.warning(
             "Legacy HTML output is deprecated and will not be further developed. "
-            "It's recommended to use .mokuro format and web reader instead."
+            "It's recommended to use .mokuro format and web reader instead. "
             "Legacy HTML will be disabled by default in the future. To explicitly enable it, run with option --legacy-html."
         )
         # legacy HTML works only with unzipped output
