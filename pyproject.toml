@@ -45,8 +45,11 @@ Homepage = "https://github.com/kha-white/mokuro"
 requires = ["setuptools >= 61.0.0", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["mokuro", "comic_text_detector"]
+[tool.setuptools.packages.find]
+include = ["mokuro*", "comic_text_detector*"]
+
+[tool.setuptools.package-data]
+comic_text_detector = ["LICENSE"]
 
 [tool.setuptools.dynamic]
 version = {attr = "mokuro._version.__version__"}
