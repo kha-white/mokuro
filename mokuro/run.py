@@ -7,6 +7,7 @@ import fire
 from loguru import logger
 
 from mokuro import MokuroGenerator
+from mokuro import __version__
 from mokuro.legacy.overlay_generator import generate_legacy_html
 from mokuro.volume import VolumeCollection
 
@@ -23,6 +24,7 @@ def run(
     unzip: bool = False,
     legacy_html: bool = True,
     as_one_file: bool = True,
+    version: bool = False,
 ):
     """
     Process manga volumes with mokuro.
@@ -39,7 +41,12 @@ def run(
         unzip: Extract volumes in zip/cbz format in their original location.
         legacy_html: Enable legacy HTML output. If True, acts as if --unzip is True.
         as_one_file: Applies only to legacy HTML. If False, generate separate CSS and JS files instead of embedding them in the HTML file.
+        version: Print the version of mokuro and exit.
     """
+
+    if version:
+        print(f"{__version__}")
+        return
 
     if disable_ocr:
         logger.info("Running with OCR disabled")

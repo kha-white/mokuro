@@ -102,6 +102,7 @@ mokuro --parent_dir manga_title/
 --unzip: Extract volumes in zip/cbz format in their original location.
 --disable_html: Disable legacy HTML output. If True, acts as if --unzip is True.
 --as_one_file: Applies only to legacy HTML. If False, generate separate CSS and JS files instead of embedding them in the HTML file.
+--version: Print the version of mokuro and exit.
 ```
 
 ## Legacy HTML vs. new .mokuro format
