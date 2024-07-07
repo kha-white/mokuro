@@ -10,14 +10,13 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: mokuro
           submodules: recursive
 
       - name: Set up Python
@@ -28,9 +27,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
-          pip install -e mokuro
+          pip install -e ".[dev]"
 
       - name: Test
         run: |
-          pytest -v mokuro/tests
+          pytest
