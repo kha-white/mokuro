@@ -23,6 +23,7 @@ dependencies = [
     "pyclipper",
     "requests",
     "scipy",
+    "setuptools",
     "shapely",
     "torch>=1.7.0",
     "torchsummary",
