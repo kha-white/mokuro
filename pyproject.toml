@@ -57,4 +57,4 @@ indent-width = 4
 extend-exclude = ["comic_text_detector"]
 
 [project.scripts]
-manga_ocr = "mokuro.__main__:main"
+mokuro = "mokuro.__main__:main"
