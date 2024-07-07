@@ -14,14 +14,14 @@ def regenerate(request):
 
 @pytest.fixture
 def test_data_root():
-    return Path(__file__).parent / 'data'
+    return Path(__file__).parent / "data"
 
 
 @pytest.fixture
 def input_data_root(test_data_root):
-    return test_data_root / 'input'
+    return test_data_root / "input"
 
 
 @pytest.fixture
 def expected_results_root(test_data_root):
-    return test_data_root / 'expected_results'
+    return test_data_root / "expected_results"
