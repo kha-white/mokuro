@@ -30,7 +30,7 @@ def run(
     Process manga volumes with mokuro.
 
     Args:
-        paths: Paths to manga volumes. Volume can ba a directory, a zip file or a cbz file.
+        paths: Paths to manga volumes. Volume can be a directory, a zip file or a cbz file.
         parent_dir: Parent directory to scan for volumes. If provided, all volumes inside this directory will be processed.
         pretrained_model_name_or_path: Name or path of the manga-ocr model.
         force_cpu: Force the use of CPU even if CUDA is available.
