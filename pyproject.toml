@@ -20,6 +20,7 @@ dependencies = [
     "numpy",
     "opencv-python>=4.1.2",
     "Pillow>=7.1.2",
+    "pillow-avif-plugin >= 1.4.6",
     "pyclipper",
     "requests",
     "scipy",
