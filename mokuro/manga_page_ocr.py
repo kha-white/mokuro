@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-import pillow_avif
+import pillow_avif # noqa: F401
 from PIL import Image
 from loguru import logger
 from scipy.signal.windows import gaussian
