@@ -5,7 +5,7 @@ authors = [
 ]
 description = "Browser reader for manga with selectable text"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -17,7 +17,7 @@ dependencies = [
     "loguru",
     "manga-ocr>=0.1.7",
     "natsort",
-    "numpy",
+    "numpy==1.23.5", # https://github.com/CadQuery/cadquery/issues/1626#issuecomment-2302217164
     "opencv-python>=4.1.2",
     "Pillow>=7.1.2",
     "pyclipper",
