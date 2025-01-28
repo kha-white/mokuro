@@ -58,7 +58,7 @@ version = {attr = "mokuro._version.__version__"}
 [tool.ruff]
 line-length = 120
 indent-width = 4
-extend-exclude = ["comic_text_detector"]
+extend-exclude = ["comic_text_detector", "notebooks"]
 
 [project.scripts]
 mokuro = "mokuro.__main__:main"
