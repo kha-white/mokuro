@@ -64,7 +64,7 @@ def run(
 
     paths_ = []
     for path in paths:
-        path_normalized = Path(path).expanduser().absolute()
+        path_normalized = Path(str(path)).expanduser().absolute()
 
         try:
             path_valid = path_normalized.exists()
