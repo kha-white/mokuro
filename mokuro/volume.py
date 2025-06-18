@@ -106,7 +106,7 @@ class Volume:
         img_paths = natsorted(
             p.relative_to(self.path_in)
             for p in self.path_in.glob("**/*")
-            if p.is_file() and p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")
+            if p.is_file() and p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp", ".avif")
         )
         img_paths = {p.with_suffix(""): p for p in img_paths}
         return img_paths
