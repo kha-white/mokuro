@@ -32,7 +32,7 @@ See also:
 
 # Installation
 
-You need Python 3.6 or newer. Please note, that the newest Python release might not be supported due to a PyTorch dependency, 
+You need Python 3.10 or newer. Please note, that the newest Python release might not be supported due to a PyTorch dependency, 
 which often breaks with new Python releases and needs some time to catch up.
 Refer to [PyTorch website](https://pytorch.org/get-started/locally/) for a list of supported Python versions.
 
