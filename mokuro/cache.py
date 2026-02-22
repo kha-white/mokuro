@@ -7,7 +7,7 @@ from loguru import logger
 
 class cache:
     def __init__(self):
-        self.root = (os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "manga-ocr"
+        self.root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "manga-ocr"
         self.root.mkdir(parents=True, exist_ok=True)
 
     @property
