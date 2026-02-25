@@ -1,5 +1,7 @@
+import os
 import cv2
 import numpy as np
+import pillow_avif # noqa: F401
 from PIL import Image
 from loguru import logger
 from scipy.signal.windows import gaussian
@@ -45,7 +47,17 @@ class MangaPageOcr:
             self.mocr = MangaOcr(pretrained_model_name_or_path, force_cpu)
 
     def __call__(self, img_path):
-        img = imread(img_path)
+        # Check if the file is in AVIF format
+        # Create a temporary png path
+        img_path = str(img_path)
+        if img_path.lower().endswith('.avif'):
+            temp_path = img_path.replace('.avif', '_temp.png')
+            avif_img = Image.open(img_path)
+            avif_img.save(temp_path, 'PNG')
+            img = imread(temp_path)
+            os.remove(temp_path)
+        else:
+            img = imread(img_path)
         if img is None:
             raise InvalidImage()
         H, W, *_ = img.shape
