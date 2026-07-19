@@ -31,8 +31,12 @@ class MangaPageOcr:
         self.disable_ocr = disable_ocr
 
         if not self.disable_ocr:
-            cuda = torch.cuda.is_available()
-            device = "cuda" if cuda and not force_cpu else "cpu"
+            if not force_cpu and torch.cuda.is_available():
+                device = "cuda"
+            elif not force_cpu and torch.backends.mps.is_available():
+                device = "mps"
+            else:
+                device = "cpu"
             logger.info(f"Initializing text detector, using device {device}")
             self.text_detector = TextDetector(
                 model_path=cache.comic_text_detector, input_size=detector_input_size, device=device, act="leaky"
