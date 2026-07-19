@@ -5,6 +5,12 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+from PIL import Image, UnidentifiedImageError
+
+
+class InvalidImage(Exception):
+    def __init__(self, message="Corrupted file or unsupported type"):
+        super().__init__(message)
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -26,9 +32,15 @@ def dump_json(obj, path):
         json.dump(obj, f, ensure_ascii=False, cls=NumpyEncoder)
 
 
-def imread(path, flags=cv2.IMREAD_COLOR):
-    """cv2.imread, but works with unicode paths"""
-    return cv2.imdecode(np.fromfile(path, dtype=np.uint8), flags)
+def imread(path):
+    """Read an image as a BGR array. Animated images decode to their first frame."""
+    try:
+        with Image.open(path) as img:
+            return cv2.cvtColor(np.array(img.convert("RGB")), cv2.COLOR_RGB2BGR)
+    except (FileNotFoundError, IsADirectoryError, PermissionError):
+        raise  # not a decoding problem
+    except (UnidentifiedImageError, OSError, ValueError) as e:
+        raise InvalidImage(f"{path}: {e}") from e
 
 
 def get_path_format(path: Path):

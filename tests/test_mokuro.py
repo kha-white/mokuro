@@ -13,6 +13,7 @@ from mokuro.run import run
         ("test0", True),
         ("test0", False),
         ("test1_webp", True),
+        ("test4_avif", True),
         ("test3_convert_legacy_ocr", False),
         ("test3_convert_legacy_ocr", True),
     ],
@@ -88,7 +89,9 @@ def _setup_and_run(
     if regenerate:
         logger.warning("Regenerating expected results")
         shutil.rmtree(expected_results_dir, ignore_errors=True)
-        shutil.copytree(input_dir, expected_results_dir, ignore=shutil.ignore_patterns("*.jpg", "*.webp", "*.zip"))
+        shutil.copytree(
+            input_dir, expected_results_dir, ignore=shutil.ignore_patterns("*.jpg", "*.webp", "*.avif", "*.zip")
+        )
 
     return input_dir, expected_results_dir
 

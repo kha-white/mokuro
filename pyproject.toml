@@ -19,7 +19,7 @@ dependencies = [
     "natsort",
     "numpy",
     "opencv-python>=4.1.2",
-    "Pillow>=7.1.2",
+    "Pillow>=11.3",
     "pyclipper",
     "requests",
     "scipy",
