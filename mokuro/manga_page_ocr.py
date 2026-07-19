@@ -12,11 +12,6 @@ from mokuro.utils import imread
 import torch
 
 
-class InvalidImage(Exception):
-    def __init__(self, message="Animation file, Corrupted file or Unsupported type"):
-        super().__init__(message)
-
-
 class MangaPageOcr:
     def __init__(
         self,
@@ -46,8 +41,6 @@ class MangaPageOcr:
 
     def __call__(self, img_path):
         img = imread(img_path)
-        if img is None:
-            raise InvalidImage()
         H, W, *_ = img.shape
         result = {"version": __version__, "img_width": W, "img_height": H, "blocks": []}
 
